@@ -7,7 +7,7 @@ Terrain::Terrain() : GameObject("Terrain", "Terrain")
 void Terrain::create(int width, int height, const QImage& hmap, bool isSameSize, float baseAlt, float scale)
 {
   m_mesh = new Mesh();
-  qDebug() << "Terrain mesh pointer is null ? " << (m_mesh == nullptr);
+  //qDebug() << "Terrain mesh pointer is null ? " << (m_mesh == nullptr);
   int w = isSameSize ? hmap.width() : width;
   int h = isSameSize ? hmap.height() : height;
 

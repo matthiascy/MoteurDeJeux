@@ -3,6 +3,7 @@
 
 #include "Types.hpp"
 #include <QTime>
+#include <QTimer>
 #include <QQuickItem>
 #include <QBasicTimer>
 
@@ -34,14 +35,6 @@ signals:
   void zRotationChanged(int angle);
 
 public slots:
-  //void setXRotation(int angle);
-  //void setYRotation(int angle);
-  //void setZRotation(int angle);
-  //void rotateView();
-  //void cleanup();
-// =========
-
-public slots:
   void sync();
   void cleanup();
   void onMousePress(Int32 x, Int32 y);
@@ -50,12 +43,12 @@ public slots:
 
 protected:
   void timerEvent(QTimerEvent* event) override;
-  void update();
 
 protected:
   UInt32 m_fps;
   QTime m_last_time;
-  QBasicTimer m_timer;
+  QTime m_last_time2;
+  QTimer m_fps_timer;
   EngineRenderer* m_renderer;
   Vec2 m_mouse_start_pos;
   Vec3 m_rotate_axis;

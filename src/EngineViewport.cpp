@@ -6,9 +6,24 @@ EngineViewport::EngineViewport()
     : m_renderer{nullptr},
       m_angular_speed(0),
       m_fps(0),
-      m_last_time(QTime::currentTime())
+      m_last_time(QTime::currentTime()),
+      m_last_time2(QTime::currentTime())
 {
-  m_timer.start(12, this);
+  m_fps_timer.setInterval(static_cast<int>(1.0/60.0) * 1000.0);
+  connect(&m_fps_timer, &QTimer::timeout, this, [this](){
+    QQuickItem::update();
+    window()->update();
+    //static UInt32 frameCount = 0;
+    //frameCount++;
+    //if (m_last_time.msecsTo(QTime::currentTime()) > 1000) {
+//    setFps(frameCount);
+//    m_last_time = QTime::currentTime();
+//    frameCount = 0;
+//  }
+    qDebug() << "elapsed: " << m_last_time2.msecsTo(QTime::currentTime());
+    m_last_time2 = QTime::currentTime();
+  });
+
 
   connect(this, &QQuickItem::windowChanged, this, [this](QQuickWindow* window){
     if (window) {
@@ -22,10 +37,7 @@ EngineViewport::EngineViewport()
   });
 }
 
-EngineViewport::~EngineViewport()
-{
-
-}
+EngineViewport::~EngineViewport() = default;
 
 void EngineViewport::sync()
 {
@@ -154,10 +166,4 @@ void EngineViewport::keyPressEvent(QKeyEvent* event)
   }
    */
   m_renderer->keyPressEvent(event);
-}
-
-void EngineViewport::update()
-{
-  QQuickItem::update();
-  window()->update();
 }

@@ -377,7 +377,7 @@ Array<SceneNode*> SceneManager::toBeRenderedSceneNodes() const
 {
   Array<SceneNode*> toBeDrew;
   for (const auto& node : m_scene_nodes) {
-    qDebug() << "Node" << node->name() << "isVisible?" << node->isVisiable();
+    //qDebug() << "Node" << node->name() << "isVisible?" << node->isVisiable();
     if (node->isVisiable() && node->attachedObjectsCount() != 0) {
         toBeDrew.push_back(node);
     }

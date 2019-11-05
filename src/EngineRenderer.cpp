@@ -14,7 +14,8 @@ struct VertexData
 
 EngineRenderer::EngineRenderer(QObject* parent /* = nullptr */)
     : QObject(parent), m_scn_mgr{}, m_vao{}, m_vbos{}, m_program{}, m_camera{nullptr},
-      m_proj_mat_loc{}, m_model_view_mat_loc{}, m_normal_mat_loc{}, m_light_pos_loc{}
+      m_proj_mat_loc{}, m_model_view_mat_loc{}, m_normal_mat_loc{}, m_light_pos_loc{},
+      m_window{nullptr}
 {
   m_scn_mgr = memory::mkUnique<SceneManager>();
 
@@ -230,7 +231,7 @@ void EngineRenderer::initializeCube()
 
 void EngineRenderer::keyPressEvent(QKeyEvent* event)
 {
-  qDebug() << "Renderer press" << event->key();
+  //qDebug() << "Renderer press" << event->key();
   switch (event->key()) {
     case Qt::Key_Z: {
       m_camera->pos += QVector3D(0.0f, 0.0f, -20.0f);
