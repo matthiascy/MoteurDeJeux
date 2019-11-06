@@ -54,7 +54,25 @@ set(MoteurDeJeuxSrc
         src/ResourceManager.hpp
         src/MeshLoader.hpp
         src/Terrain.hpp
-        src/GLWidget.hpp src/EngineRenderer.cpp src/EngineRenderer.hpp)
+        src/GLWidget.hpp src/EngineRenderer.cpp src/EngineRenderer.hpp
+    src/editor/AssetPreviewer.cpp
+    src/editor/AssetPreviewer.hpp
+    src/editor/AssetsBrowser.cpp
+    src/editor/AssetsBrowser.hpp
+    src/editor/CommandLine.cpp
+    src/editor/CommandLine.hpp
+    src/editor/Explorer.cpp
+    src/editor/Explorer.hpp
+    src/editor/LevelEditorMainWindow.cpp
+    src/editor/LevelEditorMainWindow.hpp
+    src/editor/PropertyEditor.cpp
+    src/editor/PropertyEditor.hpp
+    src/editor/SimpleOutput.cpp
+    src/editor/SimpleOutput.hpp
+    src/editor/Viewport.hpp
+    src/editor/Viewport.cpp
+    src/editor/Vertex.hpp
+    src/editor/Vertex.cpp)
 
 include(cmake/assimp.cmake)
 

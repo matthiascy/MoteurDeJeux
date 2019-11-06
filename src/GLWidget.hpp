@@ -2,10 +2,12 @@
 #define GLWIDGET_H
 
 #include <QOpenGLWidget>
+#include <QLabel>
 #include <QOpenGLFunctions>
 #include <QOpenGLTexture>
 #include <QTimer>
 #include <memory>
+#include <QtCore/QTime>
 #include "Types.hpp"
 #include "Terrain.hpp"
 #include "Camera.hpp"
@@ -67,6 +69,8 @@ private:
     OpenGLVAO m_vao;
     // chaque vbo est lie a un object
     Array<OpenGLBuffer> m_vbos;
+    Array<OpenGLBuffer*> m_ebos;
+
     OpenGLProgram* m_program;
     // Pointer sur le camera de scene manager
     Camera* m_camera;
@@ -78,13 +82,27 @@ private:
     QMatrix4x4 m_proj;
     QMatrix4x4 m_model;
 
-    std::unique_ptr<QOpenGLTexture> m_grass_texture;
-    std::unique_ptr<QOpenGLTexture> m_rock_texture;
-    std::unique_ptr<QOpenGLTexture> m_snow_rock_texture;
-    std::unique_ptr<QOpenGLTexture> m_ocean_texture;
+  UniquePtr<QOpenGLTexture> m_grass_texture;
+  UniquePtr<QOpenGLTexture> m_rock_texture;
+  UniquePtr<QOpenGLTexture> m_snow_rock_texture;
+  UniquePtr<QOpenGLTexture> m_ocean_texture;
+  UniquePtr<QOpenGLTexture> m_earth_texture;
+  UniquePtr<QOpenGLTexture> m_sun_texture;
+  UniquePtr<QOpenGLTexture> m_moon_texture;
+  UniquePtr<QOpenGLTexture> m_jupiter_texture;
+  UniquePtr<QOpenGLTexture> m_milky_texture;
 
     std::unique_ptr<QTimer> m_timer;
     bool m_is_ctrl_pressed;
+
+    QTime m_last_time;
+    UInt32 m_fps;
+
+    QLabel* m_fps_label;
+    QTimer* m_fps_timer;
+
+signals:
+  void fpsChanged(UInt32 fps);
 };
 
 #endif

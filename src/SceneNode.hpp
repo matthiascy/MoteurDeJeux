@@ -15,8 +15,8 @@ public:
 
 protected:
   ObjectMap m_attached_objects;
-  bool m_is_in_scene_graph;
-  bool m_is_visible;
+  bool      m_is_in_scene_graph;
+  bool      m_is_visible;
 
   void  _update() override;
 

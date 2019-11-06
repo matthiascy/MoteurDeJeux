@@ -7,12 +7,29 @@
         <file alias="snowrock">assets/textures/snowrocks.png</file>
         <file alias="terrain">assets/textures/terrain.jpg</file>
         <file alias="ocean">assets/textures/ocean.jpg</file>
+        <file alias="earth">assets/textures/earth.jpg</file>
+        <file alias="sun">assets/textures/sun.jpg</file>
+        <file alias="earth2">assets/textures/earth2.jpg</file>
+        <file alias="moon">assets/textures/moon.jpg</file>
+        <file alias="jupiter">assets/textures/jupiter.jpg</file>
+        <file alias="milky">assets/textures/milky_way.jpg</file>
+        <file alias="milky2">assets/textures/milky2.jpg</file>
     </qresource>
     <qresource prefix="/Shaders">
         <file alias="BasicVert">assets/shaders/Basic.vert</file>
         <file alias="BasicFrag">assets/shaders/Basic.frag</file>
         <file alias="CubeVert">assets/shaders/vertex_glsl.vert</file>
         <file alias="CubeFrag">assets/shaders/fragment_glsl.frag</file>
+        <file alias="fshader.glsl">assets/shaders/fshader.glsl</file>
+        <file alias="vshader.glsl">assets/shaders/vshader.glsl</file>
+        <file alias="viewport.frag">assets/shaders/viewport.frag</file>
+        <file alias="viewport.vert">assets/shaders/viewport.vert</file>
+        <file alias="basic.frag">assets/shaders/basic2.frag</file>
+        <file alias="basic.vert">assets/shaders/basic2.vert</file>
+        <file alias="preview.frag">assets/shaders/preview.frag</file>
+        <file alias="preview.vert">assets/shaders/preview.vert</file>
+        <file alias="previewimage.frag">assets/shaders/preview_image.frag</file>
+        <file alias="previewimage.vert">assets/shaders/preview_image.vert</file>
     </qresource>
     <qresource prefix="/Models">
         <file alias="Sphere">assets/models/sphere.obj</file>
@@ -23,5 +40,37 @@
     <qresource prefix="/Qml">
         <file alias="main">src/qml/main.qml</file>
         <file alias="splash">src/qml/splash.qml</file>
+    </qresource>
+    <qresource prefix="/Assets">
+        <file alias="fontawesome.otf">assets/fonts/fontawesome-free-5.4.1-desktop/otfs/FontAwesome5Free-Regular-400.otf</file>
+        <file alias="newdark.png">assets/icons/new-dark.png</file>
+        <file alias="newlight.png">assets/icons/new-light.png</file>
+        <file alias="opendark.png">assets/icons/open-dark.png</file>
+        <file alias="openlight.png">assets/icons/open-light.png</file>
+        <file alias="savedark.png">assets/icons/save-dark.png</file>
+        <file alias="savelight.png">assets/icons/save-light.png</file>
+        <file alias="saveasdark.png">assets/icons/saveas-dark.png</file>
+        <file alias="saveaslight.png">assets/icons/saveas-light.png</file>
+        <file alias="palettedark.png">assets/icons/palette-dark.png</file>
+        <file alias="palettelight.png">assets/icons/palette-light.png</file>
+        <file alias="shutdowndark.png">assets/icons/shutdown-dark.png</file>
+        <file alias="shutdownlight.png">assets/icons/shutdown-light.png</file>
+        <file alias="launch.png">assets/icons/launch.png</file>
+        <file alias="debugdark.png">assets/icons/debug-dark.png</file>
+        <file alias="debuglight.png">assets/icons/debug-light.png</file>
+        <file alias="cmddark.png">assets/icons/cmd-dark.png</file>
+        <file alias="cmdlight.png">assets/icons/cmd-light.png</file>
+        <file alias="loaddark.png">assets/icons/load-dark.png</file>
+        <file alias="loadlight.png">assets/icons/load-light.png</file>
+        <file alias="selectdark.png">assets/icons/select-dark.png</file>
+        <file alias="selectlight.png">assets/icons/select-light.png</file>
+        <file alias="movedark.png">assets/icons/move-dark.png</file>
+        <file alias="movelight.png">assets/icons/move-light.png</file>
+        <file alias="scaledark.png">assets/icons/scale-dark.png</file>
+        <file alias="scalelight.png">assets/icons/scale-light.png</file>
+        <file alias="rotatedark.png">assets/icons/rotate-dark.png</file>
+        <file alias="placelight.png">assets/icons/place-light.png</file>
+        <file alias="placedark.png">assets/icons/place-dark.png</file>
+        <file alias="rotatelight.png">assets/icons/rotate-light.png</file>
     </qresource>
 </RCC>

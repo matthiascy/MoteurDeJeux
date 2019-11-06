@@ -5,6 +5,7 @@
 
 /*
  * Compact layout { position | normal | texCoord }
+ *                  0  1  2    3  4  5   6  7
  */
 class Mesh {
 public:
@@ -15,11 +16,14 @@ public:
   UInt32 vertexCount() const { return m_vertex_count; }
 
   const Array<UInt32>& indices() const;
+  Array<UInt32>& indices() { return m_indices; }
+
   Array<Vec3>   vertices() const;
   Array<Vec3>   normals() const;
   Array<Vec2>   texCoords() const;
 
   const Array<float>& constDataArray() const { return m_data; }
+  Array<float>& dataArray() { return m_data; }
   const float* constData() const { return m_data.constData(); }
 
   void addVertex(const Vec3& v, const Vec3& n, const Vec2& t);

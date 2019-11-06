@@ -48,6 +48,7 @@ Array<Vec2> Mesh::texCoords() const
 
 void Mesh::addVertex(const Vec3& v, const Vec3& n, const Vec2& t)
 {
+  m_indices.push_back(m_data.size() / 8);
   m_data.push_back(v.x());
   m_data.push_back(v.y());
   m_data.push_back(v.z());

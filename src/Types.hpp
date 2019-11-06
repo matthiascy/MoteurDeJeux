@@ -148,6 +148,15 @@ struct LightInfo {
 
 class EngineRenderer;
 
+struct VertexP {
+  Vec3 position;
+};
+
+struct VertexPT {
+  Vec3 position;
+  Vec2 texCoord;
+};
+
 // Meta types declaration
 Q_DECLARE_METATYPE(Int8)
 Q_DECLARE_METATYPE(Int32)

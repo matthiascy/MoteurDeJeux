@@ -3,15 +3,6 @@
 #include "Terrain.hpp"
 #include "MeshLoader.hpp"
 
-/*
-struct VertexData
-{
-  QVector3D position;     //顶点坐标
-  QVector3D color;        //输入颜色
-  QVector2D texCoord;     //纹理坐标
-};
- */
-
 EngineRenderer::EngineRenderer(QObject* parent /* = nullptr */)
     : QObject(parent), m_scn_mgr{}, m_vao{}, m_vbos{}, m_program{}, m_camera{nullptr},
       m_proj_mat_loc{}, m_model_view_mat_loc{}, m_normal_mat_loc{}, m_light_pos_loc{},

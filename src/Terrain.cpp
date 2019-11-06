@@ -12,7 +12,7 @@ void Terrain::create(int width, int height, const QImage& hmap, bool isSameSize,
   int h = isSameSize ? hmap.height() : height;
 
   //m_mesh->data().resize(w * h * 8 * 8);
-  const float step = 5.0f;
+  const float step = 10.0f;
   const float ustep = 1.0f / w;
   const float vstep = 1.0f / h;
   const float w_half = w * step / (isSameSize? 4.0f : 2.0f);

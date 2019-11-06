@@ -4,6 +4,8 @@
 #include "Types.hpp"
 #include "SceneNode.hpp"
 
+// TODO vbo index for Creating and Destroying GameObject
+
 class SceneManager {
 public:
   typedef HashMap<String, Camera*>        CameraMap;
@@ -23,6 +25,7 @@ protected:
   SceneNodeMap            m_scene_nodes;
   //GameObjectMap           m_objects;
   GameObjectCollectionMap m_object_collections;
+  Int32                   m_vbo_index;
 
   static NameGenerator m_game_object_name_generator;
 
@@ -63,6 +66,7 @@ public:
   virtual void destroyAllGameObjects();
   virtual GameObject* gameObject(const String& name, const String& type);
   virtual bool hasGameObject(const String& name, const String& type);
+  virtual Array<const GameObject*> gameObjects() const;
 
   virtual GameObjectMap* gameObjectsOfType(const String& type);
   virtual const GameObjectMap* gameObjectsOfType(const String& type) const;
@@ -74,6 +78,7 @@ public:
 
 public:
   virtual void addGameObject(GameObject* obj);
+  virtual void removeGameObject(GameObject* obj);
 
   //virtual UInt32 addedGameObjectsNum() const;
 

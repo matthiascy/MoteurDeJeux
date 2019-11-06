@@ -30,12 +30,16 @@ public:
   void detachMesh() { m_mesh = nullptr; }
   const Mesh* mesh() const { return m_mesh; }
 
+  Int32 vboIndex() const { return m_vbo_idx; }
+  void setVboIndex(Int32 idx) { m_vbo_idx = idx; }
+
 protected:
   String m_name;
   String m_type;
   GameObject* m_parent;
   bool m_is_scene_node_attached;
   bool m_is_visible;
+  Int32 m_vbo_idx;
 
   //ResourceHandle m_mesh;
   //Array<ResourceHandle> m_textures;

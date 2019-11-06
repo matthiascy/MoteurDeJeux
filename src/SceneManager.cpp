@@ -4,7 +4,7 @@
 NameGenerator SceneManager::m_game_object_name_generator("GameObject");
 
 SceneManager::SceneManager()
-  : m_scene_root{nullptr}, m_cameras{}, m_scene_nodes{}, m_object_collections{}
+  : m_scene_root{nullptr}, m_cameras{}, m_scene_nodes{}, m_object_collections{}, m_vbo_index{0}
 {
   m_object_collections["GameObject"] = new GameObjectMap;
   m_object_collections["Light"] = new GameObjectMap;
@@ -239,6 +239,18 @@ bool SceneManager::hasGameObject(const String& name, const String& type)
   return (i.value()->find(name) != i.value()->end());
 }
 
+Array<const GameObject*> SceneManager::gameObjects() const
+{
+  Array<const GameObject*> ret;
+  for (const auto& objs : m_object_collections) {
+    for (const auto& obj : *objs) {
+      ret.push_back(obj);
+    }
+  }
+
+  return ret;
+}
+
 void SceneManager::destroyGameObject(const String& name, const String& type)
 {
   if (type == "Camera") {
@@ -364,12 +376,25 @@ void SceneManager::addGameObject(GameObject* obj)
           return;
         } else {
           m_object_collections[obj->type()]->insert(obj->name(), obj);
+          obj->setVboIndex(m_vbo_index++);
         }
       }
     } else {
       m_object_collections[obj->type()] = new GameObjectMap;
       m_object_collections[obj->type()]->insert(obj->name(), obj);
+      obj->setVboIndex(m_vbo_index++);
     }
+  }
+}
+
+void SceneManager::removeGameObject(GameObject* obj)
+{
+  if (obj->type() == "Camera") {
+    m_cameras.remove(obj->name());
+  } else {
+    m_object_collections[obj->type()]->remove(obj->name());
+    obj->setVboIndex(-1);
+    m_vbo_index--;
   }
 }
 

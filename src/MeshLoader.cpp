@@ -15,8 +15,6 @@ Mesh* MeshLoader::loadMesh(const String& path)
 
   const aiScene* scene = importer.ReadFile(path.toStdString(),
         aiProcess_Triangulate
-      | aiProcess_JoinIdenticalVertices
-      | aiProcess_GenSmoothNormals
       | aiProcess_CalcTangentSpace
       | aiProcess_SortByPType);
 
