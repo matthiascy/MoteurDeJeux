@@ -63,7 +63,7 @@ GLWidget::GLWidget(QWidget *parent)
     milkyNode->attachObject(milky);
     milkyNode->setVisible(true);
     milkyNode->setPosition(vec3::Zero);
-    milkyNode->scale(vec3::mkVec3(20000), ETransformSpace::Local);
+    milkyNode->scale(vec3::mkVec3(40000), ETransformSpace::Local);
     milkyNode->update();
 
     auto* sun = new GameObject("Sun", "Habibi");
@@ -150,7 +150,6 @@ GLWidget::GLWidget(QWidget *parent)
     jupiterNode->setPosition(Vec3{7, 0.0, 0.0});
     jupiterNode->scale(vec3::mkVec3(0.7), ETransformSpace::Local);
 
-    /*
     auto* saturnOrbitNode = m_scn_mgr->createSceneNode("SaturnOrbitNode");
     saturnOrbitNode->setParent(m_scn_mgr->rootSceneNode());
     saturnOrbitNode->scale(sunNode->scale(), ETransformSpace::Local);
@@ -164,7 +163,6 @@ GLWidget::GLWidget(QWidget *parent)
     saturnNode->setVisible(true);
     saturnNode->setPosition(Vec3{9.6, 0.0, 0.0});
     saturnNode->scale(vec3::mkVec3(0.6), ETransformSpace::Local);
-     */
 
     auto* uranusOrbitNode = m_scn_mgr->createSceneNode("UranusOrbitNode");
     uranusOrbitNode->setParent(m_scn_mgr->rootSceneNode());
@@ -177,7 +175,7 @@ GLWidget::GLWidget(QWidget *parent)
     uranusNode->setParent(uranusOrbitNode);
     uranusNode->attachObject(uranus);
     uranusNode->setVisible(true);
-    uranusNode->setPosition(Vec3{10, 0.0, 0.0});
+    uranusNode->setPosition(Vec3{11.2, 0.0, 0.0});
     uranusNode->scale(vec3::mkVec3(0.5), ETransformSpace::Local);
 
     auto* neptuneOrbitNode = m_scn_mgr->createSceneNode("NeptuneOrbitNode");
@@ -191,20 +189,29 @@ GLWidget::GLWidget(QWidget *parent)
     neptuneNode->setParent(neptuneOrbitNode);
     neptuneNode->attachObject(neptune);
     neptuneNode->setVisible(true);
-    neptuneNode->setPosition(Vec3{11.5, 0.0, 0.0});
+    neptuneNode->setPosition(Vec3{13.7, 0.0, 0.0});
     neptuneNode->scale(vec3::mkVec3(0.45), ETransformSpace::Local);
 
+    /*
     auto* moonOrbitNode = m_scn_mgr->createSceneNode("SaturnOrbitNode");
-    moonOrbitNode->setParent(sunNode);
+    //moonOrbitNode->setParent(sunNode);
+    moonOrbitNode->setParent(earthOrbitNode);
     moonOrbitNode->translate(earthNode->position(), ETransformSpace::Local);
     moonOrbitNode->scale(earthNode->scale(), ETransformSpace::Local);
+     */
+    auto* moonOrbitNode = m_scn_mgr->createSceneNode("MoonOrbitNode");
+    moonOrbitNode->setParent(earthOrbitNode);
+    //moonOrbitNode->setParent(earthOrbitNode);
+    moonOrbitNode->translate(earthOrbitNode->position(), ETransformSpace::Local);
+    moonOrbitNode->scale(earthOrbitNode->scale(), ETransformSpace::Local);
 
     auto* moon = new GameObject("Moon", "Habibi");
     moon->attachMesh(sphere);
     m_scn_mgr->addGameObject(moon);
     auto* moonNode = m_scn_mgr->createSceneNode("MoonNode");
     moonNode->setInheritedTransformation(false, true, false);
-    moonNode->setParent(moonOrbitNode);
+    //moonNode->setParent(moonOrbitNode);
+    moonNode->setParent(earthNode);
     moonNode->attachObject(moon);
     moonNode->setVisible(true);
     moonNode->setPosition(Vec3{1.5, 0.0, 0.0});
@@ -222,8 +229,8 @@ GLWidget::GLWidget(QWidget *parent)
     m_solar_system[8] = marsNode;
     m_solar_system[9] = jupiterOrbitNode;
     m_solar_system[10] = jupiterNode;
-    //m_solar_system[11] = saturnOrbitNode;
-    //m_solar_system[12] = saturnNode;
+    m_solar_system[11] = saturnOrbitNode;
+    m_solar_system[12] = saturnNode;
     m_solar_system[13] = uranusOrbitNode;
     m_solar_system[14] = uranusNode;
     m_solar_system[15] = neptuneOrbitNode;
@@ -377,9 +384,7 @@ void GLWidget::initializeGL()
     m_program->release();
     setupTextures();
   glEnable(GL_DEPTH_TEST);
-  //glEnable(GL_CULL_FACE);
-  //glCullFace(GL_BACK);
-  glFrontFace(GL_CW);
+  glDepthFunc(GL_LESS);
 }
 
 void GLWidget::setupTextures()
@@ -459,6 +464,9 @@ void GLWidget::paintGL()
       m_program->setUniformValue("isTerrain", 1);
     } else {
       m_program->setUniformValue("isTerrain", 0);
+      glEnable(GL_CULL_FACE);
+      glCullFace(GL_BACK);
+      glFrontFace(GL_CW);
       if (obj->name() == "Sun") {
         m_textures[0]->bind(0);
       } else if (obj->name() == "Mercury") {
@@ -481,6 +489,7 @@ void GLWidget::paintGL()
         m_textures[9]->bind(0);
       } else if (obj->name() == "Milky") {
         m_textures[10]->bind(0);
+        glDisable(GL_CULL_FACE);
       }
     }
 
@@ -498,7 +507,7 @@ void GLWidget::paintGL()
 void GLWidget::resizeGL(int w, int h)
 {
     m_proj.setToIdentity();
-    m_proj.perspective(45.0f, GLfloat(w) / h, 0.01f, 50000.0f);
+    m_proj.perspective(45.0f, GLfloat(w) / h, 0.01f, 500000.0f);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
@@ -556,19 +565,19 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 {
   switch (event->key()) {
     case Qt::Key_Z: {
-      m_camera->pos += QVector3D(0.0f, 0.0f, -20.0f);
+      m_camera->pos += 20 * m_camera->front;
     } break;
 
     case Qt::Key_S: {
-      m_camera->pos += QVector3D(0.0f, 0.0f, 20.0f);
+      m_camera->pos += -20 * m_camera->front;
     } break;
 
     case Qt::Key_Q: {
-      m_camera->pos += QVector3D(-20.0f, 0.0f, 0.0f);
+      m_camera->pos += -20 * m_camera->right;
     } break;
 
     case Qt::Key_D: {
-      m_camera->pos += QVector3D(20.0f ,0.0f, 0.0f);
+      m_camera->pos += 20 * m_camera->right;
     } break;
 
     case Qt::Key_Control: {
@@ -621,30 +630,29 @@ void GLWidget::solar_system_update(Real dt)
   // mars
   m_solar_system[8]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
   // jupiter orbit
-  //m_solar_system[9]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 50), ETransformSpace::Local);
+  m_solar_system[9]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 50), ETransformSpace::Local);
   // jupiter
   m_solar_system[10]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
   // saturn orbit
-  //m_solar_system[11]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 40), ETransformSpace::Local);
+  m_solar_system[11]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 40), ETransformSpace::Local);
   // saturn
-  //m_solar_system[12]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  m_solar_system[12]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
   // uranus orbit
-  //m_solar_system[13]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 35), ETransformSpace::Local);
+  m_solar_system[13]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 35), ETransformSpace::Local);
   // uranus
   m_solar_system[14]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
   // neptune orbit
-  //m_solar_system[15]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 25), ETransformSpace::Local);
+  m_solar_system[15]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 25), ETransformSpace::Local);
   // neptune
   m_solar_system[16]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
   // moon orbit
-  m_solar_system[17]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 30), ETransformSpace::Local);
+  //moonOrbitNode->translate(earthNode->position(), ETransformSpace::Local);
+  //moonOrbitNode->scale(earthNode->scale(), ETransformSpace::Local);
+  m_solar_system[17]->translate(m_solar_system[6]->position(), ETransformSpace::Local);
+  m_solar_system[17]->scale(m_solar_system[6]->scale(), ETransformSpace::Local);
+//  m_solar_system[17]->setPosition(m_solar_system[6]->position());
+//  m_solar_system[17]->setScale(m_solar_system[6]->scale());
+  m_solar_system[17]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 80), ETransformSpace::Local);
   // moon
   m_solar_system[18]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
-  //qDebug() << m_solar_system[2]->position();
-  //m_solar_system[2]->translate(m_solar_system[2]->position(), ETransformSpace::Local);
-
-  //m_solar_system[3]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 20), ETransformSpace::Local);
-  //m_solar_system[4]->rotate(Quat::fromAxisAndAngle(Vec3{1.0, 0.0, 0.0}, deltaLune), ETransformSpace::Parent);
-  //m_solar_system[2]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 80), ETransformSpace::Parent);
-  //m_solar_system[3]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 20), ETransformSpace::Parent);
 }

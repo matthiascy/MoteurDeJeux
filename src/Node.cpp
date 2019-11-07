@@ -76,16 +76,19 @@ bool Node::isOrientationInherited() const
 void Node::setOrientation(const Quat& q)
 {
   m_orientation = q.normalized();
+  update();
 }
 
 void Node::setPosition(const Vec3& pos)
 {
   m_position = pos;
+  update();
 }
 
 void Node::setScale(const Vec3& scale)
 {
   m_scale = scale;
+  update();
 }
 
 void Node::translate(const Vec3& t, ETransformSpace relativeTo)
@@ -147,6 +150,7 @@ void Node::scale(const Vec3& s, ETransformSpace relativeTo)
       // TODO
     } break;
   }
+  update();
 }
 
 Node* Node::child(const String& name) const
