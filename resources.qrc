@@ -14,6 +14,12 @@
         <file alias="jupiter">assets/textures/jupiter.jpg</file>
         <file alias="milky">assets/textures/milky_way.jpg</file>
         <file alias="milky2">assets/textures/milky2.jpg</file>
+        <file alias="mars">assets/textures/mars.jpg</file>
+        <file alias="mercury">assets/textures/mercury.jpg</file>
+        <file alias="neptune">assets/textures/neptune.jpg</file>
+        <file alias="saturn">assets/textures/saturn.jpg</file>
+        <file alias="uranus">assets/textures/uranus.jpg</file>
+        <file alias="venus">assets/textures/venus.jpg</file>
     </qresource>
     <qresource prefix="/Shaders">
         <file alias="BasicVert">assets/shaders/Basic.vert</file>

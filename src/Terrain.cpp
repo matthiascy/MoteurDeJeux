@@ -21,10 +21,10 @@ void Terrain::create(int width, int height, const QImage& hmap, bool isSameSize,
   for (int i = 0; i < width; ++i) {
     for (int j = 0; j < height; ++j) {
       m_mesh->addQuad(
-           Vec3(i * step - w_half,     j * step - h_half,     baseAlt * ((hmap.pixelColor(i,   j).red()   - 128.0f) / scale)),
-           Vec3((i+1) * step - w_half, j * step     - h_half, baseAlt * ((hmap.pixelColor(i+1, j).red()   - 128.0f) / scale)),
-           Vec3((i+1) * step - w_half, (j+1) * step - h_half, baseAlt * ((hmap.pixelColor(i+1, j+1).red() - 128.0f) / scale)),
-           Vec3(i * step     - w_half, (j+1) * step - h_half, baseAlt * ((hmap.pixelColor(i,   j+1).red() - 128.0f) / scale)),
+           Vec3(i * step - w_half,     baseAlt * ((hmap.pixelColor(i,   j).red()   - 128.0f) / scale), j * step - h_half),
+           Vec3((i+1) * step - w_half, baseAlt * ((hmap.pixelColor(i+1, j).red()   - 128.0f) / scale), j * step     - h_half),
+           Vec3((i+1) * step - w_half, baseAlt * ((hmap.pixelColor(i+1, j+1).red() - 128.0f) / scale), (j+1) * step - h_half),
+           Vec3(i * step     - w_half, baseAlt * ((hmap.pixelColor(i,   j+1).red() - 128.0f) / scale), (j+1) * step - h_half),
            Vec2(i * ustep, j * vstep),
            Vec2((i+1) * ustep, j * vstep),
            Vec2((i+1) * ustep, (j+1) * vstep),

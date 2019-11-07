@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
   format.setProfile(QSurfaceFormat::CoreProfile);
   QSurfaceFormat::setDefaultFormat(format);
 
-  LevelEditorMainWindow mainWindow;
-  //MainWindow mainWindow;
+  //LevelEditorMainWindow mainWindow;
+  MainWindow mainWindow;
   mainWindow.resize(mainWindow.sizeHint());
 
   mainWindow.show();

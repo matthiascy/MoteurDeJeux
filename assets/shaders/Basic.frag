@@ -20,16 +20,16 @@ void main(void)
     vec3 color = vec3(0.39, 1.0f, 0.0);
     vec3 col   = clamp(color* 0.2 + color * 0.8 * NL, 0.0, 1.0f);
     if (isTerrain) {
-        if (aPosition.z < -90) {
-            if (aPosition.z > -110) {
-                pixelColor = (1 + aPosition.z / 90.0) * texture2D(texture3, aTexCoord)
-                +(-aPosition.z / 90.0) * texture2D(texture0, aTexCoord);
+        if (aPosition.y < -90) {
+            if (aPosition.y > -110) {
+                pixelColor = (1 + aPosition.y / 90.0) * texture2D(texture3, aTexCoord)
+                +(-aPosition.y / 90.0) * texture2D(texture0, aTexCoord);
             } else {
                 pixelColor = texture2D(texture3, aTexCoord);
             }
-        } else if (aPosition.z < -60) {
+        } else if (aPosition.y < -60) {
             pixelColor = texture2D(texture0, aTexCoord);
-        } else if (aPosition.z < 10) {
+        } else if (aPosition.y < 10) {
             pixelColor = texture2D(texture1, aTexCoord);
         } else {
             pixelColor = texture2D(texture2, aTexCoord);

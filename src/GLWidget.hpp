@@ -33,6 +33,7 @@ public slots:
     void setZRotation(int angle);
     void rotateView();
     void cleanup();
+  void solar_system_update(Real dt);
 
 signals:
     void xRotationChanged(int angle);
@@ -57,6 +58,8 @@ protected:
 private:
     //void setupVertexAttribs();
     void setupTextures();
+    //void createStar();
+    //void createPlanet();
 
     UniquePtr<SceneManager> m_scn_mgr;
 
@@ -82,17 +85,9 @@ private:
     QMatrix4x4 m_proj;
     QMatrix4x4 m_model;
 
-  UniquePtr<QOpenGLTexture> m_grass_texture;
-  UniquePtr<QOpenGLTexture> m_rock_texture;
-  UniquePtr<QOpenGLTexture> m_snow_rock_texture;
-  UniquePtr<QOpenGLTexture> m_ocean_texture;
-  UniquePtr<QOpenGLTexture> m_earth_texture;
-  UniquePtr<QOpenGLTexture> m_sun_texture;
-  UniquePtr<QOpenGLTexture> m_moon_texture;
-  UniquePtr<QOpenGLTexture> m_jupiter_texture;
-  UniquePtr<QOpenGLTexture> m_milky_texture;
-
-    std::unique_ptr<QTimer> m_timer;
+    Array<SceneNode*> m_solar_system;
+    Array<OpenGLTexture*> m_textures;
+    QTimer* m_timer;
     bool m_is_ctrl_pressed;
 
     QTime m_last_time;

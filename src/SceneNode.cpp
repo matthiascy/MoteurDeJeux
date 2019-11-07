@@ -15,6 +15,7 @@ SceneNode::~SceneNode()
 
 void SceneNode::_update()
 {
+  /*
    if (m_parent) {
 
      // update orientation
@@ -47,6 +48,7 @@ void SceneNode::_update()
    }
 
   qDebug() << "Scene Node update, combined scale" << m_combined_scale;
+   */
 }
 
 void SceneNode::setParent(Node *parent)
@@ -63,6 +65,7 @@ void SceneNode::setParent(Node *parent)
     detachSceneGraph();
 
   }
+  update(true);
 }
 
 bool SceneNode::isInSceneGraph() const
@@ -154,7 +157,7 @@ void SceneNode::attachObject(GameObject* obj)
       obj->setSceneNodeAttached(true);
     }
   }
-  qDebug() << "SceneNode" << m_name << "attach nodes count" << m_attached_objects.size();
+  //qDebug() << "SceneNode" << m_name << "attach nodes count" << m_attached_objects.size();
   // TODO update
 }
 

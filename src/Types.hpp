@@ -38,7 +38,11 @@ struct BBox {
 };
 
 namespace vec3 {
-  static const Vec3 Zero = Vec3(0.0f, 0.0f, 0.0f);
+  static const Vec3 Zero = Vec3(0.0, 0.0, 0.0);
+  inline Vec3 mkVec3(Real a) { return Vec3(a, a, a); }
+  static const Vec3 AxisX = Vec3(1.0, 0.0, 0.0);
+  static const Vec3 AxisY = Vec3(0.0, 1.0, 0.0);
+  static const Vec3 AxisZ = Vec3(0.0, 0.0, 1.0);
 }
 
 namespace quat {
