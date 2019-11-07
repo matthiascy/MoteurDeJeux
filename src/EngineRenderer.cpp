@@ -118,7 +118,7 @@ void EngineRenderer::render()
 {
   static int iii = 0;
   qDebug() << "Render......" << ++iii;
-  m_scn_mgr->rootSceneNode()->update(true);
+  m_scn_mgr->rootSceneNode()->update();
   auto nodes = m_scn_mgr->toBeRenderedSceneNodes();
   glClearColor(0.251, 0.231, 0.259, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

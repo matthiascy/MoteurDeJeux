@@ -89,7 +89,7 @@ public:
   virtual void removeAllChildren();
   virtual void addChild(Node* child);
 
-  virtual void update(bool isUpdateChildren);
+  virtual void update();
 
   virtual Vec3 localToWorldPosition(const Vec3& localPos);
   virtual Vec3 worldToLocalPosition(const Vec3& worldPos);
@@ -101,7 +101,6 @@ public:
   virtual const Vec3& combinedScale();
 
 protected:
-  virtual void _update();
   virtual void _update_from_parent();
   virtual void _update_world_matrix();
   virtual void _update_local_matrix();

@@ -25,7 +25,7 @@ SceneManager::~SceneManager()
 
 void SceneManager::updateSceneGraph()
 {
-  rootSceneNode()->update(true);
+  rootSceneNode()->update();
 }
 
 void SceneManager::clearScene()

@@ -30,8 +30,7 @@ GLWidget::GLWidget(QWidget *parent)
     terrainNode->attachObject(terrain);
     terrainNode->setVisible(true);
     terrainNode->scale(Vec3{0.5f, 0.5f, 0.5f}, ETransformSpace::Local);
-  }
-   */
+  }*/
   // Soleil
   Mesh* sphere = MeshLoader::loadMesh("./sphere.obj");
   qDebug() << sphere->count();
@@ -64,8 +63,8 @@ GLWidget::GLWidget(QWidget *parent)
     milkyNode->attachObject(milky);
     milkyNode->setVisible(true);
     milkyNode->setPosition(vec3::Zero);
-    milkyNode->scale(vec3::mkVec3(8000), ETransformSpace::Local);
-    milkyNode->update(false);
+    milkyNode->scale(vec3::mkVec3(20000), ETransformSpace::Local);
+    milkyNode->update();
 
     auto* sun = new GameObject("Sun", "Habibi");
     sun->attachMesh(sphere);
@@ -77,126 +76,165 @@ GLWidget::GLWidget(QWidget *parent)
     //sunNode->setPosition(Vec3{0.0, 1000.0, 0.0});
     sunNode->setPosition(Vec3{0.0, 0.0, 0.0});
     sunNode->scale(vec3::mkVec3(1000), ETransformSpace::Local);
-    //sunNode->scale(vec3::mkVec3(1), ETransformSpace::Local);
-    sunNode->setInheritedTransformation(false, false, false);
+
+    auto* mercuryOrbitNode = m_scn_mgr->createSceneNode("MercuryOrbitNode");
+    mercuryOrbitNode->setParent(m_scn_mgr->rootSceneNode());
+    mercuryOrbitNode->scale(sunNode->scale(), ETransformSpace::Local);
 
     auto* mercury = new GameObject("Mercury", "Habibi");
     mercury->attachMesh(sphere);
     m_scn_mgr->addGameObject(mercury);
     auto* mercuryNode = m_scn_mgr->createSceneNode("MercuryNode");
     mercuryNode->setInheritedTransformation(false, true, false);
-    mercuryNode->setParent(sunNode);
+    mercuryNode->setParent(mercuryOrbitNode);
     mercuryNode->attachObject(mercury);
     mercuryNode->setVisible(true);
-    mercuryNode->setPosition(Vec3{2.0, .0, 0.0});
-    mercuryNode->update(false);
+    mercuryNode->setPosition(Vec3{1.5, 0.0, 0.0});
     mercuryNode->scale(vec3::mkVec3(0.2), ETransformSpace::Local);
-    mercuryNode->update(false);
+
+    auto* venusOrbitNode = m_scn_mgr->createSceneNode("VenusOrbitNode");
+    venusOrbitNode->setParent(m_scn_mgr->rootSceneNode());
+    venusOrbitNode->scale(sunNode->scale(), ETransformSpace::Local);
 
     auto* venus = new GameObject("Venus", "Habibi");
     venus->attachMesh(sphere);
     m_scn_mgr->addGameObject(venus);
     auto* venusNode = m_scn_mgr->createSceneNode("VenusNode");
-    venusNode->setParent(sunNode);
+    venusNode->setParent(venusOrbitNode);
     venusNode->attachObject(venus);
     venusNode->setVisible(true);
-    venusNode->setPosition(Vec3{3, 0, 0.0});
+    venusNode->setPosition(Vec3{2.2, 0, 0.0});
     venusNode->scale(vec3::mkVec3(0.3), ETransformSpace::Local);
-    venusNode->update(false);
+
+    auto* earthOrbitNode = m_scn_mgr->createSceneNode("EarthOrbitNode");
+    earthOrbitNode->setParent(m_scn_mgr->rootSceneNode());
+    earthOrbitNode->scale(sunNode->scale(), ETransformSpace::Local);
 
     auto* earth = new GameObject("Earth", "Habibi");
     earth->attachMesh(sphere);
     m_scn_mgr->addGameObject(earth);
     auto* earthNode = m_scn_mgr->createSceneNode("EarthNode");
     earthNode->setInheritedTransformation(false, true, false);
-    earthNode->setParent(sunNode);
+    earthNode->setParent(earthOrbitNode);
     earthNode->attachObject(earth);
     earthNode->setVisible(true);
-    earthNode->setPosition(Vec3{5, 0.0, 0.0});
+    earthNode->setPosition(Vec3{3.4, 0.0, 0.0});
     earthNode->scale(vec3::mkVec3(0.35), ETransformSpace::Local);
+
+    auto* marsOrbitNode = m_scn_mgr->createSceneNode("MarsOrbitNode");
+    marsOrbitNode->setParent(m_scn_mgr->rootSceneNode());
+    marsOrbitNode->scale(sunNode->scale(), ETransformSpace::Local);
+
+    auto* mars = new GameObject("Mars", "Habibi");
+    mars->attachMesh(sphere);
+    m_scn_mgr->addGameObject(mars);
+    auto* marsNode = m_scn_mgr->createSceneNode("MarsNode");
+    marsNode->setInheritedTransformation(false, true, false);
+    marsNode->setParent(marsOrbitNode);
+    marsNode->attachObject(mars);
+    marsNode->setVisible(true);
+    marsNode->setPosition(Vec3{5, 0.0, 0.0});
+    marsNode->scale(vec3::mkVec3(0.15), ETransformSpace::Local);
+
+    auto* jupiterOrbitNode = m_scn_mgr->createSceneNode("JupiterOrbitNode");
+    jupiterOrbitNode->setParent(m_scn_mgr->rootSceneNode());
+    jupiterOrbitNode->scale(sunNode->scale(), ETransformSpace::Local);
+
+    auto* jupiter = new GameObject("Jupiter", "Habibi");
+    jupiter->attachMesh(sphere);
+    m_scn_mgr->addGameObject(jupiter);
+    auto* jupiterNode = m_scn_mgr->createSceneNode("JupiterNode");
+    jupiterNode->setParent(jupiterOrbitNode);
+    jupiterNode->attachObject(jupiter);
+    jupiterNode->setVisible(true);
+    jupiterNode->setPosition(Vec3{7, 0.0, 0.0});
+    jupiterNode->scale(vec3::mkVec3(0.7), ETransformSpace::Local);
+
+    /*
+    auto* saturnOrbitNode = m_scn_mgr->createSceneNode("SaturnOrbitNode");
+    saturnOrbitNode->setParent(m_scn_mgr->rootSceneNode());
+    saturnOrbitNode->scale(sunNode->scale(), ETransformSpace::Local);
+
+    auto* saturn = new GameObject("Saturn", "Habibi");
+    saturn->attachMesh(sphere);
+    m_scn_mgr->addGameObject(saturn);
+    auto* saturnNode = m_scn_mgr->createSceneNode("SaturnNode");
+    saturnNode->setParent(saturnOrbitNode);
+    saturnNode->attachObject(saturn);
+    saturnNode->setVisible(true);
+    saturnNode->setPosition(Vec3{9.6, 0.0, 0.0});
+    saturnNode->scale(vec3::mkVec3(0.6), ETransformSpace::Local);
+     */
+
+    auto* uranusOrbitNode = m_scn_mgr->createSceneNode("UranusOrbitNode");
+    uranusOrbitNode->setParent(m_scn_mgr->rootSceneNode());
+    uranusOrbitNode->scale(sunNode->scale(), ETransformSpace::Local);
+
+    auto* uranus = new GameObject("Uranus", "Habibi");
+    uranus->attachMesh(sphere);
+    m_scn_mgr->addGameObject(uranus);
+    auto* uranusNode = m_scn_mgr->createSceneNode("UranusNode");
+    uranusNode->setParent(uranusOrbitNode);
+    uranusNode->attachObject(uranus);
+    uranusNode->setVisible(true);
+    uranusNode->setPosition(Vec3{10, 0.0, 0.0});
+    uranusNode->scale(vec3::mkVec3(0.5), ETransformSpace::Local);
+
+    auto* neptuneOrbitNode = m_scn_mgr->createSceneNode("NeptuneOrbitNode");
+    neptuneOrbitNode->setParent(m_scn_mgr->rootSceneNode());
+    neptuneOrbitNode->scale(sunNode->scale(), ETransformSpace::Local);
+
+    auto* neptune = new GameObject("Neptune", "Habibi");
+    neptune->attachMesh(sphere);
+    m_scn_mgr->addGameObject(neptune);
+    auto* neptuneNode = m_scn_mgr->createSceneNode("NeptuneNode");
+    neptuneNode->setParent(neptuneOrbitNode);
+    neptuneNode->attachObject(neptune);
+    neptuneNode->setVisible(true);
+    neptuneNode->setPosition(Vec3{11.5, 0.0, 0.0});
+    neptuneNode->scale(vec3::mkVec3(0.45), ETransformSpace::Local);
+
+    auto* moonOrbitNode = m_scn_mgr->createSceneNode("SaturnOrbitNode");
+    moonOrbitNode->setParent(sunNode);
+    moonOrbitNode->translate(earthNode->position(), ETransformSpace::Local);
+    moonOrbitNode->scale(earthNode->scale(), ETransformSpace::Local);
 
     auto* moon = new GameObject("Moon", "Habibi");
     moon->attachMesh(sphere);
     m_scn_mgr->addGameObject(moon);
     auto* moonNode = m_scn_mgr->createSceneNode("MoonNode");
     moonNode->setInheritedTransformation(false, true, false);
-    moonNode->setParent(earthNode);
+    moonNode->setParent(moonOrbitNode);
     moonNode->attachObject(moon);
     moonNode->setVisible(true);
-    moonNode->setPosition(Vec3{2, 0.0, 0.0});
-    moonNode->scale(vec3::mkVec3(0.4), ETransformSpace::Local);
-    moonNode->update(true);
+    moonNode->setPosition(Vec3{1.5, 0.0, 0.0});
+    moonNode->scale(vec3::mkVec3(0.15), ETransformSpace::Local);
 
-    /*
-    auto* mars = new GameObject("Mars", "Habibi");
-    mars->attachMesh(sphere);
-    m_scn_mgr->addGameObject(mars);
-    auto* marsNode = m_scn_mgr->createSceneNode("MarsNode");
-    marsNode->setInheritedTransformation(false, true, false);
-    marsNode->setParent(sunNode);
-    marsNode->attachObject(mars);
-    marsNode->setVisible(true);
-    marsNode->setPosition(Vec3{6, 0.0, 0.0});
-    marsNode->scale(vec3::mkVec3(0.15), ETransformSpace::Local);
-
-    auto* jupiter = new GameObject("Jupiter", "Habibi");
-    jupiter->attachMesh(sphere);
-    m_scn_mgr->addGameObject(jupiter);
-    auto* jupiterNode = m_scn_mgr->createSceneNode("JupiterNode");
-    jupiterNode->setParent(sunNode);
-    jupiterNode->attachObject(jupiter);
-    jupiterNode->setVisible(true);
-    jupiterNode->setPosition(Vec3{1900, 1000.0, 0.0});
-    jupiterNode->scale(vec3::mkVec3(180), ETransformSpace::Local);
-
-    auto* saturn = new GameObject("Saturn", "Habibi");
-    saturn->attachMesh(sphere);
-    m_scn_mgr->addGameObject(saturn);
-    auto* saturnNode = m_scn_mgr->createSceneNode("SaturnNode");
-    saturnNode->setParent(sunNode);
-    saturnNode->attachObject(saturn);
-    saturnNode->setVisible(true);
-    saturnNode->setPosition(Vec3{2500, 1000.0, 0.0});
-    saturnNode->scale(vec3::mkVec3(160), ETransformSpace::Local);
-
-    auto* uranus = new GameObject("Uranus", "Habibi");
-    uranus->attachMesh(sphere);
-    m_scn_mgr->addGameObject(uranus);
-    auto* uranusNode = m_scn_mgr->createSceneNode("UranusNode");
-    uranusNode->setParent(sunNode);
-    uranusNode->attachObject(uranus);
-    uranusNode->setVisible(true);
-    uranusNode->setPosition(Vec3{2900, 1000.0, 0.0});
-    uranusNode->scale(vec3::mkVec3(52), ETransformSpace::Local);
-
-    auto* neptune = new GameObject("Neptune", "Habibi");
-    neptune->attachMesh(sphere);
-    m_scn_mgr->addGameObject(neptune);
-    auto* neptuneNode = m_scn_mgr->createSceneNode("NeptuneNode");
-    neptuneNode->setParent(sunNode);
-    neptuneNode->attachObject(neptune);
-    neptuneNode->setVisible(true);
-    neptuneNode->setPosition(Vec3{3200, 1000.0, 0.0});
-    neptuneNode->scale(vec3::mkVec3(50), ETransformSpace::Local);
-    */
-
-    m_solar_system.push_back(sunNode);
-    m_solar_system.push_back(mercuryNode);
-    m_solar_system.push_back(venusNode);
-    m_solar_system.push_back(earthNode);
-    m_solar_system.push_back(moonNode);
-    /*
-    m_solar_system.push_back(marsNode);
-    m_solar_system.push_back(jupiterNode);
-    m_solar_system.push_back(saturnNode);
-    m_solar_system.push_back(uranusNode);
-    m_solar_system.push_back(neptuneNode);
-     */
+    m_solar_system.resize(20);
+    m_solar_system[0] = sunNode;
+    m_solar_system[1] = mercuryOrbitNode;
+    m_solar_system[2] = mercuryNode;
+    m_solar_system[3] = venusOrbitNode;
+    m_solar_system[4] = venusNode;
+    m_solar_system[5] = earthOrbitNode;
+    m_solar_system[6] = earthNode;
+    m_solar_system[7] = marsOrbitNode;
+    m_solar_system[8] = marsNode;
+    m_solar_system[9] = jupiterOrbitNode;
+    m_solar_system[10] = jupiterNode;
+    //m_solar_system[11] = saturnOrbitNode;
+    //m_solar_system[12] = saturnNode;
+    m_solar_system[13] = uranusOrbitNode;
+    m_solar_system[14] = uranusNode;
+    m_solar_system[15] = neptuneOrbitNode;
+    m_solar_system[16] = neptuneNode;
+    m_solar_system[17] = moonOrbitNode;
+    m_solar_system[18] = moonNode;
   }
 
   // Camera
   m_camera = m_scn_mgr->createCamera("MainCamera");
-  m_camera->pos = Vec3(0.0f, 5000.0f, 3000.0f);
+  m_camera->pos = Vec3(0.0f, 8000.0f, 4000.0f);
   //m_camera->pos = Vec3(0.0f, 50.0f, 25.0f);
 
   m_vbos.resize(255);
@@ -376,15 +414,15 @@ void GLWidget::paintGL()
     m_fps_label->setText("FPS : " + String::number(m_fps));
   }
 
-  m_scn_mgr->rootSceneNode()->update(true);
+  m_scn_mgr->rootSceneNode()->update();
   auto nodes = m_scn_mgr->toBeRenderedSceneNodes();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   m_vao.bind();
 
-  for (auto i = 0; i < nodes.size(); ++i) {
-    const auto& obj = nodes[i]->attachedObject(0);
+  for (auto & node : nodes) {
+    const auto& obj = node->attachedObject(0);
     int idx = obj->vboIndex();
     //qDebug() << "i:" << i;
     m_vbos[idx].bind();
@@ -394,9 +432,8 @@ void GLWidget::paintGL()
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void*>(6*sizeof(float)));
     m_ebos[idx]->bind();
 
-    // v' = S.T.R.v
-    m_model.setToIdentity();
-    m_model = nodes[i]->worldMatrix();
+    qDebug() << "render" << obj->name();
+    m_model = node->worldMatrix();
     //m_model = nodes[i]->worldMatrix();
     //m_model.translate(nodes[i]->combinedPosition());
     //m_model.rotate(nodes[i]->combinedOrientation());
@@ -411,6 +448,7 @@ void GLWidget::paintGL()
     //m_model.rotate(m_yRot / 16.0f, 0, 1, 0);
     //m_model.rotate(m_zRot / 16.0f, 0, 0, 1);
     QMatrix3x3 normalMatrix = m_model.normalMatrix();
+
 
     m_program->bind();
     if (obj->name() == "Terrain") {
@@ -460,7 +498,7 @@ void GLWidget::paintGL()
 void GLWidget::resizeGL(int w, int h)
 {
     m_proj.setToIdentity();
-    m_proj.perspective(45.0f, GLfloat(w) / h, 0.01f, 20000.0f);
+    m_proj.perspective(45.0f, GLfloat(w) / h, 0.01f, 50000.0f);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
@@ -564,11 +602,49 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
 
 void GLWidget::solar_system_update(Real dt)
 {
-  m_solar_system[0]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 20), ETransformSpace::Local);
-  m_solar_system[1]->rotate(Quat::fromAxisAndAngle(Vec3{0.5, 0.2, 0.0}, dt / 1000 * 100), ETransformSpace::Parent);
-  m_solar_system[2]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 100), ETransformSpace::Local);
-  m_solar_system[3]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 20), ETransformSpace::Local);
-  m_solar_system[4]->rotate(Quat::fromAxisAndAngle(Vec3{1.0, 0.0, 0.0}, dt / 1000 * 60), ETransformSpace::Local);
+  // sun
+  m_solar_system[0]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, 0), ETransformSpace::Local);
+  // mercury orbit
+  m_solar_system[1]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 20), ETransformSpace::Local);
+  // mercury
+  m_solar_system[2]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  // venus orbit
+  m_solar_system[3]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 15), ETransformSpace::Local);
+  // venus
+  m_solar_system[4]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  // earth orbit
+  m_solar_system[5]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 30), ETransformSpace::Local);
+  // earth
+  m_solar_system[6]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  // mars orbit
+  m_solar_system[7]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 40), ETransformSpace::Local);
+  // mars
+  m_solar_system[8]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  // jupiter orbit
+  //m_solar_system[9]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 50), ETransformSpace::Local);
+  // jupiter
+  m_solar_system[10]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  // saturn orbit
+  //m_solar_system[11]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 40), ETransformSpace::Local);
+  // saturn
+  //m_solar_system[12]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  // uranus orbit
+  //m_solar_system[13]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 35), ETransformSpace::Local);
+  // uranus
+  m_solar_system[14]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  // neptune orbit
+  //m_solar_system[15]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 25), ETransformSpace::Local);
+  // neptune
+  m_solar_system[16]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  // moon orbit
+  m_solar_system[17]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 30), ETransformSpace::Local);
+  // moon
+  m_solar_system[18]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
+  //qDebug() << m_solar_system[2]->position();
+  //m_solar_system[2]->translate(m_solar_system[2]->position(), ETransformSpace::Local);
+
+  //m_solar_system[3]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 20), ETransformSpace::Local);
+  //m_solar_system[4]->rotate(Quat::fromAxisAndAngle(Vec3{1.0, 0.0, 0.0}, deltaLune), ETransformSpace::Parent);
   //m_solar_system[2]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 80), ETransformSpace::Parent);
   //m_solar_system[3]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 20), ETransformSpace::Parent);
 }

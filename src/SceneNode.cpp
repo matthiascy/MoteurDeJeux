@@ -13,50 +13,12 @@ SceneNode::~SceneNode()
   m_attached_objects.clear();
 }
 
-void SceneNode::_update()
-{
-  /*
-   if (m_parent) {
-
-     // update orientation
-     const Quat& parent_orientation = m_parent->orientation();
-     if (m_is_inherited_orientation) {
-       m_combined_orientation = parent_orientation * m_orientation;
-     } else {
-       m_combined_orientation = m_orientation;
-     }
-
-     // update scale
-     const Vec3& parent_scale = m_parent->scale();
-     if (m_is_inherited_scale) {
-       m_combined_scale = parent_scale * m_scale; // component-wise mulitplication
-     } else {
-       m_combined_scale = m_scale;
-     }
-
-     // update position
-     m_combined_position = parent_orientation * parent_scale * m_position;
-     m_combined_position += m_parent->combinedPosition();
-
-   } else {
-
-     // sans parent, la racine
-     m_combined_orientation = m_orientation;
-     m_combined_position = m_position;
-     m_combined_scale = m_scale;
-
-   }
-
-  qDebug() << "Scene Node update, combined scale" << m_combined_scale;
-   */
-}
-
 void SceneNode::setParent(Node *parent)
 {
   if (parent) {
     Node::setParent(parent);
 
-    SceneNode* scene_parent = static_cast<SceneNode*>(parent);
+    auto* scene_parent = dynamic_cast<SceneNode*>(parent);
     if (scene_parent->isInSceneGraph()) attachSceneGraph();
     else detachSceneGraph();
 
@@ -65,7 +27,7 @@ void SceneNode::setParent(Node *parent)
     detachSceneGraph();
 
   }
-  update(true);
+  update();
 }
 
 bool SceneNode::isInSceneGraph() const

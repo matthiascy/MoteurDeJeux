@@ -18,8 +18,6 @@ protected:
   bool      m_is_in_scene_graph;
   bool      m_is_visible;
 
-  void  _update() override;
-
   virtual void attachSceneGraph();
   virtual void detachSceneGraph();
 

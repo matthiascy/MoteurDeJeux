@@ -109,7 +109,7 @@ void Node::translate(const Vec3& t, ETransformSpace relativeTo)
       }
     } break;
   }
-  update(true);
+  update();
 }
 
 void Node::rotate(const Quat& q, ETransformSpace relativeTo)
@@ -128,8 +128,7 @@ void Node::rotate(const Quat& q, ETransformSpace relativeTo)
       m_orientation = m_orientation * combined.inverted() * q.normalized() * combined;
     } break;
   }
-  update(true);
-  //_update_local_matrix();
+  update();
 }
 
 void Node::scale(const Vec3& s, ETransformSpace relativeTo)
@@ -284,22 +283,12 @@ const Vec3& Node::scale() const
   return m_scale;
 }
 
-void Node::_update()
-{
-  //_update_local_matrix();
-  //_update_world_matrix();
-  //_update_from_parent();
-}
-
-void Node::update(bool isUpdateChildren) {
+void Node::update() {
   _update_from_parent();
   _update_local_matrix();
   _update_world_matrix();
-  if (isUpdateChildren) {
-    for (auto i = m_children.begin(); i != m_children.end(); ++i) {
-      i.value()->update(isUpdateChildren);
-    }
-  }
+  for (auto i = m_children.begin(); i != m_children.end(); ++i)
+    i.value()->update();
 }
 
 const Quat& Node::combinedOrientation()
@@ -400,23 +389,6 @@ void Node::_update_world_matrix()
 
 void Node::_update_local_matrix()
 {
-  // position, quaternion, scale
-  /*
-  Real x = m_orientation.x(), y = m_orientation.y(), z = m_orientation.z(), w = m_orientation.scalar();
-  Real x2 = x + x, y2 = y + y, z2 = z + z;
-  Real xx = x * x2, xy = x * y2, xz = x * z2;
-  Real yy = y * y2, yz = y * z2, zz = z * z2;
-  Real wx = w * x2, wy = w * y2, wz = w * z2;
-  Real sx = m_scale.x(), sy = m_scale.y(), sz = m_scale.z();
-  Vec4 row0 = Vec4((1-(yy+zz))*sx, (xy+wz)*sx, (xz-wy)*sx, 0);
-  Vec4 row1 = Vec4((xy-wz)*sy, (1-(xx+zz))*sy, (yz+wx)*sy, 0);
-  Vec4 row2 = Vec4((xz+wy)*sz, (yz-wx)*sz, (1-(xx+yy))*sz, 0);
-  Vec4 row3 = Vec4(m_position.x(), m_position.y(), m_position.z(), 1);
-  m_local_matrix.setRow(0, row0);
-  m_local_matrix.setRow(1, row1);
-  m_local_matrix.setRow(2, row2);
-  m_local_matrix.setRow(3, row3);
-   */
   Mat4 T; T.setToIdentity();
   T.translate(m_position);
   Mat4 R; R.setToIdentity();
@@ -428,12 +400,12 @@ void Node::_update_local_matrix()
 
 const Mat4& Node::worldMatrix()
 {
-  _update_world_matrix();
+  update();
   return m_world_matrix;
 }
 
 const Mat4& Node::localMatrix()
 {
-  _update_local_matrix();
+  update();
   return m_local_matrix;
 }
