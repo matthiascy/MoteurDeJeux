@@ -25,8 +25,9 @@ protected:
   Vec3 m_combined_position;
   Vec3 m_combined_scale;
 
-  // World information
+  // World information = parent * local
   Mat4 m_world_matrix;
+  // Local information = R * T * S
   Mat4 m_local_matrix;
 
   // Est-ce que ce node herite orientation/scale de son parent ?
@@ -41,7 +42,7 @@ public:
   explicit Node(const String& name, Node* parent = nullptr);
   virtual ~Node();
 
-  String name() const { return m_name; }
+  const String& name() const { return m_name; }
   void setName(const String& name) { m_name = name; }
 
   void setInheritedTransformation(bool inheritedScale, bool inheritedPosition, bool inheritedOrientation);

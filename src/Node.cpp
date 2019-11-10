@@ -399,7 +399,7 @@ void Node::_update_local_matrix()
   R.rotate(m_orientation);
   Mat4 S; S.setToIdentity();
   S.scale(m_scale);
-  m_local_matrix = T * R * S;
+  m_local_matrix = R * T * S;
 }
 
 const Mat4& Node::worldMatrix()

@@ -72,7 +72,7 @@ set(MoteurDeJeuxSrc
     src/editor/Viewport.hpp
     src/editor/Viewport.cpp
     src/editor/Vertex.hpp
-    src/editor/Vertex.cpp)
+    src/editor/Vertex.cpp src/SolarSystem.cpp src/SolarSystem.hpp)
 
 include(cmake/assimp.cmake)
 

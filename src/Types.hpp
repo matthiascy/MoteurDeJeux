@@ -161,6 +161,8 @@ struct VertexPT {
   Vec2 texCoord;
 };
 
+#include <random>
+
 // Meta types declaration
 Q_DECLARE_METATYPE(Int8)
 Q_DECLARE_METATYPE(Int32)
