@@ -28,11 +28,11 @@ public:
     QSize sizeHint() const override;
 
 public slots:
-    void setXRotation(int angle);
-    void setYRotation(int angle);
-    void setZRotation(int angle);
-    void rotateView();
-    void cleanup();
+  void setXRotation(int angle);
+  void setYRotation(int angle);
+  void setZRotation(int angle);
+  void rotateView();
+  void cleanup();
   void solar_system_update(Real dt);
 
 signals:

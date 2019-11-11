@@ -10,6 +10,8 @@
 #include <QtQml/QQmlComponent>
 #include <QtQuick/QQuickWindow>
 #include <QtCore/QUrl>
+#include <QSplashScreen>
+#include <QThread>
 #include "GLWidget.hpp"
 #include "EngineViewport.hpp"
 #include "mainwindow.h"
@@ -34,20 +36,30 @@ int main(int argc, char *argv[])
   engine.load(QUrl("qrc:/Qml/main"));
    */
   QApplication app(argc, argv);
-
-  QCoreApplication::setApplicationName("MoteurDeJeux");
+  QApplication::setApplicationName("MoteurDeJeux");
 
   QSurfaceFormat format;
+  format.setRenderableType(QSurfaceFormat::OpenGL);
+  format.setProfile(QSurfaceFormat::CoreProfile);
+  format.setVersion(4, 0);
   format.setDepthBufferSize(24);
   format.setSamples(16);
-  format.setProfile(QSurfaceFormat::CoreProfile);
   QSurfaceFormat::setDefaultFormat(format);
+
+#ifdef DEBUG_GL
+  format.setOption(QSurfaceFormat::DebugContext);
+#endif
+
+  QPixmap engineLogo(":/App/engine-logo");
+  QSplashScreen splash(engineLogo);
+  splash.show();
 
   //LevelEditorMainWindow mainWindow;
   MainWindow mainWindow;
   mainWindow.resize(mainWindow.sizeHint());
 
-  mainWindow.show();
+  QTimer::singleShot(1000, &splash, &QSplashScreen::close);
+  QTimer::singleShot(1000, &mainWindow, &MainWindow::show);
 
-  return QCoreApplication::exec();
+  return QApplication::exec();
 }

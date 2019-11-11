@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10.0)
 
-set(ASSIMP_DIR ${SOURCE_DIR}/assimp)
+set(ASSIMP_DIR ${SOURCE_DIR}/thirdparty/assimp)
 set(ASSIMP_OUTPUT_DIR  ${OUTPUT_DIR_LIBRARY})
 
 set(BUILD_SHARED_LIBS ON CACHE BOOL "" FORCE)
@@ -158,7 +158,7 @@ add_definitions(-DASSIMP_BUILD_NO_GLTF_EXPORTER)
 set(ASSIMP_BUILD_3MF_IMPORTER OFF CACHE BOOL "Build importer" FORCE)
 add_definitions(-DASSIMP_BUILD_NO_3MF_EXPORTER)
 
-add_subdirectory(${ASSIMP_DIR} "${CMAKE_CURRENT_BINARY_DIR}/assimp")
+add_subdirectory(${ASSIMP_DIR} "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/assimp")
 
 set_target_properties(assimp PROPERTIES
     LINKER_LANGUAGE CXX

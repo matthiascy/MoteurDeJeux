@@ -117,6 +117,16 @@ enum class EResourceType {
   Mesh,
 };
 
+/* ==================== Input ==================== */
+enum class InputState {
+  Invalid,
+  Registered,
+  Unregistered,
+  Triggered,
+  Pressed,
+  Released
+};
+
 /* ==================== Forward declarations ==================== */
 class Camera;
 class Light;
@@ -127,6 +137,10 @@ class Mesh;
 class GameObject;
 class SceneNode;
 class SceneManager;
+class Input;
+
+/* ==================== Graphics ==================== */
+class Window;
 
 struct ResourceHandle {
   UInt64 idx;
@@ -160,6 +174,8 @@ struct VertexPT {
   Vec3 position;
   Vec2 texCoord;
 };
+
+typedef QColor Color;
 
 #include <random>
 

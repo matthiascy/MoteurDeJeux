@@ -1,56 +1,7 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** BSD License Usage
-** Alternatively, you may use this file under the terms of the BSD license
-** as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of The Qt Company Ltd nor the names of its
-**     contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include "GLWidget.hpp"
-#include "window.h"
+#include "Window.hpp"
 #include "mainwindow.h"
+#include "graphics/OpenGLError.hpp"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -60,84 +11,94 @@
 #include <QApplication>
 #include <QMessageBox>
 
-Window::Window(MainWindow *mw)
-    : mainWindow(mw)
+Window::Window()
+    : QOpenGLWindow(), m_clear_color{60, 60, 69, 255}
 {
-    glWidget = new GLWidget;
 
-    xSlider = createSlider();
-    ySlider = createSlider();
-    zSlider = createSlider();
-
-    connect(xSlider, &QSlider::valueChanged, glWidget, &GLWidget::setXRotation);
-    connect(glWidget, &GLWidget::xRotationChanged, xSlider, &QSlider::setValue);
-    connect(ySlider, &QSlider::valueChanged, glWidget, &GLWidget::setYRotation);
-    connect(glWidget, &GLWidget::yRotationChanged, ySlider, &QSlider::setValue);
-    connect(zSlider, &QSlider::valueChanged, glWidget, &GLWidget::setZRotation);
-    connect(glWidget, &GLWidget::zRotationChanged, zSlider, &QSlider::setValue);
-
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    QHBoxLayout *container = new QHBoxLayout;
-    container->addWidget(glWidget);
-    container->addWidget(xSlider);
-    container->addWidget(ySlider);
-    container->addWidget(zSlider);
-
-    QWidget *w = new QWidget;
-    w->setLayout(container);
-    mainLayout->addWidget(w);
-    dockBtn = new QPushButton(tr("Undock"), this);
-    connect(dockBtn, &QPushButton::clicked, this, &Window::dockUndock);
-    mainLayout->addWidget(dockBtn);
-
-    setLayout(mainLayout);
-
-    xSlider->setValue(360 * 16);
-    ySlider->setValue(360 * 16);
-    zSlider->setValue(360 * 16);
-
-    setWindowTitle(tr("TP1_2 Manel Fennira et Chen Yang"));
 }
 
-QSlider *Window::createSlider()
+void Window::initializeGL()
 {
-    QSlider *slider = new QSlider(Qt::Vertical);
-    slider->setRange(0, 360 * 16);
-    slider->setSingleStep(16);
-    slider->setPageStep(15 * 16);
-    slider->setTickInterval(15 * 16);
-    slider->setTickPosition(QSlider::TicksRight);
-    return slider;
+  initializeOpenGLFunctions();
+  connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &Window::teardownGL, Qt::DirectConnection);
+  print_version_information();
+
+  glEnable(GL_CULL_FACE);
+  glClearColor(m_clear_color.redF(), m_clear_color.greenF(), m_clear_color.blueF(), m_clear_color.alphaF());
+  {
+    // Shader program creation
+    m_program = new OpenGLProgram();
+    m_program->addShaderFromSourceFile(OpenGLShader::Vertex, ":/Shaders/");
+    m_program->addShaderFromSourceFile(OpenGLShader::Fragment, ":/Shaders/");
+    m_program->link();
+    m_program->bind();
+
+    // Buffer creation
+    m_vbo.create();
+    m_vbo.bind();
+    m_vbo.setUsagePattern(OpenGLBuffer::StaticDraw);
+    //m_vbo.allocate()
+
+    // Vertex Array Object Creation
+    m_vao.create();
+    m_vao.bind();
+    m_program->enableAttributeArray(0);
+    m_program->enableAttributeArray(1);
+    //...set attribute buffer
+
+    m_vao.release();
+    m_vbo.release();
+    m_program->release();
+  }
 }
 
-void Window::keyPressEvent(QKeyEvent *e)
+void Window::resizeGL(Int32 width, Int32 height)
 {
-    if (e->key() == Qt::Key_Escape)
-        close();
-    else
-        glWidget->keyPressEvent(e);
+
 }
 
-void Window::dockUndock()
+void Window::print_version_information()
 {
-    if (parent()) {
-        setParent(0);
-        setAttribute(Qt::WA_DeleteOnClose);
-        move(QApplication::desktop()->width() / 2 - width() / 2,
-             QApplication::desktop()->height() / 2 - height() / 2);
-        dockBtn->setText(tr("Dock"));
-        show();
-    } else {
-        if (!mainWindow->centralWidget()) {
-            if (mainWindow->isVisible()) {
-                setAttribute(Qt::WA_DeleteOnClose, false);
-                dockBtn->setText(tr("Undock"));
-                mainWindow->setCentralWidget(this);
-            } else {
-                QMessageBox::information(0, tr("Cannot dock"), tr("Main window already closed"));
-            }
-        } else {
-            QMessageBox::information(0, tr("Cannot dock"), tr("Main window already occupied"));
-        }
-    }
+  String gl_type, gl_version, gl_profile;
+  gl_type = context()->isOpenGLES() ? "OpenGL ES" : "OpenGL Desktop";
+  gl_version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+  switch (format().profile()) {
+    case QSurfaceFormat::NoProfile: {
+      gl_profile = "NoProfile";
+    } break;
+
+    case QSurfaceFormat::CoreProfile: {
+      gl_profile = "CoreProfile";
+    } break;
+
+    case QSurfaceFormat::CompatibilityProfile: {
+      gl_profile = "CompatibleProfile";
+    } break;
+  }
+
+  qDebug() << qPrintable(gl_type) << qPrintable(gl_version) << "(" << qPrintable(gl_profile) << ")";
+}
+
+/* ---------- Events ---------- */
+bool Window::event(QEvent* event)
+{
+  if (event->type() == OpenGLError::type()) {
+    errorEventGL(dynamic_cast<OpenGLError*>(event));
+    return true;
+  }
+  return QPaintDeviceWindow::event(event);
+}
+
+void Window::errorEventGL(OpenGLError* error)
+{
+  qFatal("%s::%s => Returned an error!", error->callerName(), error->functionName());
+}
+
+void Window::keyPressEvent(QKeyEvent* event)
+{
+  if (event->isAutoRepeat()) {
+    event->ignore();
+  } else {
+    //Input::registerKeyPress(event->key());
+  }
 }

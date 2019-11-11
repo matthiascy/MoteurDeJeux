@@ -49,10 +49,11 @@
 ****************************************************************************/
 
 #include "mainwindow.h"
-#include "window.h"
+#include "Window.hpp"
 #include <QMenuBar>
 #include <QMenu>
 #include <QMessageBox>
+#include "GLWidget.hpp"
 
 MainWindow::MainWindow()
 {
@@ -70,7 +71,7 @@ MainWindow::MainWindow()
 void MainWindow::onAddNew()
 {
     if (!centralWidget())
-        setCentralWidget(new Window(this));
+        setCentralWidget(new GLWidget(this));
     else
         QMessageBox::information(0, tr("Cannot add new window"), tr("Already occupied. Undock first."));
 }
