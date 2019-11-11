@@ -6,7 +6,7 @@
 #include <QTimer>
 
 GLWidget::GLWidget(QWidget *parent)
-  : QOpenGLWidget(parent), m_scn_mgr{}, m_xRot(0), m_yRot(0), m_zRot(0), m_program(nullptr),
+  : QOpenGLWidget(parent), m_scn_mgr{}, m_program(nullptr),
     m_projMatrixLoc{0}, m_mvMatrixLoc{0}, m_normalMatrixLoc{0}, m_lightPosLoc{0}, m_last_time{QTime::currentTime()},
     m_fps{0}, m_fps_label{nullptr}
 {
@@ -220,57 +220,12 @@ GLWidget::~GLWidget()
 
 QSize GLWidget::minimumSizeHint() const
 {
-    return QSize(50, 50);
+    return {600, 480};
 }
 
 QSize GLWidget::sizeHint() const
 {
-    return QSize(400, 400);
-}
-
-static void qNormalizeAngle(int &angle)
-{
-    while (angle < 0)
-        angle += 360 * 16;
-    while (angle > 360 * 16)
-        angle -= 360 * 16;
-}
-
-void GLWidget::setXRotation(int angle)
-{
-    qNormalizeAngle(angle);
-    if (angle != m_xRot) {
-        m_xRot = angle;
-        emit xRotationChanged(angle);
-        update();
-    }
-}
-
-void GLWidget::setYRotation(int angle)
-{
-    qNormalizeAngle(angle);
-    if (angle != m_yRot) {
-        m_yRot = angle;
-        emit yRotationChanged(angle);
-        update();
-    }
-}
-
-void GLWidget::setZRotation(int angle)
-{
-    qNormalizeAngle(angle);
-    if (angle != m_zRot) {
-        m_zRot = angle;
-        emit zRotationChanged(angle);
-        update();
-    }
-}
-
-void GLWidget::rotateView()
-{
-  m_zRot += 2.0f;
-  emit yRotationChanged(m_zRot);
-  update();
+    return {600, 480};
 }
 
 void GLWidget::cleanup()
@@ -452,7 +407,7 @@ void GLWidget::resizeGL(int w, int h)
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
-  m_lastPos = event->pos();
+  //m_lastPos = event->pos();
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent* event)
@@ -463,6 +418,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
+  /*
     int dx = event->x() - m_lastPos.x();
     int dy = event->y() - m_lastPos.y();
 
@@ -479,6 +435,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
     m_lastPos = event->pos();
     //qDebug() << m_camera->pos.x() << " " << m_camera->pos.y() << " " << m_camera->pos.z();
+    */
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event)
@@ -494,8 +451,6 @@ void GLWidget::wheelEvent(QWheelEvent *event)
     QVector3D dir = QVector3D::crossProduct(m_camera->up, m_camera->right);
     m_camera->pos += num_degrees.y() >= 0 ? 10.0f * dir.normalized() : -10.0f * dir.normalized();
   }
-
-  //qDebug() << m_camera->pos.x() << " " << m_camera->pos.y() << " " << m_camera->pos.z();
 
   event->accept();
   repaint();
@@ -551,8 +506,6 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
 
 void GLWidget::solar_system_update(Real dt)
 {
-  // sun
-  //m_solar_system[0]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, 0), ETransformSpace::Local);
   // mercury
   m_solar_system[1]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
   // venus
@@ -572,3 +525,11 @@ void GLWidget::solar_system_update(Real dt)
   // moon
   m_solar_system[9]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 20), ETransformSpace::Local);
 }
+
+//void GLWidget::update()
+//{
+  // process input
+  // update
+  // Schedule a redraw
+//  QOpenGLWidget::update();
+//}

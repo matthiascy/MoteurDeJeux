@@ -5,7 +5,7 @@
 #include <QtGui/QtGui>
 #include "Types.hpp"
 #include "graphics/OpenGLError.hpp"
-#include "Input.hpp"
+//#include "Input.hpp"
 
 
 class GLWidget;

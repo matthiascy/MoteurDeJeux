@@ -28,17 +28,11 @@ public:
     QSize sizeHint() const override;
 
 public slots:
-  void setXRotation(int angle);
-  void setYRotation(int angle);
-  void setZRotation(int angle);
-  void rotateView();
   void cleanup();
   void solar_system_update(Real dt);
 
-signals:
-    void xRotationChanged(int angle);
-    void yRotationChanged(int angle);
-    void zRotationChanged(int angle);
+//protected slots:
+//  void update();
 
 protected:
     void initializeGL() override;
@@ -62,11 +56,6 @@ private:
     //void createPlanet();
 
     UniquePtr<SceneManager> m_scn_mgr;
-
-    int m_xRot;
-    int m_yRot;
-    int m_zRot;
-    QPoint m_lastPos;
 
     // Pour le rendu
     OpenGLVAO m_vao;
