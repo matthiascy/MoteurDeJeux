@@ -1,13 +1,12 @@
 #include "Terrain.hpp"
 #include "Mesh.hpp"
 
-Terrain::Terrain() : GameObject("Terrain", "Terrain")
+Terrain::Terrain(const String& name, const String& type) : GameObject(name, type)
 { }
 
 void Terrain::create(int width, int height, const QImage& hmap, bool isSameSize, float baseAlt, float scale)
 {
   m_mesh = new Mesh();
-  //qDebug() << "Terrain mesh pointer is null ? " << (m_mesh == nullptr);
   int w = isSameSize ? hmap.width() : width;
   int h = isSameSize ? hmap.height() : height;
 
@@ -31,34 +30,19 @@ void Terrain::create(int width, int height, const QImage& hmap, bool isSameSize,
            Vec2(i * ustep, (j+1) * vstep));
     }
   }
+
+  m_collision_shape = new btBoxShape(btVector3(1, 1, 1));
+  btVector3 localInertial = btVector3(0, 0, 0);
+  m_collision_shape->calculateLocalInertia(BT_ONE, localInertial);
+      // new btStaticPlaneShape(btVector3(0.0, 1.0, 0.0), BT_ONE);
+  m_motion_state = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+  m_rigid_body = new btRigidBody(BT_ONE, m_motion_state, m_collision_shape);
 }
 
-/*
-void Terrain::add(const Vec3 &v, const Vec3 &n,  const Vec2 &t)
+Terrain::~Terrain()
 {
-    GLfloat *p = m_mesh->data().data() + m_count;
-    *p++ = v.x();
-    *p++ = v.y();
-    *p++ = v.z();
-    *p++ = n.x();
-    *p++ = n.y();
-    *p++ = n.z();
-    *p++ = t.x();
-    *p++ = t.y();
-    m_count += 8;
-    m_mesh->setCount(m_count);
+  delete m_mesh;
+  delete m_collision_shape;
+  delete m_motion_state;
+  delete m_rigid_body;
 }
-
-void Terrain::quad(Vec3 p1, Vec3 p2, Vec3 p3, Vec3 p4, Vec2 uv1, Vec2 uv2, Vec2 uv3, Vec2 uv4)
-{
-    Vec3 n = Vec3::normal(Vec3(p4.x() - p1.x(), p4.y() - p1.y(), 0.0f), Vec3(p2.x() - p1.x(), p2.y() - p1.y(), 0.0f));
-
-    add(p1, n, uv1);//, Vec2(u1, v1));
-    add(p4, n, uv4);//, Vec2(u4, v4));
-    add(p2, n, uv2);//, Vec2(u2, v2));
-
-    add(p3, n, uv3);//, Vec2(u3, v3));
-    add(p2, n, uv2);//, Vec2(u2, v2));
-    add(p4, n, uv4);//, Vec2(u4, v4));
-}
-*/

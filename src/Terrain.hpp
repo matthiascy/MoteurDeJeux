@@ -6,8 +6,8 @@
 
 class Terrain : public GameObject {
 public:
-    Terrain();
-    ~Terrain() override = default;
+    Terrain(const String& name, const String& type);
+    ~Terrain() override;
     void create(int width, int height, const QImage& hmap, bool isSameSize, float baseAlt, float scale);
 };
 

@@ -22,7 +22,7 @@ public slots:
   void resizeGL(Int32 w, Int32 h);
 
 protected:
-  UniquePtr<SceneManager> m_scn_mgr;
+  UniquePtr<Scene> m_scn_mgr;
 
   OpenGLVAO m_vao;
   Array<OpenGLBuffer> m_vbos;

@@ -1,5 +1,5 @@
 #include "EngineRenderer.hpp"
-#include "SceneManager.hpp"
+#include "Scene.hpp"
 #include "Terrain.hpp"
 #include "MeshLoader.hpp"
 
@@ -8,7 +8,7 @@ EngineRenderer::EngineRenderer(QObject* parent /* = nullptr */)
       m_proj_mat_loc{}, m_model_view_mat_loc{}, m_normal_mat_loc{}, m_light_pos_loc{},
       m_window{nullptr}
 {
-  m_scn_mgr = memory::mkUnique<SceneManager>();
+  m_scn_mgr = memory::mkUnique<Scene>();
 
   // Terrain
   {

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.15.0)
 
 project(MoteurDeJeux)
 
@@ -12,8 +12,22 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR_BINARY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR_LIBRARY})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR_LIBRARY})
 
+# because of bullet3
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+include(cmake/zlib.cmake)
 include(cmake/assimp.cmake)
 include(cmake/bullet3.cmake)
+
+add_executable(Bullet3Test src/Bullet3Test.cpp)
+target_compile_definitions(Bullet3Test PRIVATE
+    ${BULLET_DEFINITIONS})
+target_link_directories(Bullet3Test PRIVATE ${BULLET_LIBRARY_DIRS})
+target_link_libraries(Bullet3Test PRIVATE
+    Bullet3Common BulletSoftBody Bullet3Dynamics
+    Bullet3Collision LinearMath Bullet3Geometry
+    BulletDynamics BulletCollision)
+target_include_directories(Bullet3Test PRIVATE
+    src/thirdparty/bullet3/src)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOROC ON)
@@ -32,11 +46,11 @@ set(MoteurDeJeuxSrc
     src/GLWidget.cpp
     src/Camera.cpp
     src/Light.cpp
-    src/Node.cpp
+    #src/Node.cpp
     src/NameGenerator.cpp
-    src/SceneNode.cpp
-    src/SceneManager.cpp
-    src/Shader.cpp
+    #src/SceneNode.cpp
+    src/Scene.cpp
+    #src/Shader.cpp
     src/Mesh.cpp
     src/ResourceManager.cpp
     src/MeshLoader.cpp
@@ -48,11 +62,11 @@ set(MoteurDeJeuxSrc
     src/Camera.hpp
     src/Types.hpp
     src/Light.hpp
-    src/Node.hpp
+    #src/Node.hpp
     src/NameGenerator.hpp
-    src/SceneNode.hpp
-    src/SceneManager.hpp
-    src/Shader.hpp
+    #src/SceneNode.hpp
+    src/Scene.hpp
+    #src/Shader.hpp
     src/Mesh.hpp
     src/ResourceManager.hpp
     src/MeshLoader.hpp
@@ -81,12 +95,22 @@ set(MoteurDeJeuxSrc
     #src/graphics/OpenGLError.cpp
     #src/graphics/OpenGLError.hpp
     #src/Input.cpp src/Input.hpp
-    )
+    src/subsystem/PhysicsSystem.cpp
+    src/subsystem/PhysicsSystem.hpp
+    src/GameFramework/Transform.cpp
+    src/GameFramework/Transform.hpp
+    src/physics/Collider.cpp src/physics/Collider.hpp src/physics/BoxCollider.cpp src/physics/BoxCollider.hpp src/assets/AssetStorage.cpp src/assets/AssetStorage.hpp src/GameFramework/GameFrameworkTypes.hpp src/Core/CoreTypes.hpp src/Core/Core.hpp src/Core/Math/MathTypes.hpp src/Core/Math/Math.hpp src/Core/BasicTypes.hpp src/Core/ContainerTypes.hpp src/Core/MemoryTypes.hpp src/Core/Memory.hpp src/Core/Object.hpp src/Core/Private/Object.cpp)
 
 add_executable(MoteurDeJeux ${MoteurDeJeuxSrc} ${QRCS})
 
 target_link_libraries(MoteurDeJeux PRIVATE
     Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Quick Qt5::Qml
-    assimp)
-target_include_directories(MoteurDeJeux
-    PRIVATE src/assimp/assimp/include)
+    assimp Bullet3Common BulletSoftBody Bullet3Dynamics
+    Bullet3Collision LinearMath Bullet3Geometry
+    BulletDynamics BulletCollision)
+target_include_directories(MoteurDeJeux PRIVATE
+    ${SOURCE_DIR}
+    src/thirdparty/assimp/assimp/include
+    src/thirdparty/bullet3/src/)
+target_compile_definitions(MoteurDeJeux PRIVATE
+    ${BULLET_DEFINITIONS})

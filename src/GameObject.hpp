@@ -3,49 +3,62 @@
 
 #include "Types.hpp"
 #include "Mesh.hpp"
+#include "Transform.hpp"
+#include <btBulletCollisionCommon.h>
+#include <BulletDynamics/Dynamics/btRigidBody.h>
+
+// TODO: instantly all objects have a collider, seperate
 
 class GameObject {
-public:
-  GameObject();
-  explicit GameObject(const String& name, const String& type);
-  virtual ~GameObject();
+protected:
+  String m_name;
+  String m_type;
 
-  enum class Type {
-    Light,
-    Mesh,
-    Camera,
-    Count,
-  };
+  GameObject* m_parent;
+  Transform m_transform;
+  Mat4 m_world_matrix;
+
+  Array<GameObject*> m_children;
+
+  bool m_is_visible;
+  bool m_is_static;
+
+  Int32 m_vbo_idx;
+
+  Mesh*     m_mesh;
+  Collider* m_collider;
+public:
+  GameObject() = delete;
+  explicit GameObject(String name, String type);
+  virtual ~GameObject() = default;
 
   const String& name() const { return m_name; }
   const String& type() const { return m_type; }
 
-  void setSceneNodeAttached(bool isAttached) { m_is_scene_node_attached = isAttached; }
-  bool isSceneNodeAttached() const { return m_is_scene_node_attached; }
-
   bool isVisible() const { return m_is_visible; }
   void setVisible(bool isVisible) { m_is_visible = isVisible; }
 
-  void attachMesh(Mesh* mesh) { m_mesh = mesh; }
-  void detachMesh() { m_mesh = nullptr; }
-  const Mesh* mesh() const { return m_mesh; }
+  // TODO: who will destroy mesh ?
+  void attachMesh(Mesh* mesh);
+  void detachMesh();
+  const Mesh* mesh() const;
+
+  void attachCollider(Collider* collider);
+  void detachCollider();
+  const Collider* collider() const;
 
   Int32 vboIndex() const { return m_vbo_idx; }
   void setVboIndex(Int32 idx) { m_vbo_idx = idx; }
 
-protected:
-  String m_name;
-  String m_type;
-  GameObject* m_parent;
-  bool m_is_scene_node_attached;
-  bool m_is_visible;
-  Int32 m_vbo_idx;
+  GameObject& setParent(GameObject* parent) { m_parent = parent; return *this; }
 
-  //ResourceHandle m_mesh;
-  //Array<ResourceHandle> m_textures;
-  Mesh* m_mesh;
+  void setTransform(Transform trans) { m_transform = trans; }
+  const Transform& transform() const { return m_transform; }
+  Transform& transform() { return m_transform; }
 
-  NameGenerator* m_name_generator;
+  const Mat4& worldMatrix();
+
+  void update();
 };
 
 #endif // GAMEOBJECT_HPP

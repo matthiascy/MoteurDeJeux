@@ -4,13 +4,15 @@
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
 #include <QTimer>
+#include <QLabel>
 
 GLWidget::GLWidget(QWidget *parent)
-  : QOpenGLWidget(parent), m_scn_mgr{}, m_program(nullptr),
+  : QOpenGLWidget(parent), m_program(nullptr),
     m_projMatrixLoc{0}, m_mvMatrixLoc{0}, m_normalMatrixLoc{0}, m_lightPosLoc{0}, m_last_time{QTime::currentTime()},
     m_fps{0}, m_fps_label{nullptr}
 {
-  m_scn_mgr = memory::mkUnique<SceneManager>();
+  m_scene = memory::mkUnique<Scene>();
+  m_physics_system = memory::mkUnique<PhysicsSystem>();
   m_timer = new QTimer;
   m_fps_label = new QLabel(this);
   m_fps_label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
@@ -18,19 +20,12 @@ GLWidget::GLWidget(QWidget *parent)
   m_fps_label->setFixedWidth(60);
   m_fps_label->move(25, 25);
   m_fps_label->setStyleSheet("QLabel { background-color : white; color : black; }");
-  // Terrain
-  {
-    auto* terrain = new Terrain();
-    terrain->create(1023, 1023, Image(":/Textures/heightmap"), false, 100.0f, 100.0f);
-    m_scn_mgr->addGameObject(terrain);
-    SceneNode* terrainNode = m_scn_mgr->createSceneNode("TerrainNode");
-    terrainNode->setParent(m_scn_mgr->rootSceneNode());
-    //terrainNode->setOrientation(Quat::fromAxisAndAngle(vec3::AxisX, 90));
-    terrainNode->attachObject(terrain);
-    terrainNode->setVisible(true);
-    terrainNode->setPosition(Vec3{0, -1000, 0});
-    terrainNode->scale(Vec3{0.5f, 0.5f, 0.5f}, ETransformSpace::Local);
-  }
+
+  auto& terrain = m_scene->createTerrain(1023, 1023, Image(":/Textures/heightmap"), false, 100.0f);
+  terrain->setParent(m_scene->root())->setVisible(true);
+  terrain->transform().scale(0.5).translate(Vec3{0, -1000, 0});
+  
+  /*
   // Soleil
   Mesh* sphere = MeshLoader::loadMesh("./sphere.obj");
   qDebug() << sphere->count();
@@ -62,9 +57,9 @@ GLWidget::GLWidget(QWidget *parent)
   {
     auto* milky = new GameObject("Milky", "Habibi");
     milky->attachMesh(sphere);
-    m_scn_mgr->addGameObject(milky);
-    auto* milkyNode = m_scn_mgr->createSceneNode("MilkyNode");
-    milkyNode->setParent(m_scn_mgr->rootSceneNode());
+    m_scene->addGameObject(milky);
+    auto* milkyNode = m_scene->createSceneNode("MilkyNode");
+    milkyNode->setParent(m_scene->rootSceneNode());
     milkyNode->attachObject(milky);
     milkyNode->setVisible(true);
     milkyNode->setPosition(Vec3{0.0, 500.0, 0.0});
@@ -73,9 +68,9 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* sun = new GameObject("Sun", "Habibi");
     sun->attachMesh(sphere);
-    m_scn_mgr->addGameObject(sun);
-    auto* sunNode = m_scn_mgr->createSceneNode("SunNode");
-    sunNode->setParent(m_scn_mgr->rootSceneNode());
+    m_scene->addGameObject(sun);
+    auto* sunNode = m_scene->createSceneNode("SunNode");
+    sunNode->setParent(m_scene->rootSceneNode());
     sunNode->attachObject(sun);
     sunNode->setVisible(true);
     //sunNode->setPosition(Vec3{0.0, 1000.0, 0.0});
@@ -84,8 +79,8 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* mercury = new GameObject("Mercury", "Habibi");
     mercury->attachMesh(sphere);
-    m_scn_mgr->addGameObject(mercury);
-    auto* mercuryNode = m_scn_mgr->createSceneNode("MercuryNode");
+    m_scene->addGameObject(mercury);
+    auto* mercuryNode = m_scene->createSceneNode("MercuryNode");
     mercuryNode->setInheritedTransformation(false, true, false);
     mercuryNode->setParent(sunNode);
     mercuryNode->attachObject(mercury);
@@ -95,8 +90,8 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* venus = new GameObject("Venus", "Habibi");
     venus->attachMesh(sphere);
-    m_scn_mgr->addGameObject(venus);
-    auto* venusNode = m_scn_mgr->createSceneNode("VenusNode");
+    m_scene->addGameObject(venus);
+    auto* venusNode = m_scene->createSceneNode("VenusNode");
     venusNode->setParent(sunNode);
     venusNode->attachObject(venus);
     venusNode->setVisible(true);
@@ -105,8 +100,8 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* earth = new GameObject("Earth", "Habibi");
     earth->attachMesh(sphere);
-    m_scn_mgr->addGameObject(earth);
-    auto* earthNode = m_scn_mgr->createSceneNode("EarthNode");
+    m_scene->addGameObject(earth);
+    auto* earthNode = m_scene->createSceneNode("EarthNode");
     earthNode->setInheritedTransformation(false, true, false);
     //earthNode->setParent(earthOrbitNode);
     earthNode->setParent(sunNode);
@@ -117,8 +112,8 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* mars = new GameObject("Mars", "Habibi");
     mars->attachMesh(sphere);
-    m_scn_mgr->addGameObject(mars);
-    auto* marsNode = m_scn_mgr->createSceneNode("MarsNode");
+    m_scene->addGameObject(mars);
+    auto* marsNode = m_scene->createSceneNode("MarsNode");
     marsNode->setInheritedTransformation(false, true, false);
     marsNode->setParent(sunNode);
     marsNode->attachObject(mars);
@@ -128,8 +123,8 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* jupiter = new GameObject("Jupiter", "Habibi");
     jupiter->attachMesh(sphere);
-    m_scn_mgr->addGameObject(jupiter);
-    auto* jupiterNode = m_scn_mgr->createSceneNode("JupiterNode");
+    m_scene->addGameObject(jupiter);
+    auto* jupiterNode = m_scene->createSceneNode("JupiterNode");
     jupiterNode->setParent(sunNode);
     jupiterNode->attachObject(jupiter);
     jupiterNode->setVisible(true);
@@ -138,8 +133,8 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* saturn = new GameObject("Saturn", "Habibi");
     saturn->attachMesh(sphere);
-    m_scn_mgr->addGameObject(saturn);
-    auto* saturnNode = m_scn_mgr->createSceneNode("SaturnNode");
+    m_scene->addGameObject(saturn);
+    auto* saturnNode = m_scene->createSceneNode("SaturnNode");
     saturnNode->setParent(sunNode);
     saturnNode->attachObject(saturn);
     saturnNode->setVisible(true);
@@ -148,8 +143,8 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* uranus = new GameObject("Uranus", "Habibi");
     uranus->attachMesh(sphere);
-    m_scn_mgr->addGameObject(uranus);
-    auto* uranusNode = m_scn_mgr->createSceneNode("UranusNode");
+    m_scene->addGameObject(uranus);
+    auto* uranusNode = m_scene->createSceneNode("UranusNode");
     uranusNode->setParent(sunNode);
     uranusNode->attachObject(uranus);
     uranusNode->setVisible(true);
@@ -158,8 +153,8 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* neptune = new GameObject("Neptune", "Habibi");
     neptune->attachMesh(sphere);
-    m_scn_mgr->addGameObject(neptune);
-    auto* neptuneNode = m_scn_mgr->createSceneNode("NeptuneNode");
+    m_scene->addGameObject(neptune);
+    auto* neptuneNode = m_scene->createSceneNode("NeptuneNode");
     neptuneNode->setParent(sunNode);
     neptuneNode->attachObject(neptune);
     neptuneNode->setVisible(true);
@@ -168,8 +163,8 @@ GLWidget::GLWidget(QWidget *parent)
 
     auto* moon = new GameObject("Moon", "Habibi");
     moon->attachMesh(sphere);
-    m_scn_mgr->addGameObject(moon);
-    auto* moonNode = m_scn_mgr->createSceneNode("MoonNode");
+    m_scene->addGameObject(moon);
+    auto* moonNode = m_scene->createSceneNode("MoonNode");
     moonNode->setInheritedTransformation(false, true, false);
     moonNode->setParent(earthNode);
     moonNode->attachObject(moon);
@@ -189,17 +184,14 @@ GLWidget::GLWidget(QWidget *parent)
     m_solar_system[8] = neptuneNode;
     m_solar_system[9] = moonNode;
   }
+       */
 
   // Camera
-  m_camera = m_scn_mgr->createCamera("MainCamera");
+  m_camera = m_scene->createCamera("MainCamera");
   m_camera->pos = Vec3(0.0f, 6000.0f, 6000.0f);
 
   m_vbos.resize(255);
   m_ebos.resize(255);
-
-  //m_timer->setInterval(100);
-  //connect(&*m_timer, &QTimer::timeout, this, &GLWidget::rotateView);
-  //m_timer->start();
 
   m_is_ctrl_pressed = false;
 
@@ -271,7 +263,7 @@ void GLWidget::initializeGL()
     m_vao.create();
     m_vao.bind();
 
-    for (const auto& obj : m_scn_mgr->gameObjects()) {
+    for (const auto& obj : m_scene->gameObjects()) {
       int idx = obj->vboIndex();
       m_vbos[idx].create();
       m_vbos[idx].bind();
@@ -324,16 +316,18 @@ void GLWidget::paintGL()
     m_fps_label->setText("FPS : " + String::number(m_fps));
   }
 
-  m_scn_mgr->rootSceneNode()->update();
-  auto nodes = m_scn_mgr->toBeRenderedSceneNodes();
+  auto objs = m_scene->toBeRenderedGameObjects();
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  m_physics_system->update(1.0/60.0);
+
+  auto collisionObjects = m_physics_system->collisionObjects();
 
   m_vao.bind();
 
   static float a = 0;
-  for (auto & node : nodes) {
-    const auto& obj = node->attachedObject(0);
+  for (auto& obj : objs) {
     int idx = obj->vboIndex();
     m_vbos[idx].bind();
     glEnableVertexAttribArray(0); glEnableVertexAttribArray(1); glEnableVertexAttribArray(2);
@@ -345,10 +339,11 @@ void GLWidget::paintGL()
     qDebug() << "render" << obj->name();
     m_model.setToIdentity();
     m_model = node->worldMatrix();
-    if (obj->name() == "Earth")
-      m_model.rotate(a, Vec3(qCos(23.44), qSin(23.44), 0));
-    else if (obj->name() != "Sun" && obj->name() != "Terrain" && obj->name() != "Milky")
-      m_model.rotate(a / 2, vec3::AxisY);
+    btTransform state;
+    btRigidBody::upcast(collisionObjects[0])->getMotionState()->getWorldTransform(state);
+    m_model.translate(state.getOrigin().x(), state.getOrigin().y(), state.getOrigin().z());
+    m_model.rotate(Quat(state.getRotation().w(), state.getRotation().x(), state.getRotation().y(), state.getRotation().z()));
+    //m_model.rotate(a / 2, vec3::AxisY);
     QMatrix3x3 normalMatrix = m_model.normalMatrix();
 
     m_program->bind();
@@ -506,6 +501,7 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
 
 void GLWidget::solar_system_update(Real dt)
 {
+  /*
   // mercury
   m_solar_system[1]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 5), ETransformSpace::Local);
   // venus
@@ -524,6 +520,7 @@ void GLWidget::solar_system_update(Real dt)
   m_solar_system[8]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 55), ETransformSpace::Local);
   // moon
   m_solar_system[9]->rotate(Quat::fromAxisAndAngle(vec3::AxisY, dt / 1000 * 20), ETransformSpace::Local);
+   */
 }
 
 //void GLWidget::update()

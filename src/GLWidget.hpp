@@ -12,7 +12,8 @@
 #include "Terrain.hpp"
 #include "Camera.hpp"
 #include "SceneNode.hpp"
-#include "SceneManager.hpp"
+#include "Scene.hpp"
+#include "physics/PhysicsManager.hpp"
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
 
@@ -55,7 +56,8 @@ private:
     //void createStar();
     //void createPlanet();
 
-    UniquePtr<SceneManager> m_scn_mgr;
+    UniquePtr<Scene> m_scene;
+    UniquePtr<PhysicsSystem> m_physics_system;
 
     // Pour le rendu
     OpenGLVAO m_vao;

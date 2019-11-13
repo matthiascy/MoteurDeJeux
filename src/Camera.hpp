@@ -18,7 +18,7 @@ class Camera : public GameObject {
 public:
   explicit Camera(const String& name);
   Camera(Vec3 pos = {0.0f, 0.0f, 0.0f}, Vec3 up = {0.0f, 1.0f, 0.0f}, float yaw = kYaw, float pitch = kPitch);
-  ~Camera() override { }
+  ~Camera() override = default;
 
 public:
   QMatrix4x4 ViewMatrix();
