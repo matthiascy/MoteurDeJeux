@@ -1,7 +1,7 @@
 #include "GLWidget.hpp"
-#include "Window.hpp"
+#include "Engine/Graphics/OpenGLWindow.hpp"
 #include "mainwindow.h"
-#include "OpenGLError.hpp"
+#include "Engine/Graphics/OpenGLError.hpp"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -11,16 +11,16 @@
 #include <QApplication>
 #include <QMessageBox>
 
-Window::Window()
-    : QOpenGLWindow(), m_clear_color{60, 60, 69, 255}
+OpenGLWindow::OpenGLWindow()
+    : Window(), QOpenGLWindow(), m_clear_color{60, 60, 69, 255}
 {
 
 }
 
-void Window::initializeGL()
+void OpenGLWindow::initializeGL()
 {
   initializeOpenGLFunctions();
-  connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &Window::teardownGL, Qt::DirectConnection);
+  connect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &OpenGLWindow::teardownGL, Qt::DirectConnection);
   print_version_information();
 
   glEnable(GL_CULL_FACE);
@@ -52,12 +52,12 @@ void Window::initializeGL()
   }
 }
 
-void Window::resizeGL(Int32 width, Int32 height)
+void OpenGLWindow::resizeGL(Int32 width, Int32 height)
 {
 
 }
 
-void Window::print_version_information()
+void OpenGLWindow::print_version_information()
 {
   String gl_type, gl_version, gl_profile;
   gl_type = context()->isOpenGLES() ? "OpenGL ES" : "OpenGL Desktop";
@@ -80,7 +80,7 @@ void Window::print_version_information()
 }
 
 /* ---------- Events ---------- */
-bool Window::event(QEvent* event)
+bool OpenGLWindow::event(QEvent* event)
 {
   if (event->type() == OpenGLError::type()) {
     errorEventGL(dynamic_cast<OpenGLError*>(event));
@@ -89,16 +89,21 @@ bool Window::event(QEvent* event)
   return QPaintDeviceWindow::event(event);
 }
 
-void Window::errorEventGL(OpenGLError* error)
+void OpenGLWindow::errorEventGL(OpenGLError* error)
 {
   qFatal("%s::%s => Returned an error!", error->callerName(), error->functionName());
 }
 
-void Window::keyPressEvent(QKeyEvent* event)
+void OpenGLWindow::keyPressEvent(QKeyEvent* event)
 {
   if (event->isAutoRepeat()) {
     event->ignore();
   } else {
     //Input::registerKeyPress(event->key());
   }
+}
+
+void OpenGLWindow::startShowing()
+{
+  this->show();
 }

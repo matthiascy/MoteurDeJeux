@@ -15,7 +15,9 @@
 #include "GLWidget.hpp"
 #include "EngineViewport.hpp"
 #include "mainwindow.h"
-#include "editor/LevelEditorMainWindow.hpp"
+#include "Editor/LevelEditorMainWindow.hpp"
+
+#include <Engine/GameFramework/GameApp.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -35,6 +37,8 @@ int main(int argc, char *argv[])
   QQuickWindow::setDefaultAlphaBuffer(true);
   engine.load(QUrl("qrc:/Qml/main"));
    */
+
+  /*
   QApplication app(argc, argv);
   QApplication::setApplicationName("MoteurDeJeux");
 
@@ -62,4 +66,5 @@ int main(int argc, char *argv[])
   QTimer::singleShot(1000, &mainWindow, &MainWindow::show);
 
   return QApplication::exec();
+   */
 }

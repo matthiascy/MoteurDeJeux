@@ -18,17 +18,6 @@ include(cmake/zlib.cmake)
 include(cmake/assimp.cmake)
 include(cmake/bullet3.cmake)
 
-add_executable(Bullet3Test src/Bullet3Test.cpp)
-target_compile_definitions(Bullet3Test PRIVATE
-    ${BULLET_DEFINITIONS})
-target_link_directories(Bullet3Test PRIVATE ${BULLET_LIBRARY_DIRS})
-target_link_libraries(Bullet3Test PRIVATE
-    Bullet3Common BulletSoftBody Bullet3Dynamics
-    Bullet3Collision LinearMath Bullet3Geometry
-    BulletDynamics BulletCollision)
-target_include_directories(Bullet3Test PRIVATE
-    src/thirdparty/bullet3/src)
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOROC ON)
 set(CMAKE_AUTOUIC ON)
@@ -43,8 +32,8 @@ set(GameFrameworkSrc
     src/Engine/GameFramework/Private/Transform.cpp
     src/Engine/GameFramework/Private/Component.cpp
     src/Engine/GameFramework/Private/System.cpp
-    src/Engine/GameFramework/Private/Components/Collider.cpp
-    src/Engine/GameFramework/Private/Components/BoxCollider.cpp
+    src/Engine/GameFramework/Components/Private/Collider.cpp
+    src/Engine/GameFramework/Components/Private/BoxCollider.cpp
     src/Engine/GameFramework/GameFrameworkTypes.hpp
     src/Engine/GameFramework/GameObject.hpp
     src/Engine/GameFramework/Scene.hpp
@@ -53,8 +42,8 @@ set(GameFrameworkSrc
     src/Engine/GameFramework/Components/Collider.hpp
     src/Engine/GameFramework/Components/BoxCollider.hpp
     src/Engine/GameFramework/System.hpp
-    src/Engine/GameFramework/Private/Subsystems/PhysicsSystem.cpp
-    src/Engine/GameFramework/Subsystems/PhysicsSystem.hpp src/Engine/GameFramework/Private/Components/Behavior.cpp src/Engine/GameFramework/Components/Behavior.hpp)
+    src/Engine/GameFramework/Subsystems/Private/PhysicsSystem.cpp
+    src/Engine/GameFramework/Subsystems/PhysicsSystem.hpp src/Engine/GameFramework/Components/Private/Behavior.cpp src/Engine/GameFramework/Components/Behavior.hpp src/Engine/GameFramework/Engine.hpp src/Engine/GameFramework/Private/Engine.cpp src/Engine/GameFramework/Private/GameApp.cpp src/Engine/GameFramework/GameApp.hpp)
 
 set(EditroSrc
     src/editor/AssetPreviewer.cpp
@@ -83,10 +72,10 @@ set(MoteurDeJeuxSrc
     src/mainwindow.cpp
     src/GLWidget.cpp
     src/Camera.cpp
-    src/Engine/Graphics/Light.cpp
+    src/Engine/Graphics/Private/Light.cpp
     src/NameGenerator.cpp
     #src/Shader.cpp
-    src/Engine/Graphics/Mesh.cpp
+    src/Engine/Graphics/Private/Mesh.cpp
     src/to-delete/ResourceManager.cpp
     src/Engine/Assets/Private/MeshLoader.cpp
     src/Terrain.cpp
@@ -96,10 +85,7 @@ set(MoteurDeJeuxSrc
     src/Camera.hpp
     src/Types.hpp
     src/Engine/Graphics/Light.hpp
-    #src/Node.hpp
     src/NameGenerator.hpp
-    #src/SceneNode.hpp
-    #src/Shader.hpp
     src/Engine/Graphics/Mesh.hpp
     src/to-delete/ResourceManager.hpp
     src/Engine/Assets/MeshLoader.hpp
@@ -107,9 +93,6 @@ set(MoteurDeJeuxSrc
     src/GLWidget.hpp src/EngineRenderer.cpp src/EngineRenderer.hpp
     src/SolarSystem.cpp
     src/SolarSystem.hpp
-    #src/graphics/OpenGLError.cpp
-    #src/graphics/OpenGLError.hpp
-    #src/Input.cpp src/Input.hpp
     src/Engine/Assets/Private/AssetStorage.cpp src/Engine/assets/AssetStorage.hpp
     src/Engine/Core/CoreTypes.hpp
     src/Engine/Core/Core.hpp
@@ -121,7 +104,12 @@ set(MoteurDeJeuxSrc
     src/Engine/Core/Private/Object.cpp
     src/Engine/Core/HandleType.hpp src/Engine/Core/Handle.hpp
     ${GameFrameworkSrc}
-    ${EditorSrc} src/Engine/GameFramework/Private/Components/MeshRenderable.cpp src/Engine/GameFramework/Components/MeshRenderable.hpp src/Engine/GameFramework/Private/Components/Renderable.cpp src/Engine/GameFramework/Components/Renderable.hpp src/Engine/GameFramework/Private/Subsystems/RendererSystem.cpp src/Engine/GameFramework/Subsystems/RendererSystem.hpp src/Engine/Assets/Private/Asset.cpp src/Engine/Assets/Asset.hpp src/Engine/Assets/Private/AssetManager.cpp src/Engine/Assets/AssetManager.hpp src/Engine/Core/QtTypes.hpp src/Engine/Assets/AssetsTypes.hpp)
+    ${EditorSrc} src/Engine/GameFramework/Components/Private/MeshRenderable.cpp src/Engine/GameFramework/Components/MeshRenderable.hpp src/Engine/GameFramework/Components/Private/Renderable.cpp src/Engine/GameFramework/Components/Renderable.hpp src/Engine/GameFramework/Subsystems/Private/RendererSystem.cpp src/Engine/GameFramework/Subsystems/RendererSystem.hpp src/Engine/Assets/Private/Asset.cpp src/Engine/Assets/Asset.hpp src/Engine/Assets/Private/AssetManager.cpp src/Engine/Assets/AssetManager.hpp src/Engine/Core/QtTypes.hpp src/Engine/Assets/AssetsTypes.hpp src/Engine/Core/Container.hpp
+    src/Engine/Graphics/Private/WidgetWindow.cpp
+    src/Engine/Graphics/Private/OpenGLWindow.cpp
+    src/Engine/Graphics/WidgetWindow.hpp
+    src/Engine/Graphics/OpenGLWindow.hpp
+    src/Engine/Graphics/Window.hpp src/Homeland/Main.cpp src/Homeland/Private/HomelandApp.cpp src/Homeland/HomelandApp.hpp)
 
 add_executable(MoteurDeJeux ${MoteurDeJeuxSrc} ${QRCS})
 
@@ -132,7 +120,18 @@ target_link_libraries(MoteurDeJeux PRIVATE
     BulletDynamics BulletCollision)
 target_include_directories(MoteurDeJeux PRIVATE
     ${SOURCE_DIR}
-    src/thirdparty/assimp/assimp/include
-    src/thirdparty/bullet3/src/)
+    src/Engine/Thirdparty/assimp/assimp/include
+    src/Engine/Thirdparty/bullet3/src/)
 target_compile_definitions(MoteurDeJeux PRIVATE
     ${BULLET_DEFINITIONS})
+
+add_executable(Bullet3Test src/Bullet3Test.cpp)
+target_compile_definitions(Bullet3Test PRIVATE
+    ${BULLET_DEFINITIONS})
+target_link_libraries(Bullet3Test PRIVATE
+    Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Quick Qt5::Qml
+    Bullet3Common BulletSoftBody Bullet3Dynamics
+    Bullet3Collision LinearMath Bullet3Geometry
+    BulletDynamics BulletCollision)
+target_include_directories(Bullet3Test PRIVATE
+    src/Engine/Thirdparty/bullet3/src)

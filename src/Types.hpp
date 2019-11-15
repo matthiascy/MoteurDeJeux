@@ -51,7 +51,7 @@ class Scene;
 class InputSystem;
 
 /* ==================== Graphics ==================== */
-class Window;
+class OpenGLWindow;
 
 #include <QImage>
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>

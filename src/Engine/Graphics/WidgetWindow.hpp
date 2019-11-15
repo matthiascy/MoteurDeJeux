@@ -1,0 +1,11 @@
+#ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_WIDGET_WINDOW_HPP
+#define MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_WIDGET_WINDOW_HPP
+
+#include "Window.hpp"
+
+class WidgetWindow : public Window {
+
+};
+
+
+#endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_WIDGET_WINDOW_HPP */

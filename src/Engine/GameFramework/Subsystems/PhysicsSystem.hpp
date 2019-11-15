@@ -1,13 +1,15 @@
 #ifndef MOTEUR_DE_JEUX_SRC_WORLD_PHYSICS_HPP
 #define MOTEUR_DE_JEUX_SRC_WORLD_PHYSICS_HPP
 
-#include "Types.hpp"
-
+#include <Engine/Core/Core.hpp>
+#include <Engine/GameFramework/System.hpp>
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 #include <BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>
 
-class PhysicsSystem {
+class Scene;
+
+class PhysicsSystem : System {
 protected:
   btDefaultCollisionConfiguration*     m_config;
   btCollisionDispatcher*               m_dispatcher;
@@ -19,8 +21,10 @@ protected:
   btCollisionObjectArray   m_collision_objects;
 
 public:
-  explicit PhysicsSystem(const Vec3& gravity = vec3::DirDown);
+  PhysicsSystem(String name, Scene* scene, const Vec3& gravity = vec3::DirDown);
   virtual ~PhysicsSystem();
+
+  void init() override;
 
   void setGravity(const Vec3& gravity);
   const Vec3& gravity() const;

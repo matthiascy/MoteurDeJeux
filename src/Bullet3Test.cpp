@@ -1,8 +1,85 @@
-#include "btBulletDynamicsCommon.h"
+#include <btBulletDynamicsCommon.h>
+#include "mainwindow.h"
+#include <QtWidgets/QMainWindow>
+#include <QApplication>
+#include <QtGui/QSurfaceFormat>
+#include <iostream>
+#include <QCommandLineParser>
+#include <QCommandLineOption>
+#include <QWindow>
+#include <QOpenGLWindow>
 /// This is a Hello World program for running a basic Bullet physics simulation
+
+struct GameApp {
+public:
+  GameApp(int argc, char** argv)
+  {
+    {
+      QCoreApplication appTmp(argc, argv);
+      QCoreApplication::setApplicationName("MoteurDeJeux");
+      QCommandLineParser parser;
+      parser.setApplicationDescription("Hello Game App");
+      parser.addHelpOption();
+      parser.addVersionOption();
+      QCommandLineOption withEditorOption = {"with-editor", "Blalalalal"};
+
+      parser.addOption(withEditorOption);
+      parser.process(appTmp);
+      isWidget = parser.isSet(withEditorOption);
+    }
+
+    if(isWidget) {
+      std::cout << "Widget Application" << std::endl;
+      app = new QApplication(argc, argv);
+      mainWindow = new QMainWindow();
+    } else {
+      std::cout << "OpenGL Application" << std::endl;
+      app = new QGuiApplication(argc, argv);
+      mainWindow = new QOpenGLWindow;
+    }
+
+    QSurfaceFormat format;
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setVersion(4, 0);
+    format.setDepthBufferSize(24);
+    format.setSamples(16);
+    QSurfaceFormat::setDefaultFormat(format);
+
+    if (isWidget)
+      ((QMainWindow*)mainWindow)->show();
+    else
+      ((QOpenGLWindow*)mainWindow)->show();
+
+    QCoreApplication::exec();
+  }
+
+  ~GameApp()
+  {
+    if (isWidget)
+      delete ((QMainWindow*)mainWindow);
+    else
+      delete ((QOpenGLWindow*)mainWindow);
+
+    delete app;
+  }
+
+  void run()
+  {
+
+  }
+
+  QCoreApplication* app;
+  void* mainWindow;
+  bool isWidget;
+};
+
 
 int main(int argc, char** argv)
 {
+  GameApp app(argc, argv);
+  app.run();
+  /*
   ///-----includes_end-----
 
   int i;
@@ -159,4 +236,5 @@ int main(int argc, char** argv)
 
   //next line is optional: it will be cleared by the destructor when the array goes out of scope
   collisionShapes.clear();
+   */
 }

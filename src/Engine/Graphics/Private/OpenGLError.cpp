@@ -1,4 +1,4 @@
-#include "OpenGLError.hpp"
+#include "Engine/Graphics/OpenGLError.hpp"
 #include <QCoreApplication>
 
 QStack<QObject*> OpenGLError::m_error_handler;

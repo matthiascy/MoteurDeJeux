@@ -5,5 +5,6 @@
 #include "Math/Math.hpp"
 #include "Memory.hpp"
 #include "Handle.hpp"
+#include "Container.hpp"
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_CORE_HPP */

@@ -1,4 +1,4 @@
-#include "Light.hpp"
+#include "Engine/Graphics/Light.hpp"
 
 Light::Light()
 { }

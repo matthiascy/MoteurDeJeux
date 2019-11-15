@@ -5,7 +5,7 @@
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 
-class Collider : Component {
+class Collider : public Component {
 private:
   UniquePtr<btCollisionShape> m_shape;
   UniquePtr<btRigidBody>      m_rigid_body;
