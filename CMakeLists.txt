@@ -37,41 +37,26 @@ find_package(Qt5 COMPONENTS Widgets Core Gui Qml Quick REQUIRED)
 
 qt5_add_resources(QRCS resources.qrc)
 
-set(MoteurDeJeuxSrc
-    src/main.cpp
-    src/EngineViewport.cpp
-    #src/Window.cpp
-    src/mainwindow.cpp
-    src/GameObject.cpp
-    src/GLWidget.cpp
-    src/Camera.cpp
-    src/Light.cpp
-    #src/Node.cpp
-    src/NameGenerator.cpp
-    #src/SceneNode.cpp
-    src/Scene.cpp
-    #src/Shader.cpp
-    src/Mesh.cpp
-    src/ResourceManager.cpp
-    src/MeshLoader.cpp
-    src/Terrain.cpp
-    src/EngineViewport.hpp
-    #src/Window.hpp
-    src/mainwindow.h
-    src/GameObject.hpp
-    src/Camera.hpp
-    src/Types.hpp
-    src/Light.hpp
-    #src/Node.hpp
-    src/NameGenerator.hpp
-    #src/SceneNode.hpp
-    src/Scene.hpp
-    #src/Shader.hpp
-    src/Mesh.hpp
-    src/ResourceManager.hpp
-    src/MeshLoader.hpp
-    src/Terrain.hpp
-    src/GLWidget.hpp src/EngineRenderer.cpp src/EngineRenderer.hpp
+set(GameFrameworkSrc
+    src/Engine/GameFramework/Private/GameObject.cpp
+    src/Engine/GameFramework/Private/Scene.cpp
+    src/Engine/GameFramework/Private/Transform.cpp
+    src/Engine/GameFramework/Private/Component.cpp
+    src/Engine/GameFramework/Private/System.cpp
+    src/Engine/GameFramework/Private/Components/Collider.cpp
+    src/Engine/GameFramework/Private/Components/BoxCollider.cpp
+    src/Engine/GameFramework/GameFrameworkTypes.hpp
+    src/Engine/GameFramework/GameObject.hpp
+    src/Engine/GameFramework/Scene.hpp
+    src/Engine/GameFramework/Components/Transform.hpp
+    src/Engine/GameFramework/Component.hpp
+    src/Engine/GameFramework/Components/Collider.hpp
+    src/Engine/GameFramework/Components/BoxCollider.hpp
+    src/Engine/GameFramework/System.hpp
+    src/Engine/GameFramework/Private/Subsystems/PhysicsSystem.cpp
+    src/Engine/GameFramework/Subsystems/PhysicsSystem.hpp src/Engine/GameFramework/Private/Components/Behavior.cpp src/Engine/GameFramework/Components/Behavior.hpp)
+
+set(EditroSrc
     src/editor/AssetPreviewer.cpp
     src/editor/AssetPreviewer.hpp
     src/editor/AssetsBrowser.cpp
@@ -89,17 +74,54 @@ set(MoteurDeJeuxSrc
     src/editor/Viewport.hpp
     src/editor/Viewport.cpp
     src/editor/Vertex.hpp
-    src/editor/Vertex.cpp
+    src/editor/Vertex.cpp)
+
+set(MoteurDeJeuxSrc
+    src/main.cpp
+    src/EngineViewport.cpp
+    #src/Window.cpp
+    src/mainwindow.cpp
+    src/GLWidget.cpp
+    src/Camera.cpp
+    src/Engine/Graphics/Light.cpp
+    src/NameGenerator.cpp
+    #src/Shader.cpp
+    src/Engine/Graphics/Mesh.cpp
+    src/to-delete/ResourceManager.cpp
+    src/Engine/Assets/Private/MeshLoader.cpp
+    src/Terrain.cpp
+    src/EngineViewport.hpp
+    #src/Window.hpp
+    src/mainwindow.h
+    src/Camera.hpp
+    src/Types.hpp
+    src/Engine/Graphics/Light.hpp
+    #src/Node.hpp
+    src/NameGenerator.hpp
+    #src/SceneNode.hpp
+    #src/Shader.hpp
+    src/Engine/Graphics/Mesh.hpp
+    src/to-delete/ResourceManager.hpp
+    src/Engine/Assets/MeshLoader.hpp
+    src/Terrain.hpp
+    src/GLWidget.hpp src/EngineRenderer.cpp src/EngineRenderer.hpp
     src/SolarSystem.cpp
     src/SolarSystem.hpp
     #src/graphics/OpenGLError.cpp
     #src/graphics/OpenGLError.hpp
     #src/Input.cpp src/Input.hpp
-    src/subsystem/PhysicsSystem.cpp
-    src/subsystem/PhysicsSystem.hpp
-    src/GameFramework/Transform.cpp
-    src/GameFramework/Transform.hpp
-    src/physics/Collider.cpp src/physics/Collider.hpp src/physics/BoxCollider.cpp src/physics/BoxCollider.hpp src/assets/AssetStorage.cpp src/assets/AssetStorage.hpp src/GameFramework/GameFrameworkTypes.hpp src/Core/CoreTypes.hpp src/Core/Core.hpp src/Core/Math/MathTypes.hpp src/Core/Math/Math.hpp src/Core/BasicTypes.hpp src/Core/ContainerTypes.hpp src/Core/MemoryTypes.hpp src/Core/Memory.hpp src/Core/Object.hpp src/Core/Private/Object.cpp)
+    src/Engine/Assets/Private/AssetStorage.cpp src/Engine/assets/AssetStorage.hpp
+    src/Engine/Core/CoreTypes.hpp
+    src/Engine/Core/Core.hpp
+    src/Engine/Core/Math/MathTypes.hpp
+    src/Engine/Core/Math/Math.hpp
+    src/Engine/Core/BasicTypes.hpp
+    src/Engine/Core/ContainerTypes.hpp src/Engine/Core/MemoryTypes.hpp src/Engine/Core/Memory.hpp
+    src/Engine/Core/Object.hpp
+    src/Engine/Core/Private/Object.cpp
+    src/Engine/Core/HandleType.hpp src/Engine/Core/Handle.hpp
+    ${GameFrameworkSrc}
+    ${EditorSrc} src/Engine/GameFramework/Private/Components/MeshRenderable.cpp src/Engine/GameFramework/Components/MeshRenderable.hpp src/Engine/GameFramework/Private/Components/Renderable.cpp src/Engine/GameFramework/Components/Renderable.hpp src/Engine/GameFramework/Private/Subsystems/RendererSystem.cpp src/Engine/GameFramework/Subsystems/RendererSystem.hpp src/Engine/Assets/Private/Asset.cpp src/Engine/Assets/Asset.hpp src/Engine/Assets/Private/AssetManager.cpp src/Engine/Assets/AssetManager.hpp src/Engine/Core/QtTypes.hpp src/Engine/Assets/AssetsTypes.hpp)
 
 add_executable(MoteurDeJeux ${MoteurDeJeuxSrc} ${QRCS})
 

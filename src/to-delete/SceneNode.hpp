@@ -5,7 +5,7 @@
 #include "Node.hpp"
 #include "GameObject.hpp"
 #include "Camera.hpp"
-#include "Light.hpp"
+#include "graphics/Light.hpp"
 
 class SceneNode : public Node {
 public:

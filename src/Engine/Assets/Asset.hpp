@@ -1,0 +1,14 @@
+//
+// Created by matth on 11/15/2019.
+//
+
+#ifndef MOTEURDEJEUX_SRC_ENGINE_ASSETS_ASSET_HPP
+#define MOTEURDEJEUX_SRC_ENGINE_ASSETS_ASSET_HPP
+
+
+class Asset {
+
+};
+
+
+#endif //MOTEURDEJEUX_SRC_ENGINE_ASSETS_ASSET_HPP

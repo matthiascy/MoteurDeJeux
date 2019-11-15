@@ -28,12 +28,6 @@ enum class ELightType {
   Count,
 };
 
-enum class EResourceType {
-  Texture,
-  Audio,
-  Mesh,
-};
-
 /* ==================== Input ==================== */
 enum class InputState {
   Invalid,
@@ -58,11 +52,6 @@ class InputSystem;
 
 /* ==================== Graphics ==================== */
 class Window;
-
-struct ResourceHandle {
-  UInt64 idx;
-  EResourceType type;
-};
 
 #include <QImage>
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>

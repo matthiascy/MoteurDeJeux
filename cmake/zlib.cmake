@@ -1,11 +1,11 @@
-set(ZLIB_DIR ${SOURCE_DIR}/thirdparty/zlib)
+set(ZLIB_DIR ${SOURCE_DIR}/Engine/Thirdparty/zlib)
 set(ZLIB_OUTPUT_DIR  ${OUTPUT_DIR_LIBRARY})
 
 set(SKIP_INSTALL_ALL ON CACHE BOOL "" FORCE)
 set(AMD64 OFF CACHE BOOL "" FORCE)
 set(ASM686 OFF CACHE BOOL "" FORCE)
 
-add_subdirectory(${ZLIB_DIR} "${CMAKE_CURRENT_BINARY_DIR}/thirdparty/zlib")
+add_subdirectory(${ZLIB_DIR} "${CMAKE_CURRENT_BINARY_DIR}/Thirdparty/zlib")
 
 set(CMAKE_DISABLE_FIND_PACKAGE_ZLIB TRUE CACHE BOOL "" FORCE)
 

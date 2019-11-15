@@ -1,5 +1,5 @@
 #include "GLWidget.hpp"
-#include "MeshLoader.hpp"
+#include "Engine/Assets/MeshLoader.hpp"
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>

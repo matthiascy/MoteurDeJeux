@@ -1,7 +1,7 @@
 #include "EngineRenderer.hpp"
 #include "Scene.hpp"
 #include "Terrain.hpp"
-#include "MeshLoader.hpp"
+#include "Engine/Assets/MeshLoader.hpp"
 
 EngineRenderer::EngineRenderer(QObject* parent /* = nullptr */)
     : QObject(parent), m_scn_mgr{}, m_vao{}, m_vbos{}, m_program{}, m_camera{nullptr},
