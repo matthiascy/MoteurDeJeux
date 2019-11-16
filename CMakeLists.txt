@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15.0)
+cmake_minimum_required(VERSION 3.10.0)
 
 project(MoteurDeJeux)
 
@@ -43,9 +43,21 @@ set(GameFrameworkSrc
     src/Engine/GameFramework/Components/BoxCollider.hpp
     src/Engine/GameFramework/System.hpp
     src/Engine/GameFramework/Subsystems/Private/PhysicsSystem.cpp
-    src/Engine/GameFramework/Subsystems/PhysicsSystem.hpp src/Engine/GameFramework/Components/Private/Behavior.cpp src/Engine/GameFramework/Components/Behavior.hpp src/Engine/GameFramework/Engine.hpp src/Engine/GameFramework/Private/Engine.cpp src/Engine/GameFramework/Private/GameApp.cpp src/Engine/GameFramework/GameApp.hpp)
+    src/Engine/GameFramework/Subsystems/PhysicsSystem.hpp
+    src/Engine/GameFramework/Components/Private/Behavior.cpp
+    src/Engine/GameFramework/Components/Behavior.hpp
+    src/Engine/GameFramework/Engine.hpp
+    src/Engine/GameFramework/Private/Engine.cpp
+    src/Engine/GameFramework/Private/GameApp.cpp
+    src/Engine/GameFramework/GameApp.hpp
+    src/Engine/GameFramework/Components/Private/MeshRenderable.cpp
+    src/Engine/GameFramework/Components/MeshRenderable.hpp
+    src/Engine/GameFramework/Components/Private/Renderable.cpp
+    src/Engine/GameFramework/Components/Renderable.hpp
+    src/Engine/GameFramework/Subsystems/Private/RendererSystem.cpp
+    src/Engine/GameFramework/Subsystems/RendererSystem.hpp)
 
-set(EditroSrc
+set(EditorSrc
     src/editor/AssetPreviewer.cpp
     src/editor/AssetPreviewer.hpp
     src/editor/AssetsBrowser.cpp
@@ -54,8 +66,6 @@ set(EditroSrc
     src/editor/CommandLine.hpp
     src/editor/Explorer.cpp
     src/editor/Explorer.hpp
-    src/editor/LevelEditorMainWindow.cpp
-    src/editor/LevelEditorMainWindow.hpp
     src/editor/PropertyEditor.cpp
     src/editor/PropertyEditor.hpp
     src/editor/SimpleOutput.cpp
@@ -68,19 +78,15 @@ set(EditroSrc
 set(MoteurDeJeuxSrc
     src/main.cpp
     src/EngineViewport.cpp
-    #src/Window.cpp
     src/mainwindow.cpp
     src/GLWidget.cpp
     src/Camera.cpp
     src/Engine/Graphics/Private/Light.cpp
     src/NameGenerator.cpp
-    #src/Shader.cpp
     src/Engine/Graphics/Private/Mesh.cpp
-    src/to-delete/ResourceManager.cpp
     src/Engine/Assets/Private/MeshLoader.cpp
     src/Terrain.cpp
     src/EngineViewport.hpp
-    #src/Window.hpp
     src/mainwindow.h
     src/Camera.hpp
     src/Types.hpp
@@ -104,12 +110,21 @@ set(MoteurDeJeuxSrc
     src/Engine/Core/Private/Object.cpp
     src/Engine/Core/HandleType.hpp src/Engine/Core/Handle.hpp
     ${GameFrameworkSrc}
-    ${EditorSrc} src/Engine/GameFramework/Components/Private/MeshRenderable.cpp src/Engine/GameFramework/Components/MeshRenderable.hpp src/Engine/GameFramework/Components/Private/Renderable.cpp src/Engine/GameFramework/Components/Renderable.hpp src/Engine/GameFramework/Subsystems/Private/RendererSystem.cpp src/Engine/GameFramework/Subsystems/RendererSystem.hpp src/Engine/Assets/Private/Asset.cpp src/Engine/Assets/Asset.hpp src/Engine/Assets/Private/AssetManager.cpp src/Engine/Assets/AssetManager.hpp src/Engine/Core/QtTypes.hpp src/Engine/Assets/AssetsTypes.hpp src/Engine/Core/Container.hpp
+    ${EditorSrc}
+    src/Engine/Assets/Private/Asset.cpp
+    src/Engine/Assets/Asset.hpp
+    src/Engine/Assets/Private/AssetManager.cpp
+    src/Engine/Assets/AssetManager.hpp
+    src/Engine/Core/QtTypes.hpp
+    src/Engine/Assets/AssetsTypes.hpp
+    src/Engine/Core/Container.hpp
     src/Engine/Graphics/Private/WidgetWindow.cpp
     src/Engine/Graphics/Private/OpenGLWindow.cpp
     src/Engine/Graphics/WidgetWindow.hpp
     src/Engine/Graphics/OpenGLWindow.hpp
-    src/Engine/Graphics/Window.hpp src/Homeland/Main.cpp src/Homeland/Private/HomelandApp.cpp src/Homeland/HomelandApp.hpp)
+    src/Engine/Graphics/Window.hpp src/Homeland/Main.cpp
+    src/Homeland/Private/HomelandApp.cpp
+    src/Homeland/HomelandApp.hpp)
 
 add_executable(MoteurDeJeux ${MoteurDeJeuxSrc} ${QRCS})
 

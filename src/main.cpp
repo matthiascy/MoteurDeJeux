@@ -15,7 +15,7 @@
 #include "GLWidget.hpp"
 #include "EngineViewport.hpp"
 #include "mainwindow.h"
-#include "Editor/LevelEditorMainWindow.hpp"
+#include "Engine/Graphics/WidgetWindow.hpp"
 
 #include <Engine/GameFramework/GameApp.hpp>
 

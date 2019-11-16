@@ -165,4 +165,4 @@ set_target_properties(assimp PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR_BINARY}
     )
 target_include_directories(assimp PRIVATE
-    ${SOURCE_DIR}/thirdparty/zlib)
+    ${SOURCE_DIR}/Engine/Thirdparty/zlib)
