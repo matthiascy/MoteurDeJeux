@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15.0)
+cmake_minimum_required(VERSION 3.10.0)
 
 project(MoteurDeJeux)
 
@@ -84,7 +84,6 @@ set(MoteurDeJeuxSrc
     src/Camera.cpp
     src/NameGenerator.cpp
     src/Engine/Graphics/Private/Mesh.cpp
-    src/to-delete/ResourceManager.cpp
     src/Engine/Assets/Private/MeshLoader.cpp
     src/Terrain.cpp
     src/EngineViewport.hpp
