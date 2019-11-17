@@ -2,9 +2,12 @@
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_TRANSFORM_HPP
 
 #include <Engine/Core/Math/Math.hpp>
-#include <Engine/GameFramework/Component.hpp>
+#include <Engine/Core/CoreTypes.hpp>
+#include <Engine/GameFramework/GameObject.hpp>
 
-class Transform : Component {
+class Component;
+
+class Transform : public Component {
 public:
   enum class ESpace {
     World,

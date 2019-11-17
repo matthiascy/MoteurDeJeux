@@ -2,7 +2,7 @@
 #define PLANE_H
 
 #include "Types.hpp"
-#include "GameObject.hpp"
+#include <Engine/GameFramework/GameObject.hpp>
 
 class Terrain : public GameObject {
 public:

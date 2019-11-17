@@ -29,7 +29,7 @@ qt5_add_resources(QRCS resources.qrc)
 set(GameFrameworkSrc
     src/Engine/GameFramework/Private/GameObject.cpp
     src/Engine/GameFramework/Private/Scene.cpp
-    src/Engine/GameFramework/Private/Transform.cpp
+    src/Engine/GameFramework/Components/Private/Transform.cpp
     src/Engine/GameFramework/Private/Component.cpp
     src/Engine/GameFramework/Private/System.cpp
     src/Engine/GameFramework/Components/Private/Collider.cpp
@@ -37,15 +37,21 @@ set(GameFrameworkSrc
     src/Engine/GameFramework/GameFrameworkTypes.hpp
     src/Engine/GameFramework/GameObject.hpp
     src/Engine/GameFramework/Scene.hpp
-    src/Engine/GameFramework/Components/Transform.hpp
     src/Engine/GameFramework/Component.hpp
+    src/Engine/GameFramework/Components/Transform.hpp
     src/Engine/GameFramework/Components/Collider.hpp
     src/Engine/GameFramework/Components/BoxCollider.hpp
     src/Engine/GameFramework/System.hpp
     src/Engine/GameFramework/Subsystems/Private/PhysicsSystem.cpp
-    src/Engine/GameFramework/Subsystems/PhysicsSystem.hpp src/Engine/GameFramework/Components/Private/Behavior.cpp src/Engine/GameFramework/Components/Behavior.hpp src/Engine/GameFramework/Engine.hpp src/Engine/GameFramework/Private/Engine.cpp src/Engine/GameFramework/Private/GameApp.cpp src/Engine/GameFramework/GameApp.hpp)
+    src/Engine/GameFramework/Subsystems/PhysicsSystem.hpp
+    src/Engine/GameFramework/Components/Private/Behavior.cpp
+    src/Engine/GameFramework/Components/Behavior.hpp
+    src/Engine/GameFramework/Engine.hpp
+    src/Engine/GameFramework/Private/Engine.cpp
+    src/Engine/GameFramework/Private/GameApp.cpp
+    src/Engine/GameFramework/GameApp.hpp)
 
-set(EditroSrc
+set(EditorSrc
     src/editor/AssetPreviewer.cpp
     src/editor/AssetPreviewer.hpp
     src/editor/AssetsBrowser.cpp
@@ -54,8 +60,8 @@ set(EditroSrc
     src/editor/CommandLine.hpp
     src/editor/Explorer.cpp
     src/editor/Explorer.hpp
-    src/editor/LevelEditorMainWindow.cpp
-    src/editor/LevelEditorMainWindow.hpp
+    src/Editor/EditorMainWindow.cpp
+    src/Editor/EditorMainWindow.hpp
     src/editor/PropertyEditor.cpp
     src/editor/PropertyEditor.hpp
     src/editor/SimpleOutput.cpp
@@ -65,32 +71,33 @@ set(EditroSrc
     src/editor/Vertex.hpp
     src/editor/Vertex.cpp)
 
+set(HomelandSrc
+    src/Homeland/Private/HomelandApp.cpp
+    src/Homeland/Main.cpp
+    src/Homeland/HomelandApp.hpp
+)
+
 set(MoteurDeJeuxSrc
-    src/main.cpp
     src/EngineViewport.cpp
-    #src/Window.cpp
     src/mainwindow.cpp
-    src/GLWidget.cpp
+    #src/GLWidget.cpp
     src/Camera.cpp
-    src/Engine/Graphics/Private/Light.cpp
     src/NameGenerator.cpp
-    #src/Shader.cpp
     src/Engine/Graphics/Private/Mesh.cpp
     src/to-delete/ResourceManager.cpp
     src/Engine/Assets/Private/MeshLoader.cpp
     src/Terrain.cpp
     src/EngineViewport.hpp
-    #src/Window.hpp
     src/mainwindow.h
     src/Camera.hpp
     src/Types.hpp
-    src/Engine/Graphics/Light.hpp
     src/NameGenerator.hpp
     src/Engine/Graphics/Mesh.hpp
     src/to-delete/ResourceManager.hpp
     src/Engine/Assets/MeshLoader.hpp
     src/Terrain.hpp
-    src/GLWidget.hpp src/EngineRenderer.cpp src/EngineRenderer.hpp
+    #src/GLWidget.hpp
+    src/EngineRenderer.cpp src/EngineRenderer.hpp
     src/SolarSystem.cpp
     src/SolarSystem.hpp
     src/Engine/Assets/Private/AssetStorage.cpp src/Engine/assets/AssetStorage.hpp
@@ -105,11 +112,10 @@ set(MoteurDeJeuxSrc
     src/Engine/Core/HandleType.hpp src/Engine/Core/Handle.hpp
     ${GameFrameworkSrc}
     ${EditorSrc} src/Engine/GameFramework/Components/Private/MeshRenderable.cpp src/Engine/GameFramework/Components/MeshRenderable.hpp src/Engine/GameFramework/Components/Private/Renderable.cpp src/Engine/GameFramework/Components/Renderable.hpp src/Engine/GameFramework/Subsystems/Private/RendererSystem.cpp src/Engine/GameFramework/Subsystems/RendererSystem.hpp src/Engine/Assets/Private/Asset.cpp src/Engine/Assets/Asset.hpp src/Engine/Assets/Private/AssetManager.cpp src/Engine/Assets/AssetManager.hpp src/Engine/Core/QtTypes.hpp src/Engine/Assets/AssetsTypes.hpp src/Engine/Core/Container.hpp
-    src/Engine/Graphics/Private/WidgetWindow.cpp
     src/Engine/Graphics/Private/OpenGLWindow.cpp
-    src/Engine/Graphics/WidgetWindow.hpp
     src/Engine/Graphics/OpenGLWindow.hpp
-    src/Engine/Graphics/Window.hpp src/Homeland/Main.cpp src/Homeland/Private/HomelandApp.cpp src/Homeland/HomelandApp.hpp)
+    src/Engine/Graphics/Window.hpp
+    ${HomelandSrc})
 
 add_executable(MoteurDeJeux ${MoteurDeJeuxSrc} ${QRCS})
 

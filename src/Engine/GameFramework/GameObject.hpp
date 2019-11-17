@@ -2,16 +2,16 @@
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP
 
 #include <Engine/Core/CoreTypes.hpp>
-#include "Component.hpp"
+#include <Engine/GameFramework/GameFrameworkTypes.hpp>
 #include "Types.hpp"
-#include "graphics/Mesh.hpp"
-#include "Engine/GameFramework/Components/Transform.hpp"
+#include <Engine/Graphics/Mesh.hpp>
 #include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 
 // TODO: instantly all objects have a collider, seperate
+// TODO: final
 
-class GameObject final : public Object {
+class GameObject : public Object {
   using ComponentHandle = Handle;
 private:
   String m_tag;

@@ -1,7 +1,7 @@
 #include <QtWidgets>
 #include <iostream>
 #include <QHBoxLayout>
-#include "LevelEditorMainWindow.hpp"
+#include "EditorMainWindow.hpp"
 
 LevelEditorMainWindow::LevelEditorMainWindow(QWidget *parent)
   : QMainWindow(parent),
@@ -128,8 +128,8 @@ void LevelEditorMainWindow::setupStatusBar()
 void LevelEditorMainWindow::setupViewport()
 {
   //viewport = new Exercise02;
-  //viewport = new Viewport;
-  viewport = new GLWidget;
+  viewport = new Viewport;
+  //viewport = new GLWidget;
   //viewport->SetClearColor(scene_bg_color);
 }
 

@@ -25,13 +25,14 @@
  * TODO: Color picker style
  */
 
-class LevelEditorMainWindow : public QMainWindow {
+class EditorMainWindow : public QMainWindow {
 
   Q_OBJECT
 
 public:
-  explicit LevelEditorMainWindow(QWidget* parent = nullptr);
-  ~LevelEditorMainWindow() override;
+  explicit EditorMainWindow(QWidget* parent = nullptr);
+  ~EditorMainWindow() override;
+
 
 protected:
   void closeEvent(QCloseEvent* event) override;

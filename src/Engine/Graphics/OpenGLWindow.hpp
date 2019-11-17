@@ -1,6 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "../../Types.hpp"
 #include <QWidget>
 #include <QtGui/QtGui>
 #include <Engine/Core/CoreTypes.hpp>
@@ -11,7 +12,7 @@
 class GLWidget;
 class MainWindow;
 
-class OpenGLWindow : public Window, public QOpenGLWindow, protected QOpenGLFunctions {
+class OpenGLWindow : public QOpenGLWindow, protected QOpenGLFunctions {
     Q_OBJECT
 
 public:
@@ -20,8 +21,6 @@ public:
   void initializeGL() override;
   void resizeGL(Int32 width, Int32 height) override;
   void paintGL() override {  };
-
-  void startShowing() override;
 
 protected slots:
   void teardownGL() { };

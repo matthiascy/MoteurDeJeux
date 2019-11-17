@@ -1,6 +1,8 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
+#include <Engine/Core/CoreTypes.hpp>
+
 /* =================== GL related =================== */
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
@@ -59,6 +61,7 @@ class OpenGLWindow;
 
 typedef QImage Image;
 
+/*
 struct MaterialInfo {
   String name;
   Vec3 ambient;
@@ -71,6 +74,7 @@ struct LightInfo {
   Vec4 position;
   Vec3 intensity;
 };
+ */
 
 class EngineRenderer;
 

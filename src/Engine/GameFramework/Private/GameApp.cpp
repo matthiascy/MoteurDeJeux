@@ -5,6 +5,7 @@
 #include <QtGui/QOpenGLWindow>
 #include <QtGui/QGuiApplication>
 #include <QApplication>
+#include <Editor/EditorMainWindow.hpp>
 
 GameApp::GameApp(const String& name, const String& description, int argc, char** argv)
 {
@@ -42,7 +43,16 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
   }
 
   m_engine = new Engine(this);
-  m_engine->window()->startShowing();
+  if (m_is_with_editor) {
+    dynamic_cast<QMainWindow*>(m_engine->window())->show();
+  } else {
+    dynamic_cast<QOpenGLWindow*>(m_engine->window())->show();
+  }
+}
+
+inline bool GameApp::isEditorEnabled() const
+{
+  return m_is_with_editor;
 }
 
 

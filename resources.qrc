@@ -44,8 +44,8 @@
         <file alias="engine-logo">assets/textures/ephemeral-engine.png</file>
     </qresource>
     <qresource prefix="/Qml">
-        <file alias="main">src/qml/main.qml</file>
-        <file alias="splash">src/qml/splash.qml</file>
+        <file alias="main">src/Editor/qml/main.qml</file>
+        <file alias="splash">src/Editor/qml/splash.qml</file>
     </qresource>
     <qresource prefix="/Assets">
         <file alias="fontawesome.otf">assets/fonts/fontawesome-free-5.4.1-desktop/otfs/FontAwesome5Free-Regular-400.otf</file>

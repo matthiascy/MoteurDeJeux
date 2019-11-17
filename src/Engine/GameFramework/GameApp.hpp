@@ -18,6 +18,7 @@ private:
 
 public:
   GameApp(const String& name, const String& description, int argc, char** argv);
+  bool isEditorEnabled() const;
   virtual void run() { };
 };
 

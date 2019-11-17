@@ -2,7 +2,7 @@
 #define CAMERA_HPP
 
 #include "Types.hpp"
-#include "GameObject.hpp"
+#include <Engine/GameFramework/GameObject.hpp>
 
 #define DEFAULT_NEAR 0.25f
 #define DEFAULT_FAR  1024.0f

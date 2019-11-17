@@ -11,9 +11,11 @@
 #include "Types.hpp"
 #include "Terrain.hpp"
 #include "Camera.hpp"
+/*
 #include "SceneNode.hpp"
 #include "Scene.hpp"
 #include "physics/PhysicsManager.hpp"
+ */
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
 

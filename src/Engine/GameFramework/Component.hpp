@@ -3,6 +3,7 @@
 
 #include <Engine/GameFramework/GameFrameworkTypes.hpp>
 #include <Engine/Core/HandleType.hpp>
+#include <Engine/Core/Object.hpp>
 
 enum class EComponentType {
   None = 0x00,
