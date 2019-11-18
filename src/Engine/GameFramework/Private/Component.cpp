@@ -1,4 +1,5 @@
 #include <Engine/GameFramework/Component.hpp>
+#include <Engine/GameFramework/GameObject.hpp>
 #include <utility>
 
 Component::Component(String name, GameObject* gameObject)

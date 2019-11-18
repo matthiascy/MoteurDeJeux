@@ -14,11 +14,11 @@ const float kSpeed       = 2.5f;
 const float kSensitivity = 0.1f;
 const float kZoom        = 45.0f;
 
-class Camera : public GameObject {
+class Camera {
 public:
   explicit Camera(const String& name);
   Camera(Vec3 pos = {0.0f, 0.0f, 0.0f}, Vec3 up = {0.0f, 1.0f, 0.0f}, float yaw = kYaw, float pitch = kPitch);
-  ~Camera() override = default;
+  ~Camera() = default;
 
 public:
   QMatrix4x4 ViewMatrix();

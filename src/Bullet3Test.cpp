@@ -1,5 +1,4 @@
 #include <btBulletDynamicsCommon.h>
-#include "mainwindow.h"
 #include <QtWidgets/QMainWindow>
 #include <QApplication>
 #include <QtGui/QSurfaceFormat>

@@ -21,13 +21,13 @@ protected:
   btCollisionObjectArray   m_collision_objects;
 
 public:
-  PhysicsSystem(String name, Scene* scene, const Vec3& gravity = vec3::DirDown);
-  virtual ~PhysicsSystem();
+  PhysicsSystem(String name, Scene* scene, const Vec3& gravity = vec3::Down);
+  ~PhysicsSystem() override;
 
-  void init() override;
+  void init() override { };
 
   void setGravity(const Vec3& gravity);
-  const Vec3& gravity() const;
+  Vec3 gravity() const;
 
   void update(Real dt);
 };

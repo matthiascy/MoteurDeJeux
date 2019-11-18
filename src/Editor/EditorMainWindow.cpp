@@ -2,8 +2,9 @@
 #include <iostream>
 #include <QHBoxLayout>
 #include "EditorMainWindow.hpp"
+#include "Viewport.hpp"
 
-LevelEditorMainWindow::LevelEditorMainWindow(QWidget *parent)
+EditorMainWindow::EditorMainWindow(QWidget *parent)
   : QMainWindow(parent),
     viewport(nullptr),
     _toolBar(nullptr),
@@ -46,7 +47,7 @@ LevelEditorMainWindow::LevelEditorMainWindow(QWidget *parent)
   viewport->setFocus();
 }
 
-LevelEditorMainWindow::~LevelEditorMainWindow()
+EditorMainWindow::~EditorMainWindow()
 {
   for (int i = 0; i < 8; ++i) {
     if (menus[i])
@@ -95,7 +96,7 @@ LevelEditorMainWindow::~LevelEditorMainWindow()
 
 /** Private functions */
 
-void LevelEditorMainWindow::setupLayout()
+void EditorMainWindow::setupLayout()
 {
   mainSplitter = new QSplitter(Qt::Vertical);
   botLRSplitter = new QSplitter(Qt::Horizontal);
@@ -112,7 +113,7 @@ void LevelEditorMainWindow::setupLayout()
   this->setCentralWidget(mainSplitter);
 }
 
-void LevelEditorMainWindow::setupStatusBar()
+void EditorMainWindow::setupStatusBar()
 {
   cmd = new CommandLine;
   cmd->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
@@ -125,15 +126,16 @@ void LevelEditorMainWindow::setupStatusBar()
   this->statusBar()->setStyleSheet("QStatusBar::item {border: none;}");
 }
 
-void LevelEditorMainWindow::setupViewport()
+void EditorMainWindow::setupViewport()
 {
   //viewport = new Exercise02;
-  viewport = new Viewport;
+  //viewport = new Viewport;
+  viewport = new QOpenGLWidget;
   //viewport = new GLWidget;
   //viewport->SetClearColor(scene_bg_color);
 }
 
-void LevelEditorMainWindow::setupMenuBar()
+void EditorMainWindow::setupMenuBar()
 {
   _toolBar = new QToolBar(tr("File"));
   // ----------------------
@@ -142,25 +144,25 @@ void LevelEditorMainWindow::setupMenuBar()
   new_level_act = new QAction(QIcon(":/Assets/newlight.png"), tr("New Level"), this);
   new_level_act->setShortcuts(QKeySequence::New);
   new_level_act->setStatusTip(tr("Create a new level"));
-  //connect(newAct, &QAction::triggered, this, &LevelEditorMainWindow::newFile);
+  //connect(newAct, &QAction::triggered, this, &EditorMainWindow::newFile);
   menus[0]->addAction(new_level_act);
   _toolBar->addAction(new_level_act);
 
   open_level_act = new QAction(QIcon(":/Assets/openlight.png"), tr("Open Level"), this);
   open_level_act->setShortcuts(QKeySequence::Open);
   open_level_act->setStatusTip(tr("Open a level"));
-  //    connect(openAct, &QAction::triggered, this, &LevelEditorMainWindow::open);
+  //    connect(openAct, &QAction::triggered, this, &EditorMainWindow::open);
   menus[0]->addAction(open_level_act);
   _toolBar->addAction(open_level_act);
 
   save_level_act = new QAction(QIcon(":/Assets/savelight.png"), tr("Save Level"), this);
   save_level_act->setShortcuts(QKeySequence::Save);
   save_level_act->setStatusTip(tr("Save current level to disk"));
-  //connect(saveAct, &QAction::triggered, this, &LevelEditorMainWindow::save);
+  //connect(saveAct, &QAction::triggered, this, &EditorMainWindow::save);
   menus[0]->addAction(save_level_act);
   _toolBar->addAction(save_level_act);
 
-  QAction *saveAsAct = menus[0]->addAction(QIcon(":/Assets/saveaslight"), tr("Save Level As"), this, &LevelEditorMainWindow::about);
+  QAction *saveAsAct = menus[0]->addAction(QIcon(":/Assets/saveaslight"), tr("Save Level As"), this, &EditorMainWindow::about);
   saveAsAct->setShortcuts(QKeySequence::SaveAs);
   saveAsAct->setStatusTip(tr("Save the level under a new name"));
   _toolBar->addAction(saveAsAct);
@@ -185,8 +187,8 @@ void LevelEditorMainWindow::setupMenuBar()
   tp2_act->setStatusTip(tr("Load TP 2 - HMIN317"));
   menu_tp->addAction(tp1_act);
   menu_tp->addAction(tp2_act);
-  connect(tp1_act, &QAction::triggered, this, &LevelEditorMainWindow::to_delete_tp1);
-  connect(tp2_act, &QAction::triggered, this, &LevelEditorMainWindow::to_delete_tp2);
+  connect(tp1_act, &QAction::triggered, this, &EditorMainWindow::to_delete_tp1);
+  connect(tp2_act, &QAction::triggered, this, &EditorMainWindow::to_delete_tp2);
   QMenu* menu_examples = menu_load->addMenu(tr("Examples"));
   QMenu* menu_subdivision = menu_examples->addMenu(tr("Subdivisions"));
   QAction* sub_catmull_clark_act = new QAction(tr("Catmull–Clark subdivision"));
@@ -288,7 +290,7 @@ void LevelEditorMainWindow::setupMenuBar()
 
   scene_bg_color_act = new QAction(QIcon(":/Assets/palettelight.png"), tr("&Viewport Background Color"), this);
   scene_bg_color_act->setStatusTip("Change viewport background color");
-  connect(scene_bg_color_act, &QAction::triggered, this, &LevelEditorMainWindow::change_scene_bg);
+  connect(scene_bg_color_act, &QAction::triggered, this, &EditorMainWindow::change_scene_bg);
   menus[4]->addAction(scene_bg_color_act);
   _toolBar->addAction(scene_bg_color_act);
 
@@ -298,18 +300,18 @@ void LevelEditorMainWindow::setupMenuBar()
   menus[5] = menuBar()->addMenu(tr("&Windows"));
   menus[5]->addAction("New Window");
   QAction* saveLayoutAct = menus[5]->addAction(tr("Save Layout"));
-  connect(saveLayoutAct, &QAction::triggered, this, &LevelEditorMainWindow::saveLayout);
+  connect(saveLayoutAct, &QAction::triggered, this, &EditorMainWindow::saveLayout);
   QAction* loadLayoutAct = menus[5]->addAction("Load Layout");
-  connect(loadLayoutAct, &QAction::triggered, this, &LevelEditorMainWindow::loadLayout);
+  connect(loadLayoutAct, &QAction::triggered, this, &EditorMainWindow::loadLayout);
   menus[5]->addAction("Reset Layout");
   menus[5]->addAction("Close Windows");
   menus[5]->addSeparator();
-  windows_preferences_act = menus[5]->addAction(tr("Settings/Preferences"), this, &LevelEditorMainWindow::windows_preferences);
+  windows_preferences_act = menus[5]->addAction(tr("Settings/Preferences"), this, &EditorMainWindow::windows_preferences);
   menus[5]->addSeparator();
-  fullscreen_toggle_act = menus[5]->addAction(tr("Fullscreen"), this, &LevelEditorMainWindow::fullscreen);
+  fullscreen_toggle_act = menus[5]->addAction(tr("Fullscreen"), this, &EditorMainWindow::fullscreen);
   fullscreen_toggle_act->setCheckable(true);
   fullscreen_toggle_act->setChecked(false);
-  toolbar_toggle_act = menus[5]->addAction(tr("Show Tool Bar"), this, &LevelEditorMainWindow::show_toolbar);
+  toolbar_toggle_act = menus[5]->addAction(tr("Show Tool Bar"), this, &EditorMainWindow::show_toolbar);
   toolbar_toggle_act->setCheckable(true);
   toolbar_toggle_act->setChecked(true);
 
@@ -377,9 +379,9 @@ void LevelEditorMainWindow::setupMenuBar()
   doc->addAction(tr("C++"));
   doc->addAction(tr("Rust"));
   doc->addAction(tr("Guile"));
-  menus[7]->addAction(tr("&About"), this, &LevelEditorMainWindow::about);
+  menus[7]->addAction(tr("&About"), this, &EditorMainWindow::about);
 
-  cmd_act = _toolBar->addAction(QIcon(":/Assets/cmdlight.png"), tr("Command"), this, &LevelEditorMainWindow::command);
+  cmd_act = _toolBar->addAction(QIcon(":/Assets/cmdlight.png"), tr("Command"), this, &EditorMainWindow::command);
 
   /** Launch/debug button */
   QWidget* spacer = new QWidget();
@@ -387,16 +389,16 @@ void LevelEditorMainWindow::setupMenuBar()
   _toolBar->addWidget(spacer);
   _toolBar->addSeparator();
   launch_act = new QAction(QIcon(":/Assets/launch.png"), tr("&New Scene"), this);
-  connect(launch_act, &QAction::triggered, this, &LevelEditorMainWindow::launch);
+  connect(launch_act, &QAction::triggered, this, &EditorMainWindow::launch);
   _toolBar->addAction(launch_act);
   _toolBar->addSeparator();
   //QAction* debug_act =
-  _toolBar->addAction(QIcon(":/Assets/debuglight.png"), tr("Debug"), this, &LevelEditorMainWindow::debug);
+  _toolBar->addAction(QIcon(":/Assets/debuglight.png"), tr("Debug"), this, &EditorMainWindow::debug);
 
   this->addToolBar(Qt::LeftToolBarArea, _toolBar);
 }
 
-void LevelEditorMainWindow::setupDocks()
+void EditorMainWindow::setupDocks()
 {
   this->assetsBrowser = std::make_unique<AssetsBrowser>();
   QDockWidget* dockAssets = new QDockWidget(tr("Assets Browser"));
@@ -423,17 +425,17 @@ void LevelEditorMainWindow::setupDocks()
   this->addDockWidget(Qt::RightDockWidgetArea, dockExplorer);
 }
 
-void LevelEditorMainWindow::setupColorPicker()
+void EditorMainWindow::setupColorPicker()
 {
   palette = new QColorDialog(this);
   palette->setCurrentColor(scene_bg_color);
   palette->setOption(QColorDialog::ShowAlphaChannel);
 }
 
-void LevelEditorMainWindow::applyStyles()
+void EditorMainWindow::applyStyles()
 {
   // this->setWindowFlags(Qt::SplashScreen);
-  // TODO: isolate LevelEditorMainWindow's style with docked widgets' style.
+  // TODO: isolate EditorMainWindow's style with docked widgets' style.
   this->setStyleSheet("background-color: #303133; QTabBar::tab {background-color: #414345; color: #EEEEEE;};");
   menuBar()->setStyleSheet("QMenuBar { color: #EEEEEE; background-color: #414345; }"
                            "QMenuBar::item:selected:enabled{ background:#4286f4; }"
@@ -464,7 +466,7 @@ void LevelEditorMainWindow::applyStyles()
   this->explorer->SetStyle();
 }
 
-void LevelEditorMainWindow::setupConnections()
+void EditorMainWindow::setupConnections()
 {
   QObject::connect(this->assetsBrowser->ListView(), &QListView::clicked,
                    this->assetPreviewer.get(),
@@ -475,7 +477,7 @@ void LevelEditorMainWindow::setupConnections()
 
 /** Slots */
 
-void LevelEditorMainWindow::about()
+void EditorMainWindow::about()
 {
   QMessageBox* about = new QMessageBox(this);
   about->setWindowTitle("About GemTD-Knockoff");
@@ -488,7 +490,7 @@ void LevelEditorMainWindow::about()
   about->exec();
 }
 
-void LevelEditorMainWindow::fullscreen()
+void EditorMainWindow::fullscreen()
 {
   if (windowState() == Qt::WindowFullScreen)
     this->setWindowState(Qt::WindowMaximized);
@@ -496,7 +498,7 @@ void LevelEditorMainWindow::fullscreen()
     this->setWindowState(Qt::WindowFullScreen);
 }
 
-void LevelEditorMainWindow::show_toolbar()
+void EditorMainWindow::show_toolbar()
 {
   if (_toolBar->isHidden()) {
     _toolBar->show();
@@ -505,7 +507,7 @@ void LevelEditorMainWindow::show_toolbar()
   }
 }
 
-void LevelEditorMainWindow::change_scene_bg()
+void EditorMainWindow::change_scene_bg()
 {
   QColor color = palette->getColor(scene_bg_color, this,
                                        tr("Scene Background Color"),
@@ -518,47 +520,47 @@ void LevelEditorMainWindow::change_scene_bg()
   viewport->update();
 }
 
-void LevelEditorMainWindow::windows_preferences()
+void EditorMainWindow::windows_preferences()
 {
 
 }
 
-void LevelEditorMainWindow::launch()
+void EditorMainWindow::launch()
 {
 
 }
 
-void LevelEditorMainWindow::debug()
+void EditorMainWindow::debug()
 {
 
 }
 
-void LevelEditorMainWindow::command()
+void EditorMainWindow::command()
 {
 
 }
 
-void LevelEditorMainWindow::to_delete_tp1()
+void EditorMainWindow::to_delete_tp1()
 {
 
 }
 
-void LevelEditorMainWindow::to_delete_tp2()
+void EditorMainWindow::to_delete_tp2()
 {
 
 }
 
-void LevelEditorMainWindow::actionTriggered(QAction* action)
+void EditorMainWindow::actionTriggered(QAction* action)
 {
   this->output->setText(action->text());
 }
 
-void LevelEditorMainWindow::closeEvent(QCloseEvent* event)
+void EditorMainWindow::closeEvent(QCloseEvent* event)
 {
   event->accept();
 }
 
-void LevelEditorMainWindow::saveLayout()
+void EditorMainWindow::saveLayout()
 {
   QString filename = QFileDialog::getSaveFileName(this, tr("Save layout"));
 
@@ -592,7 +594,7 @@ void LevelEditorMainWindow::saveLayout()
   }
 }
 
-void LevelEditorMainWindow::loadLayout()
+void EditorMainWindow::loadLayout()
 {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Load layout"));
   if (fileName.isEmpty())

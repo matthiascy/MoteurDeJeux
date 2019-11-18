@@ -7,47 +7,63 @@ GameObject::GameObject(String name, Scene* scene)
     m_is_static{false}, m_is_visible{true},
     m_scene{scene}, m_components{}
 {
-  m_transform = scene->
+  //m_transform = scene->
 }
 
-GameObject::GameObject(String name, String tag)
-  : Object(name), m_tag{std::move(tag)},
-    m_parent{nullptr},
-    m_transform{}, m_is_visible{true}, m_vbo_idx{-1},
-    m_mesh{nullptr}, m_collider{nullptr}
-{ }
-
-/*
-GameObject::~GameObject()
-{ }
- */
-
-void GameObject::attachMesh(Mesh* mesh)
+GameObject::GameObject(String name, Scene* scene, String tag)
+    : Object(std::move(name)), m_tag{std::move(tag)}, m_transform{nullptr},
+      m_is_static{false}, m_is_visible{true},
+      m_scene{scene}, m_components{}
 {
-  m_mesh = mesh;
+  //m_transform = scene->
 }
 
-void GameObject::detachMesh()
+StringView GameObject::tag() const
 {
-  m_mesh = nullptr;
+  return m_tag;
 }
 
-const Mesh* GameObject::mesh() const
+void GameObject::setTag(const String& tag)
 {
-  return m_mesh;
+  m_tag = tag;
 }
 
-const Collider* GameObject::collider() const
+Transform* GameObject::transform()
 {
-  return m_collider;
+  return m_transform;
 }
 
-void GameObject::attachCollider(Collider* collider)
+const Transform* GameObject::transform() const
 {
-  m_collider = collider;
+  return m_transform;
 }
 
-void GameObject::detachCollider()
+void GameObject::setTransform(Transform* trans)
 {
-  m_collider = nullptr;
+  m_transform = trans;
+}
+
+bool GameObject::isVisible() const
+{
+  return m_is_visible;
+}
+
+void GameObject::setVisible(bool isVisible)
+{
+  m_is_visible = isVisible;
+}
+
+bool GameObject::isStatic() const
+{
+  return m_is_static;
+}
+
+void GameObject::setStatic(bool isStatic)
+{
+  m_is_static = isStatic;
+}
+
+Scene *GameObject::scene() const
+{
+  return m_scene;
 }

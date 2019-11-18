@@ -1,5 +1,5 @@
 #include "Terrain.hpp"
-#include "graphics/Mesh.hpp"
+#include <Engine/Graphics/Mesh.hpp>
 
 Terrain::Terrain(const String& name, const String& type) : GameObject(name, type)
 { }

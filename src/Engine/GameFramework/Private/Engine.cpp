@@ -12,9 +12,11 @@ Engine::Engine(GameApp* app)
   //m_physics_sys = makeUnique<PhysicsSystem>(name + "PhysicsSystem", this);
   //m_input_sys = makeUnique<InputSystem>(name + "InputSystem", this);
   if (m_app->isEditorEnabled()) {
+    //m_window = makeUnique<QMainWindow>();
     m_window = makeUnique<EditorMainWindow>();
   } else {
-    m_window = makeUnique<OpenGLWindow>();
+    //m_window = makeUnique<OpenGLWindow>();
+    m_window = makeUnique<QOpenGLWindow>();
   }
 }
 
@@ -23,7 +25,7 @@ Engine::~Engine()
   m_window.reset();
 }
 
-Window* Engine::window()
+QObject* Engine::window()
 {
   return m_window.get();
 }

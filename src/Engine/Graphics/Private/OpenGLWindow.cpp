@@ -1,7 +1,5 @@
-#include "GLWidget.hpp"
 #include "Engine/Graphics/OpenGLWindow.hpp"
-#include "mainwindow.h"
-#include "Engine/Graphics/OpenGLError.hpp"
+//#include "Engine/Graphics/OpenGLError.hpp"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -12,7 +10,7 @@
 #include <QMessageBox>
 
 OpenGLWindow::OpenGLWindow()
-    : Window(), QOpenGLWindow(), m_clear_color{60, 60, 69, 255}
+    : QOpenGLWindow(), m_clear_color{60, 60, 69, 255}
 {
 
 }
@@ -82,17 +80,19 @@ void OpenGLWindow::print_version_information()
 /* ---------- Events ---------- */
 bool OpenGLWindow::event(QEvent* event)
 {
+  /*
   if (event->type() == OpenGLError::type()) {
     errorEventGL(dynamic_cast<OpenGLError*>(event));
     return true;
   }
+   */
   return QPaintDeviceWindow::event(event);
 }
 
-void OpenGLWindow::errorEventGL(OpenGLError* error)
-{
-  qFatal("%s::%s => Returned an error!", error->callerName(), error->functionName());
-}
+//void OpenGLWindow::errorEventGL(OpenGLError* error)
+//{
+//  qFatal("%s::%s => Returned an error!", error->callerName(), error->functionName());
+//}
 
 void OpenGLWindow::keyPressEvent(QKeyEvent* event)
 {
@@ -101,9 +101,4 @@ void OpenGLWindow::keyPressEvent(QKeyEvent* event)
   } else {
     //Input::registerKeyPress(event->key());
   }
-}
-
-void OpenGLWindow::startShowing()
-{
-  this->show();
 }

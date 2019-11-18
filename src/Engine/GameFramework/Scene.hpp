@@ -14,9 +14,9 @@ class InputSystem;
 
 class Scene : Object {
 public:
-  typedef Array<UniquePtr<GameObject>> GameObjectsArray;
-  typedef HashMap<String, UniquePtr<GameObjectsArray>> TaggedGameObjects;
-  typedef Array<UniquePtr<Component>> ComponentsArray;
+  typedef Array<GameObject*> GameObjectsArray;
+  typedef HashMap<String, GameObjectsArray*> TaggedGameObjects;
+  typedef Array<Component*> ComponentsArray;
 
 protected:
   UniquePtr<TaggedGameObjects> m_game_objects;
@@ -31,7 +31,7 @@ public:
 
   virtual Transform* root();
 
-  virtual GameObject* createGameObject(String name, String tag);
+  virtual GameObject* createGameObject(String name, const String& tag);
 
   virtual Array<GameObject*> gameObjects() const;
 };

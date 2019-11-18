@@ -12,15 +12,15 @@
 #include <QLabel>
 #include <QActionGroup>
 #include <QLineEdit>
-#include "Viewport.hpp"
+//#include "Viewport.hpp"
 #include "CommandLine.hpp"
 #include "SimpleOutput.hpp"
 #include "AssetsBrowser.hpp"
 #include "AssetPreviewer.hpp"
 #include "PropertyEditor.hpp"
 #include "Explorer.hpp"
-#include "../GLWidget.hpp"
 
+class Viewport;
 /*
  * TODO: Color picker style
  */
@@ -67,8 +67,9 @@ private:
 
 private:
   //OglContext* _context;
+  QOpenGLWidget* viewport;
   //Viewport* viewport;
-  GLWidget* viewport;
+  //GLWidget* viewport;
   QToolBar* _toolBar;
 
   /** Layout */

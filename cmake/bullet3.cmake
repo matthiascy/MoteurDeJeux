@@ -1,7 +1,7 @@
 set(BULLET3_DIR ${SOURCE_DIR}/Engine/Thirdparty/bullet3)
 set(BULLET3_OUTPUT_DIR  ${OUTPUT_DIR_LIBRARY})
 
-set(USE_MSVC_RUNTIME_LIBRARY_DLL OFF)
+set(USE_MSVC_RUNTIME_LIBRARY_DLL ON)
 set(USE_GRAPHICAL_BENCHMARK OFF CACHE BOOL "Use Graphical Benchmark" FORCE)
 set(BUILD_CPU_DEMOS OFF CACHE BOOL "Build original Bullet CPU examples" FORCE)
 set(BUILD_BULLET3 ON CACHE BOOL "Set when you want to build Bullet 3" FORCE)
@@ -10,6 +10,6 @@ set(BUILD_OPENGL3_DEMOS OFF CACHE BOOL "Set when you want to build Bullet 3 Open
 set(BUILD_BULLET2_DEMOS OFF CACHE BOOL "Set when you want to build the Bullet 2 demos" FORCE)
 set(BUILD_EXTRAS OFF CACHE BOOL "Set when you want to build the extras" FORCE)
 set(BUILD_SHARED_LIBS OFF)
-set(BUILD_UNIT_TESTS OFF)
+#set(BUILD_UNIT_TESTS OFF)
 
 add_subdirectory(${BULLET3_DIR} "${CMAKE_CURRENT_BINARY_DIR}/Thirdparty/bullet3")

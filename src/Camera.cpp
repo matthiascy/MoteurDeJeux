@@ -1,15 +1,16 @@
+#include <Engine/Core/Core.hpp>
 #include "Camera.hpp"
 
 
 Camera::Camera(const String& name)
-  : GameObject(name, "Camera"), pos{vec3::Zero}, up{0.0f, 1.0f, 0.0f}, worldUp{up}, yaw{kYaw}, pitch{kPitch},
+  : pos{vec3::Zero}, up{0.0f, 1.0f, 0.0f}, worldUp{up}, yaw{kYaw}, pitch{kPitch},
     zoom{kZoom}
 {
   update_camera_vectors();
 }
 
 Camera::Camera(Vec3 pos, Vec3 up, float yaw, float pitch)
-  : GameObject("Camera", "Camera"), pos{pos}, up{up}, worldUp{up}, yaw{yaw}, pitch{pitch},
+  : pos{pos}, up{up}, worldUp{up}, yaw{yaw}, pitch{pitch},
     zoom{kZoom}
 {
   update_camera_vectors();

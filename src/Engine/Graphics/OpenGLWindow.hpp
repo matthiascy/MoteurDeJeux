@@ -5,7 +5,7 @@
 #include <QWidget>
 #include <QtGui/QtGui>
 #include <Engine/Core/CoreTypes.hpp>
-#include "OpenGLError.hpp"
+//#include "OpenGLError.hpp"
 #include "Window.hpp"
 
 
@@ -28,7 +28,7 @@ protected slots:
 
 protected:
   bool event(QEvent* event) override;
-  void errorEventGL(OpenGLError* error);
+  //void errorEventGL(OpenGLError* error);
   void keyPressEvent(QKeyEvent* event) override;
   void keyReleaseEvent(QKeyEvent* event) override { };
   void mousePressEvent(QMouseEvent* event) override { };

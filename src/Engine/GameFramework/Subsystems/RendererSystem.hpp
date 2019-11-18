@@ -10,10 +10,10 @@ class GameObject;
 class RendererSystem : public System {
 public:
   RendererSystem(String name, Scene* scene);
-  ~RendererSystem() override;
+  ~RendererSystem() override { };
 
 
-  void init() override;
+  void init() override { };
 
   void render(GameObject* gameObject);
 

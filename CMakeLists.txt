@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10.0)
 
-project(MoteurDeJeux)
+project(Homeland)
 
 set(SOURCE_DIR src)
 set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/Build/${BUILD_PLATFORM}/${CMAKE_BUILD_TYPE})
@@ -22,7 +22,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOROC ON)
 set(CMAKE_AUTOUIC ON)
 
-find_package(Qt5 COMPONENTS Widgets Core Gui Qml Quick REQUIRED)
+#find_package(Qt5 COMPONENTS Widgets Core Gui Qml Quick REQUIRED)
+find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
 qt5_add_resources(QRCS resources.qrc)
 
@@ -72,31 +73,25 @@ set(EditorSrc
     src/editor/Vertex.cpp)
 
 set(HomelandSrc
-    src/Homeland/Private/HomelandApp.cpp
-    src/Homeland/Main.cpp
-    src/Homeland/HomelandApp.hpp
-)
-
-set(MoteurDeJeuxSrc
-    src/EngineViewport.cpp
-    src/mainwindow.cpp
+    #src/EngineViewport.cpp
+    #src/mainwindow.cpp
     #src/GLWidget.cpp
     src/Camera.cpp
     src/NameGenerator.cpp
     src/Engine/Graphics/Private/Mesh.cpp
     src/Engine/Assets/Private/MeshLoader.cpp
-    src/Terrain.cpp
-    src/EngineViewport.hpp
-    src/mainwindow.h
+    #src/Terrain.cpp
+    #src/EngineViewport.hpp
+    #src/mainwindow.h
     src/Camera.hpp
     src/Types.hpp
     src/NameGenerator.hpp
     src/Engine/Graphics/Mesh.hpp
     src/to-delete/ResourceManager.hpp
     src/Engine/Assets/MeshLoader.hpp
-    src/Terrain.hpp
+    #src/Terrain.hpp
     #src/GLWidget.hpp
-    src/EngineRenderer.cpp src/EngineRenderer.hpp
+    #src/EngineRenderer.cpp src/EngineRenderer.hpp
     src/SolarSystem.cpp
     src/SolarSystem.hpp
     src/Engine/Assets/Private/AssetStorage.cpp src/Engine/assets/AssetStorage.hpp
@@ -114,27 +109,29 @@ set(MoteurDeJeuxSrc
     src/Engine/Graphics/Private/OpenGLWindow.cpp
     src/Engine/Graphics/OpenGLWindow.hpp
     src/Engine/Graphics/Window.hpp
-    ${HomelandSrc})
+    src/Homeland/Private/HomelandApp.cpp
+    src/Homeland/Main.cpp
+    src/Homeland/HomelandApp.hpp src/Engine/GameFramework/Forward.hpp)
 
-add_executable(MoteurDeJeux ${MoteurDeJeuxSrc} ${QRCS})
+add_executable(Homeland ${HomelandSrc} ${QRCS})
 
-target_link_libraries(MoteurDeJeux PRIVATE
-    Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Quick Qt5::Qml
+target_link_libraries(Homeland PRIVATE
+    Qt5::Widgets Qt5::Core Qt5::Gui #Qt5::Quick Qt5::Qml
     assimp Bullet3Common BulletSoftBody Bullet3Dynamics
     Bullet3Collision LinearMath Bullet3Geometry
     BulletDynamics BulletCollision)
-target_include_directories(MoteurDeJeux PRIVATE
+target_include_directories(Homeland PRIVATE
     ${SOURCE_DIR}
     src/Engine/Thirdparty/assimp/assimp/include
     src/Engine/Thirdparty/bullet3/src/)
-target_compile_definitions(MoteurDeJeux PRIVATE
+target_compile_definitions(Homeland PRIVATE
     ${BULLET_DEFINITIONS})
 
 add_executable(Bullet3Test src/Bullet3Test.cpp)
 target_compile_definitions(Bullet3Test PRIVATE
     ${BULLET_DEFINITIONS})
 target_link_libraries(Bullet3Test PRIVATE
-    Qt5::Widgets Qt5::Core Qt5::Gui Qt5::Quick Qt5::Qml
+    Qt5::Widgets Qt5::Core Qt5::Gui #Qt5::Quick Qt5::Qml
     Bullet3Common BulletSoftBody Bullet3Dynamics
     Bullet3Collision LinearMath Bullet3Geometry
     BulletDynamics BulletCollision)

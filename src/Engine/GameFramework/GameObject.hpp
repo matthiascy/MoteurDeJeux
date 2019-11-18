@@ -2,7 +2,7 @@
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP
 
 #include <Engine/Core/CoreTypes.hpp>
-#include <Engine/GameFramework/GameFrameworkTypes.hpp>
+#include <Engine/GameFramework/Forward.hpp>
 #include "Types.hpp"
 #include <Engine/Graphics/Mesh.hpp>
 #include <btBulletCollisionCommon.h>
@@ -24,7 +24,7 @@ private:
 public:
   GameObject() = delete;
   GameObject(String name, Scene* scene);
-  GameObject(String name, String tag, EComponentType components = EComponentType::None);
+  GameObject(String name, Scene* scene, String tag);
   virtual ~GameObject() = default;
 
   StringView tag() const;
@@ -42,6 +42,7 @@ public:
 
   Scene* scene() const;
 
+  /*
   template <typename T>
   ComponentHandle getComponent() const;
 
@@ -71,6 +72,7 @@ public:
   void addComponent(Args&&... args);
 
   void addComponent(ComponentHandle component);
+   */
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP */

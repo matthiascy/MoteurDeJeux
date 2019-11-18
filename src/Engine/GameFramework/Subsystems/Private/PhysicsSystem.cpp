@@ -1,7 +1,9 @@
 #include "Engine/GameFramework/Subsystems/PhysicsSystem.hpp"
 #include "Engine/GameFramework/GameObject.hpp"
 
-PhysicsSystem::PhysicsSystem(const Vec3& gravity)
+// TODO:
+PhysicsSystem::PhysicsSystem(String name, Scene* scene, const Vec3& gravity)
+  : System(std::move(name), scene)
 {
   m_config = new btDefaultCollisionConfiguration();
   m_dispatcher = new btCollisionDispatcher(m_config);
@@ -25,9 +27,9 @@ void PhysicsSystem::setGravity(const Vec3& gravity)
   m_world->setGravity(btVector3(gravity.x(), gravity.y(), gravity.z()));
 }
 
-inline const Vec3& PhysicsSystem::gravity() const
+inline Vec3 PhysicsSystem::gravity() const
 {
-  return m_world->getGravity();
+  return vec3::fromBTVec3(m_world->getGravity());
 }
 
 void PhysicsSystem::update(Real dt)

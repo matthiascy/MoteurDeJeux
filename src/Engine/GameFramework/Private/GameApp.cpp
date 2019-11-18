@@ -48,9 +48,11 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
   } else {
     dynamic_cast<QOpenGLWindow*>(m_engine->window())->show();
   }
+
+  QCoreApplication::exec();
 }
 
-inline bool GameApp::isEditorEnabled() const
+bool GameApp::isEditorEnabled() const
 {
   return m_is_with_editor;
 }
