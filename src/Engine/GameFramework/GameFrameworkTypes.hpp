@@ -3,7 +3,7 @@
 
 #include "GameObject.hpp"
 #include "Component.hpp"
-#include "Engine/GameFramework/Components/Transform.hpp"
+#include "GameFramework/Components/Transform.hpp"
 #include "Scene.hpp"
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_TYPES_HPP */

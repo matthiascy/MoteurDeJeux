@@ -1,5 +1,5 @@
-#include <Engine/GameFramework/Component.hpp>
-#include <Engine/GameFramework/GameObject.hpp>
+#include <GameFramework/Component.hpp>
+#include <GameFramework/GameObject.hpp>
 #include <utility>
 
 Component::Component(String name, GameObject* gameObject)

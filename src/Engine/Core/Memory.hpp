@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_CORE_MEMORY_HPP
 #define MOTEUR_DE_JEUX_SRC_CORE_MEMORY_HPP
 
-#include "MemoryTypes.hpp"
+#include <memory>
 
 template <typename T, typename... Args>
 inline auto makeUnique(Args&&... args) -> decltype(std::make_unique<T>(std::forward<Args>(args)...)) {

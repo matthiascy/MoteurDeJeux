@@ -1,8 +1,8 @@
-#include <Engine/Core/Core.hpp>
-#include <Engine/GameFramework/Engine.hpp>
-#include <Engine/GameFramework/GameApp.hpp>
+#include <Core/Core.hpp>
+#include <GameFramework/Engine.hpp>
+#include <GameFramework/GameApp.hpp>
 #include <Editor/EditorMainWindow.hpp>
-#include <Engine/Graphics/OpenGLWindow.hpp>
+#include <Graphics/OpenGLWindow.hpp>
 
 Engine::Engine(GameApp* app)
   : m_app{app}

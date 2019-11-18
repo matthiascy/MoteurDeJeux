@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_PHYSICS_COLLIDER_HPP
 #define MOTEUR_DE_JEUX_SRC_PHYSICS_COLLIDER_HPP
 
-#include <Engine/GameFramework/GameFrameworkTypes.hpp>
+#include <GameFramework/GameFrameworkTypes.hpp>
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 

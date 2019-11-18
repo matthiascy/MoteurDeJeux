@@ -1,12 +1,11 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "../../Types.hpp"
+#include <Core/Core.hpp>
 #include <QWidget>
 #include <QtGui/QtGui>
-#include <Engine/Core/CoreTypes.hpp>
+#include "GraphicsTypes.hpp"
 //#include "OpenGLError.hpp"
-#include "Window.hpp"
 
 
 class GLWidget;

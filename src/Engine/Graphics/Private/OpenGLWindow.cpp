@@ -1,5 +1,5 @@
-#include "Engine/Graphics/OpenGLWindow.hpp"
-//#include "Engine/Graphics/OpenGLError.hpp"
+#include "Graphics/OpenGLWindow.hpp"
+//#include "Graphics/OpenGLError.hpp"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>

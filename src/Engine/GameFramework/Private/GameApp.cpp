@@ -1,5 +1,5 @@
-#include <Engine/GameFramework/GameApp.hpp>
-#include <Engine/GameFramework/Engine.hpp>
+#include <GameFramework/GameApp.hpp>
+#include <GameFramework/Engine.hpp>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
 #include <QtGui/QOpenGLWindow>

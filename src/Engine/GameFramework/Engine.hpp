@@ -1,11 +1,10 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP
 
-#include <Engine/Graphics/Window.hpp>
-//#include <Engine/Assets/AssetManager.hpp>
-//#include <Engine/GameFramework/Subsystems/RendererSystem.hpp>
-//#include <Engine/GameFramework/Subsystems/PhysicsSystem.hpp>
-//#include <Engine/GameFramework/Subsystems/InputSystem.hpp>
+//#include <Assets/AssetManager.hpp>
+//#include <GameFramework/Subsystems/RendererSystem.hpp>
+//#include <GameFramework/Subsystems/PhysicsSystem.hpp>
+//#include <GameFramework/Subsystems/InputSystem.hpp>
 
 class GameApp;
 

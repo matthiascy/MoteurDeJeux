@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SCENE_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SCENE_HPP
 
-#include "Types.hpp"
+#include <Core/Core.hpp>
 #include "GameObject.hpp"
 #include "NameGenerator.hpp"
 

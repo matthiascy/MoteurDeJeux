@@ -1,8 +1,0 @@
-#ifndef MOTEUR_DE_JEUX_SRC_ENGINE_CORE_QT_TYPES_HPP
-#define MOTEUR_DE_JEUX_SRC_ENGINE_CORE_QT_TYPES_HPP
-
-#include <QtGui/QImage>
-
-typedef QImage Image;
-
-#endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_CORE_QT_TYPES_HPP */

@@ -1,8 +1,8 @@
-#include <Engine/GameFramework/Scene.hpp>
-#include <Engine/Assets/AssetManager.hpp>
-#include <Engine/GameFramework/Subsystems/RendererSystem.hpp>
-#include <Engine/GameFramework/Component.hpp>
-#include <Engine/GameFramework/Subsystems/PhysicsSystem.hpp>
+#include <GameFramework/Scene.hpp>
+#include <GameFramework/Assets/AssetManager.hpp>
+#include <GameFramework/Subsystems/RendererSystem.hpp>
+#include <GameFramework/Component.hpp>
+#include <GameFramework/Subsystems/PhysicsSystem.hpp>
 #include <utility>
 #include "Camera.hpp"
 #include "Terrain.hpp"

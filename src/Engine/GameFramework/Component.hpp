@@ -1,9 +1,9 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENT_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENT_HPP
 
-#include <Engine/GameFramework/Forward.hpp>
-#include <Engine/Core/HandleType.hpp>
-#include <Engine/Core/Object.hpp>
+#include <GameFramework/Forward.hpp>
+#include <Core/Handle.hpp>
+#include <Core/Object.hpp>
 
 enum class EComponentType {
   None = 0x00,

@@ -1,7 +1,7 @@
 #ifndef SHADER_HPP
 #define SHADER_HPP
 
-#include "Types.hpp"
+#include <Core/Core.hpp>
 
 
 class Shader {

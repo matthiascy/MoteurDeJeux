@@ -1,4 +1,5 @@
-#include <Engine/Core/Object.hpp>
+#include <Core/Object.hpp>
+#include <Core/Core.hpp>
 #include <utility>
 
 Object::Object(String name)

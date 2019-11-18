@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SUBSYSTEMS_RENDERER_SYSTEM_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SUBSYSTEMS_RENDERER_SYSTEM_HPP
 
-#include <Engine/GameFramework/System.hpp>
+#include <GameFramework/System.hpp>
 
 // TODO forward
 class Scene;

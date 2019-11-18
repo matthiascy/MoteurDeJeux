@@ -1,8 +1,8 @@
 #ifndef MOTEUR_DE_JEUX_SRC_WORLD_PHYSICS_HPP
 #define MOTEUR_DE_JEUX_SRC_WORLD_PHYSICS_HPP
 
-#include <Engine/Core/Core.hpp>
-#include <Engine/GameFramework/System.hpp>
+#include <Core/Core.hpp>
+#include <GameFramework/System.hpp>
 #include <btBulletCollisionCommon.h>
 #include <btBulletDynamicsCommon.h>
 #include <BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>

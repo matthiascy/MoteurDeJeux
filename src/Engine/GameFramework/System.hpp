@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SYSTEM_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SYSTEM_HPP
 
-#include <Engine/Core/Core.hpp>
+#include <Core/Core.hpp>
 
 class Scene;
 

@@ -1,6 +1,6 @@
-#include <Engine/GameFramework/Components/Collider.hpp>
-#include <Engine/Core/Math/Math.hpp>
-#include <Engine/Core/Memory.hpp>
+#include <GameFramework/Components/Collider.hpp>
+#include <Core/Math/Math.hpp>
+#include <Core/Memory.hpp>
 #include <LinearMath/btDefaultMotionState.h>
 
 Collider::Collider(String name, GameObject* gameObject, btCollisionShape* shape, Real mass)

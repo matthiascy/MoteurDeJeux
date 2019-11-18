@@ -1,7 +1,7 @@
 #ifndef MESH_HPP
 #define MESH_HPP
 
-#include "Types.hpp"
+#include <Core/Core.hpp>
 
 /*
  * Compact layout { position | normal | texCoord }

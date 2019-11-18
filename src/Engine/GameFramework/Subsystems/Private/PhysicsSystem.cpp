@@ -1,5 +1,5 @@
-#include "Engine/GameFramework/Subsystems/PhysicsSystem.hpp"
-#include "Engine/GameFramework/GameObject.hpp"
+#include "GameFramework/Subsystems/PhysicsSystem.hpp"
+#include "GameFramework/GameObject.hpp"
 
 // TODO:
 PhysicsSystem::PhysicsSystem(String name, Scene* scene, const Vec3& gravity)

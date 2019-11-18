@@ -1,4 +1,4 @@
-#include "Engine/Graphics/Mesh.hpp"
+#include "Graphics/Mesh.hpp"
 
 Mesh::Mesh()
   : m_vertex_count{0}, m_indices{}, m_data{}, m_count{0}

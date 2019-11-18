@@ -3,7 +3,7 @@
 
 
 #include <QtGui/QGuiApplication>
-#include <Engine/Core/Core.hpp>
+#include <Core/Core.hpp>
 
 // QApplication : widgets
 // QGuiApplication : opengl, quick

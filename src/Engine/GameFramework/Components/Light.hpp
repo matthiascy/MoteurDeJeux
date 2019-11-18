@@ -1,8 +1,9 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_LIGHT_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_LIGHT_HPP
 
-#include <Engine/Core/BasicTypes.hpp>
-#include <Engine/GameFramework/Forward.hpp>
+#include <Core/Core.hpp>
+#include <GameFramework/Forward.hpp>
+#include <GameFramework/Component.hpp>
 
 class Light : public Component {
 protected:
@@ -14,7 +15,7 @@ public:
   ~Light() override = default;
 
   const Vec3& color() const;
-  const Vec3& intensity() const;
-}
+  Real intensity() const;
+};
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_LIGHT_HPP */

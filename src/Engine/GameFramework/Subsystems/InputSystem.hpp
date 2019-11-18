@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_INPUT_HPP
 #define MOTEUR_DE_JEUX_SRC_INPUT_HPP
 
-#include "Types.hpp"
+#include <Core/Core.hpp>
 
 class InputSystem {
 public:

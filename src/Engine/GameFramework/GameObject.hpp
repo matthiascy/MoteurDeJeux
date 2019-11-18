@@ -1,12 +1,13 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP
 
-#include <Engine/Core/CoreTypes.hpp>
-#include <Engine/GameFramework/Forward.hpp>
-#include "Types.hpp"
-#include <Engine/Graphics/Mesh.hpp>
+#include <Core/Core.hpp>
+#include <GameFramework/Forward.hpp>
+#include <Graphics/Mesh.hpp>
 #include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
+
+class Scene;
 
 // TODO: instantly all objects have a collider, seperate
 // TODO: final
@@ -55,8 +56,6 @@ public:
 
   template <typename T>
   bool hasComponent() const;
-
-  bool hasComponent(EComponentType componentType) const;
 
   template <typename T, class... Args>
   T* addComponent(Args&&... args);

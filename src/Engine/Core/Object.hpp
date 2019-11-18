@@ -1,8 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_CORE_OBJECT_HPP
 #define MOTEUR_DE_JEUX_SRC_CORE_OBJECT_HPP
 
-#include "CoreTypes.hpp"
-#include "ContainerTypes.hpp"
+#include "Container.hpp"
 
 class Object {
 protected:

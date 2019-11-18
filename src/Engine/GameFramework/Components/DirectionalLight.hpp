@@ -6,7 +6,6 @@
 class DirectionalLight : Light {
 public:
   DirectionalLight(String name, GameObject* gameObject, const Vec3& color, Real intensity);
-  ~DirectionalLight() override = deafault;
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_DIRECTIONAL_LIGHT_HPP */
