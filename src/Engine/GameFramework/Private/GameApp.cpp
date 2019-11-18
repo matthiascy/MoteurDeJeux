@@ -6,6 +6,8 @@
 #include <QtGui/QGuiApplication>
 #include <QApplication>
 #include <Editor/EditorMainWindow.hpp>
+#include <QtWidgets/QSplashScreen>
+#include <QtCore/QTimer>
 
 GameApp::GameApp(const String& name, const String& description, int argc, char** argv)
 {
@@ -42,10 +44,18 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
     QSurfaceFormat::setDefaultFormat(format);
   }
 
+  //QPixmap engineLogo(":/App/engine-logo");
+  //QSplashScreen splashScreen(engineLogo);
+  //splashScreen.show();
+
+  //QTimer::singleShot(1000, &splashScreen, &QSplashScreen::close);
   m_engine = new Engine(this);
+
   if (m_is_with_editor) {
+    //QTimer::singleShot(1000, dynamic_cast<QMainWindow*>(m_engine->window()), &QMainWindow::show);
     dynamic_cast<QMainWindow*>(m_engine->window())->show();
   } else {
+    //QTimer::singleShot(1000, dynamic_cast<QOpenGLWindow*>(m_engine->window()), &QOpenGLWindow::show);
     dynamic_cast<QOpenGLWindow*>(m_engine->window())->show();
   }
 

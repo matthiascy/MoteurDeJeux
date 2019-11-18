@@ -12,12 +12,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR_BINARY})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR_LIBRARY})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR_LIBRARY})
 
-# because of bullet3
-#set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-#include(cmake/zlib.cmake)
-#include(cmake/assimp.cmake)
-#include(cmake/bullet3.cmake)
-
 add_subdirectory(src/Engine)
 
 set(CMAKE_AUTOMOC ON)
@@ -27,14 +21,14 @@ set(CMAKE_AUTOUIC ON)
 #find_package(Qt5 COMPONENTS Widgets Core Gui Qml Quick REQUIRED)
 find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
-qt5_add_resources(QRCS src/Engine/resources.qrc)
+qt5_add_resources(Assets src/Homeland/Assets/Assets.qrc)
 
 set(HomelandSrc
     src/Homeland/Main.cpp
     src/Homeland/Private/HomelandApp.cpp
     src/Homeland/HomelandApp.hpp)
 
-add_executable(Homeland ${HomelandSrc} ${QRCS})
+add_executable(Homeland ${HomelandSrc} ${Assets})
 
 target_link_libraries(Homeland PRIVATE
     Engine)

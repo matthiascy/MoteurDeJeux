@@ -6,6 +6,8 @@
 //#include <GameFramework/Subsystems/PhysicsSystem.hpp>
 //#include <GameFramework/Subsystems/InputSystem.hpp>
 
+#include <QtWidgets/QSplashScreen>
+
 class GameApp;
 
 class Engine {
@@ -15,7 +17,8 @@ private:
   //UniquePtr<PhysicsSystem>  m_physics_sys;
   //UniquePtr<InputSystem>    m_input_sys;
   UniquePtr<QObject> m_window;
-  GameApp*          m_app;
+  GameApp*           m_app;
+  //UniquePtr<QSplashScreen> m_splash;
 
 public:
   explicit Engine(GameApp* app);

@@ -156,7 +156,7 @@ add_definitions(-DASSIMP_BUILD_NO_GLTF_EXPORTER)
 set(ASSIMP_BUILD_3MF_IMPORTER OFF CACHE BOOL "Build importer" FORCE)
 add_definitions(-DASSIMP_BUILD_NO_3MF_EXPORTER)
 
-add_subdirectory(${ASSIMP_DIR} "${CMAKE_CURRENT_BINARY_DIR}/Thirdparty/assimp")
+add_subdirectory(${ASSIMP_DIR})
 
 set_target_properties(assimp PROPERTIES
     LINKER_LANGUAGE CXX

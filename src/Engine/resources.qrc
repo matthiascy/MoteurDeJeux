@@ -43,10 +43,6 @@
     <qresource prefix="/App">
         <file alias="engine-logo">../../assets/textures/ephemeral-engine.png</file>
     </qresource>
-    <qresource prefix="/Qml">
-        <file alias="main">Editor/qml/main.qml</file>
-        <file alias="splash">Editor/qml/splash.qml</file>
-    </qresource>
     <qresource prefix="/Assets">
         <file alias="fontawesome.otf">../../assets/fonts/fontawesome-free-5.4.1-desktop/otfs/FontAwesome5Free-Regular-400.otf</file>
         <file alias="newdark.png">../../assets/icons/new-dark.png</file>
