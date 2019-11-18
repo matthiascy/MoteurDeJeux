@@ -25,7 +25,7 @@ public:
   GameObject() = delete;
   GameObject(String name, Scene* scene);
   GameObject(String name, Scene* scene, String tag);
-  virtual ~GameObject() = default;
+  ~GameObject() override = default;
 
   StringView tag() const;
   void setTag(const String& tag);

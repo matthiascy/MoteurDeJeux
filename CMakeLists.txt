@@ -50,7 +50,7 @@ set(GameFrameworkSrc
     src/Engine/GameFramework/Engine.hpp
     src/Engine/GameFramework/Private/Engine.cpp
     src/Engine/GameFramework/Private/GameApp.cpp
-    src/Engine/GameFramework/GameApp.hpp)
+    src/Engine/GameFramework/GameApp.hpp src/Engine/GameFramework/Components/Camera.hpp)
 
 set(EditorSrc
     src/editor/AssetPreviewer.cpp
@@ -105,7 +105,7 @@ set(HomelandSrc
     src/Engine/Core/Private/Object.cpp
     src/Engine/Core/HandleType.hpp src/Engine/Core/Handle.hpp
     ${GameFrameworkSrc}
-    ${EditorSrc} src/Engine/GameFramework/Components/Private/MeshRenderable.cpp src/Engine/GameFramework/Components/MeshRenderable.hpp src/Engine/GameFramework/Components/Private/Renderable.cpp src/Engine/GameFramework/Components/Renderable.hpp src/Engine/GameFramework/Subsystems/Private/RendererSystem.cpp src/Engine/GameFramework/Subsystems/RendererSystem.hpp src/Engine/Assets/Private/Asset.cpp src/Engine/Assets/Asset.hpp src/Engine/Assets/Private/AssetManager.cpp src/Engine/Assets/AssetManager.hpp src/Engine/Core/QtTypes.hpp src/Engine/Assets/AssetsTypes.hpp src/Engine/Core/Container.hpp
+    ${EditorSrc} src/Engine/GameFramework/Components/Private/MeshRenderer.cpp src/Engine/GameFramework/Components/MeshRenderer.hpp src/Engine/GameFramework/Components/Private/Renderer.cpp src/Engine/GameFramework/Components/Renderer.hpp src/Engine/GameFramework/Subsystems/Private/RendererSystem.cpp src/Engine/GameFramework/Subsystems/RendererSystem.hpp src/Engine/Assets/Private/Asset.cpp src/Engine/Assets/Asset.hpp src/Engine/Assets/Private/AssetManager.cpp src/Engine/Assets/AssetManager.hpp src/Engine/Core/QtTypes.hpp src/Engine/Assets/AssetsTypes.hpp src/Engine/Core/Container.hpp
     src/Engine/Graphics/Private/OpenGLWindow.cpp
     src/Engine/Graphics/OpenGLWindow.hpp
     src/Engine/Graphics/Window.hpp

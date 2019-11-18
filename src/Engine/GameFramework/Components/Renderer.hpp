@@ -3,7 +3,11 @@
 
 #include <Engine/GameFramework/Component.hpp>
 
-class Renderable : public Component {
+class Renderer : public Component {
+private:
+
+public:
+  Renderer(String name, GameObject* gameObject);
 };
 
 
