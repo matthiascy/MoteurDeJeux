@@ -3,25 +3,7 @@
 
 #include <Engine/Core/CoreTypes.hpp>
 
-/* =================== GL related =================== */
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLBuffer>
-#include <QOpenGLTexture>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLShader>
-
-typedef QOpenGLBuffer            OpenGLBuffer;
-typedef QOpenGLVertexArrayObject OpenGLVAO;
-typedef QOpenGLTexture           OpenGLTexture;
-typedef QOpenGLShaderProgram     OpenGLProgram;
-typedef QOpenGLShader            OpenGLShader;
-
 /* ==================== Enums ==================== */
-enum class ETransformSpace {
-  Local,   // Transform is relative to the local space
-  Parent,  // Transform is relative to the parent space
-  World,   // Transform is relative to the world space
-};
 
 enum class ELightType {
   Point,
@@ -55,12 +37,6 @@ class InputSystem;
 /* ==================== Graphics ==================== */
 class OpenGLWindow;
 
-#include <QImage>
-#include <BulletCollision/CollisionShapes/btCollisionShape.h>
-#include <BulletDynamics/Dynamics/btRigidBody.h>
-
-typedef QImage Image;
-
 /*
 struct MaterialInfo {
   String name;
@@ -75,8 +51,6 @@ struct LightInfo {
   Vec3 intensity;
 };
  */
-
-class EngineRenderer;
 
 struct VertexP {
   Vec3 position;

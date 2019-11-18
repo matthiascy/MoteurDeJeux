@@ -6,17 +6,13 @@ GameObject::GameObject(String name, Scene* scene)
   : Object(std::move(name)), m_tag{"None"}, m_transform{nullptr},
     m_is_static{false}, m_is_visible{true},
     m_scene{scene}, m_components{}
-{
-  //m_transform = scene->
-}
+{ }
 
 GameObject::GameObject(String name, Scene* scene, String tag)
     : Object(std::move(name)), m_tag{std::move(tag)}, m_transform{nullptr},
       m_is_static{false}, m_is_visible{true},
       m_scene{scene}, m_components{}
-{
-  //m_transform = scene->
-}
+{ }
 
 StringView GameObject::tag() const
 {
@@ -63,7 +59,7 @@ void GameObject::setStatic(bool isStatic)
   m_is_static = isStatic;
 }
 
-Scene *GameObject::scene() const
+Scene* GameObject::scene() const
 {
   return m_scene;
 }

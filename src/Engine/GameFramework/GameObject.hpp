@@ -42,9 +42,8 @@ public:
 
   Scene* scene() const;
 
-  /*
   template <typename T>
-  ComponentHandle getComponent() const;
+  T* getComponent() const;
 
   template <typename T>
   ComponentHandle getComponentInParent() const;
@@ -52,16 +51,7 @@ public:
   template <typename T>
   ComponentHandle getComponentInChildren() const;
 
-  Array<ComponentHandle> getAllComponents() const;
-
-  template <typename T>
-  Array<ComponentHandle> getComponents() const;
-
-  template <typename T>
-  Array<ComponentHandle> getComponentsInParent() const;
-
-  template <typename T>
-  Array<ComponentHandle> getComponentsInChildren() const;
+  Array<Component*> getComponents() const;
 
   template <typename T>
   bool hasComponent() const;
@@ -69,10 +59,20 @@ public:
   bool hasComponent(EComponentType componentType) const;
 
   template <typename T, class... Args>
-  void addComponent(Args&&... args);
+  T* addComponent(Args&&... args);
 
-  void addComponent(ComponentHandle component);
-   */
+  template <typename T>
+  void removeComponent();
+
+  void removeAllComponents();
 };
+
+template <typename T>
+T* GameObject::getComponent() const
+{
+  static_assert(std::is_base_of<Component, T>(), "T is not a Component");
+}
+
+
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP */
