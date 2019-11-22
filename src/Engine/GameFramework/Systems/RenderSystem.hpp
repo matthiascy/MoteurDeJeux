@@ -4,13 +4,13 @@
 #include <GameFramework/System.hpp>
 
 // TODO forward
-class Scene;
 class GameObject;
+class Engine;
 
-class RendererSystem : public System {
+class RenderSystem : public System {
 public:
-  RendererSystem(String name, Scene* scene);
-  ~RendererSystem() override { };
+  RenderSystem(String name, Engine* engine);
+  ~RenderSystem() override { };
 
 
   void init() override { };

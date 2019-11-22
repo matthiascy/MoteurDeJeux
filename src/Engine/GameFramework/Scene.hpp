@@ -8,7 +8,7 @@
 // TODO vbo index for Creating and Destroying GameObject
 
 class AssetManager;
-class RendererSystem;
+class RenderSystem;
 class PhysicsSystem;
 class InputSystem;
 

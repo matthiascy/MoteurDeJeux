@@ -6,6 +6,7 @@
 
 EditorMainWindow::EditorMainWindow(QWidget *parent)
   : QMainWindow(parent),
+    AbstractWindow(),
     viewport(nullptr),
     _toolBar(nullptr),
     mainSplitter{nullptr},

@@ -5,13 +5,14 @@
 #include <QWidget>
 #include <QtGui/QtGui>
 #include "GraphicsTypes.hpp"
+#include "AbstractWindow.hpp"
 //#include "OpenGLError.hpp"
 
 
 class GLWidget;
 class MainWindow;
 
-class OpenGLWindow : public QOpenGLWindow, protected QOpenGLFunctions {
+class OpenGLWindow : public QOpenGLWindow, protected QOpenGLFunctions, public AbstractWindow {
     Q_OBJECT
 
 public:
@@ -20,6 +21,8 @@ public:
   void initializeGL() override;
   void resizeGL(Int32 width, Int32 height) override;
   void paintGL() override {  };
+
+  void startShowing() override { show(); }
 
 protected slots:
   void teardownGL() { };

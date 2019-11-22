@@ -57,12 +57,12 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Components/Renderer.hpp
     ${EngineSrcDir}/GameFramework/Components/Transform.hpp
 
-    #${EngineSrcDir}/GameFramework/Subsystems/Private/InputSystem.cpp
-    ${EngineSrcDir}/GameFramework/Subsystems/Private/PhysicsSystem.cpp
-    ${EngineSrcDir}/GameFramework/Subsystems/Private/RendererSystem.cpp
-    #${EngineSrcDir}/GameFramework/Subsystems/InputSystem.hpp
-    ${EngineSrcDir}/GameFramework/Subsystems/PhysicsSystem.hpp
-    ${EngineSrcDir}/GameFramework/Subsystems/RendererSystem.hpp
+    ${EngineSrcDir}/GameFramework/Systems/Private/InputSystem.cpp
+    ${EngineSrcDir}/GameFramework/Systems/Private/PhysicsSystem.cpp
+    ${EngineSrcDir}/GameFramework/Systems/Private/RenderSystem.cpp
+    ${EngineSrcDir}/GameFramework/Systems/InputSystem.hpp
+    ${EngineSrcDir}/GameFramework/Systems/PhysicsSystem.hpp
+    ${EngineSrcDir}/GameFramework/Systems/RenderSystem.hpp
 
     ${EngineSrcDir}/GameFramework/Private/Component.cpp
     ${EngineSrcDir}/GameFramework/Private/Engine.cpp
@@ -117,7 +117,7 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.hpp
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
-    ${EditorSrcDir}/Vertex.cpp)
+    ${EditorSrcDir}/Vertex.cpp Graphics/AbstractWindow.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 

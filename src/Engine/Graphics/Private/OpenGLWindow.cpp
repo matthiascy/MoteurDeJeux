@@ -10,7 +10,7 @@
 #include <QMessageBox>
 
 OpenGLWindow::OpenGLWindow()
-    : QOpenGLWindow(), m_clear_color{60, 60, 69, 255}
+    : QOpenGLWindow(), AbstractWindow(), m_clear_color{60, 60, 69, 255}
 {
 
 }

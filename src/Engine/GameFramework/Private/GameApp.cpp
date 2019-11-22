@@ -11,6 +11,8 @@
 
 GameApp::GameApp(const String& name, const String& description, int argc, char** argv)
 {
+  Q_INIT_RESOURCE(resources);
+
   QCoreApplication::setApplicationName(name);
   {
     QCommandLineParser parser;
@@ -28,10 +30,10 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
 
   if (m_is_with_editor) {
     qDebug() << "Launching with editor : Qt Widget Application";
-    m_app = new QApplication(argc, argv);
+    m_app = makeUnique<QApplication>(argc, argv);
   } else {
     qDebug() << "Launching without editor : Qt OpenGL Application";
-    m_app = new QGuiApplication(argc, argv);
+    m_app = makeUnique<QGuiApplication>(argc, argv);
   }
 
   {
@@ -44,27 +46,39 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
     QSurfaceFormat::setDefaultFormat(format);
   }
 
-  //QPixmap engineLogo(":/App/engine-logo");
-  //QSplashScreen splashScreen(engineLogo);
-  //splashScreen.show();
-
-  //QTimer::singleShot(1000, &splashScreen, &QSplashScreen::close);
-  m_engine = new Engine(this);
+  // Engine initialization
+  m_engine = makeUnique<Engine>(this);
+  m_engine->initialize();
 
   if (m_is_with_editor) {
-    //QTimer::singleShot(1000, dynamic_cast<QMainWindow*>(m_engine->window()), &QMainWindow::show);
-    dynamic_cast<QMainWindow*>(m_engine->window())->show();
+    m_splash = makeUnique<QSplashScreen>(QPixmap{":/App/engine-logo"}, Qt::WindowStaysOnTopHint);
+    //m_splash = new QSplashScreen({":/App/engine-logo"}, Qt::WindowStaysOnTopHint);
+    m_splash->show();
+    //QTimer::singleShot(2000, m_splash.get(), &QSplashScreen::close);
+    QTimer::singleShot(2000, m_splash.get(), &QSplashScreen::close);
+    QTimer::singleShot(1000, dynamic_cast<QMainWindow*>(m_engine->window()), &QMainWindow::show);
   } else {
-    //QTimer::singleShot(1000, dynamic_cast<QOpenGLWindow*>(m_engine->window()), &QOpenGLWindow::show);
-    dynamic_cast<QOpenGLWindow*>(m_engine->window())->show();
+    m_engine->window()->startShowing();
   }
 
   QCoreApplication::exec();
 }
 
+GameApp::~GameApp()
+{
+  m_splash.reset(nullptr);
+  m_engine.reset(nullptr);
+  m_app.reset(nullptr);
+}
+
 bool GameApp::isEditorEnabled() const
 {
   return m_is_with_editor;
+}
+
+StringView GameApp::name() const
+{
+  return QCoreApplication::applicationName();
 }
 
 

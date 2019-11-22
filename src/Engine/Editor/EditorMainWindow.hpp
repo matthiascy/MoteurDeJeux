@@ -13,6 +13,7 @@
 #include <QActionGroup>
 #include <QLineEdit>
 //#include "Viewport.hpp"
+#include <Graphics/AbstractWindow.hpp>
 #include "CommandLine.hpp"
 #include "SimpleOutput.hpp"
 #include "AssetsBrowser.hpp"
@@ -25,14 +26,14 @@ class Viewport;
  * TODO: Color picker style
  */
 
-class EditorMainWindow : public QMainWindow {
+class EditorMainWindow : public QMainWindow, public AbstractWindow {
 
   Q_OBJECT
 
 public:
   explicit EditorMainWindow(QWidget* parent = nullptr);
   ~EditorMainWindow() override;
-
+  void startShowing() override { show(); }
 
 protected:
   void closeEvent(QCloseEvent* event) override;

@@ -7,7 +7,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>
 
-class Scene;
+class Engine;
 
 class PhysicsSystem : System {
 protected:
@@ -21,7 +21,7 @@ protected:
   btCollisionObjectArray   m_collision_objects;
 
 public:
-  PhysicsSystem(String name, Scene* scene, const Vec3& gravity = vec3::Down);
+  PhysicsSystem(String name, Engine* engine, const Vec3& gravity = vec3::Down);
   ~PhysicsSystem() override;
 
   void init() override { };

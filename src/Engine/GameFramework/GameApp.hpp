@@ -5,20 +5,28 @@
 #include <QtGui/QGuiApplication>
 #include <Core/Core.hpp>
 
-// QApplication : widgets
-// QGuiApplication : opengl, quick
+/*
+ * QApplication : widgets
+ * QGuiApplication : opengl, quick
+ */
 
 class Engine;
+class QSplashScreen;
 
 class GameApp {
 private:
-  QCoreApplication* m_app;
-  Engine* m_engine;
+  UniquePtr<QCoreApplication> m_app;
+  UniquePtr<Engine>           m_engine;
+  UniquePtr<QSplashScreen>    m_splash;
+
   bool m_is_with_editor;
 
 public:
   GameApp(const String& name, const String& description, int argc, char** argv);
-  bool isEditorEnabled() const;
+  virtual ~GameApp();
+  [[nodiscard]] bool isEditorEnabled() const;
+  [[nodiscard]] StringView name() const;
+
   virtual void run() { };
 };
 
