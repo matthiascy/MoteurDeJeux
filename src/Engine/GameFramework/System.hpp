@@ -6,7 +6,7 @@
 //class Scene;
 class Engine;
 
-class System : Object {
+class System : public Object {
 public:
   System(String name, Engine* scene);
   virtual void init() = 0;

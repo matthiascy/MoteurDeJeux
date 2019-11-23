@@ -7,16 +7,15 @@
 Engine::Engine(GameApp* app)
   : m_app{app}
 {
+  qDebug() << "Engine instance creation.";
   //m_asset_manager = makeUnique<AssetManager>(name + "AssetManager");
-  //m_render_sys = makeUnique<RenderSystem>(m_app->name() + "RenderSystem", this);
+  m_render_sys = makeUnique<RenderSystem>(m_app->name() + "RenderSystem", this);
   //m_physics_sys = makeUnique<PhysicsSystem>(m_app->name() + "PhysicsSystem", this);
   //m_input_sys = makeUnique<InputSystem>(m_app->name() + "InputSystem", this);
 
   if (m_app->isEditorEnabled()) {
-    //m_window = makeUnique<QMainWindow>();
     m_window = makeUnique<EditorMainWindow>();
   } else {
-    //m_window = makeUnique<OpenGLWindow>();
     m_window = makeUnique<OpenGLWindow>();
   }
 }
@@ -34,8 +33,8 @@ AbstractWindow* Engine::window()
   return m_window.get();
 }
 
-bool Engine::initialize()
+bool Engine::init()
 {
-  return false;
+  m_render_sys->init();
 }
 

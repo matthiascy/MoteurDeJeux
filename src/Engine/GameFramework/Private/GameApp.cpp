@@ -11,6 +11,7 @@
 
 GameApp::GameApp(const String& name, const String& description, int argc, char** argv)
 {
+  qDebug() << "GameApp creation :";
   Q_INIT_RESOURCE(resources);
 
   QCoreApplication::setApplicationName(name);
@@ -29,13 +30,14 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
   }
 
   if (m_is_with_editor) {
-    qDebug() << "Launching with editor : Qt Widget Application";
+    qDebug() << "\twith editor (Widget Application)";
     m_app = makeUnique<QApplication>(argc, argv);
   } else {
-    qDebug() << "Launching without editor : Qt OpenGL Application";
+    qDebug() << "\twithout editor (OpenGL Application)";
     m_app = makeUnique<QGuiApplication>(argc, argv);
   }
 
+  /*
   {
     QSurfaceFormat format;
     format.setRenderableType(QSurfaceFormat::OpenGL);
@@ -45,16 +47,14 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
     format.setSamples(16);
     QSurfaceFormat::setDefaultFormat(format);
   }
+   */
 
-  // Engine initialization
   m_engine = makeUnique<Engine>(this);
-  m_engine->initialize();
+  m_engine->init();
 
   if (m_is_with_editor) {
     m_splash = makeUnique<QSplashScreen>(QPixmap{":/App/engine-logo"}, Qt::WindowStaysOnTopHint);
-    //m_splash = new QSplashScreen({":/App/engine-logo"}, Qt::WindowStaysOnTopHint);
     m_splash->show();
-    //QTimer::singleShot(2000, m_splash.get(), &QSplashScreen::close);
     QTimer::singleShot(2000, m_splash.get(), &QSplashScreen::close);
     QTimer::singleShot(1000, dynamic_cast<QMainWindow*>(m_engine->window()), &QMainWindow::show);
   } else {
