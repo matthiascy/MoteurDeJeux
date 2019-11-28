@@ -6,6 +6,7 @@
 #include <Graphics/Mesh.hpp>
 #include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <GameFramework/Assets/AssetsTypes.hpp>
 
 class Scene;
 
@@ -20,6 +21,7 @@ private:
   bool m_is_static;   // do we need to update GameObject ?
   bool m_is_visible;  // is the GameObject active in the scene ?
   Scene* m_scene;
+  AssetHandle m_mesh;
   Array<ComponentHandle> m_components;
 
 public:
@@ -28,31 +30,33 @@ public:
   GameObject(String name, Scene* scene, String tag);
   ~GameObject() override = default;
 
-  StringView tag() const;
+  [[nodiscard]] StringView tag() const;
   void setTag(const String& tag);
 
   void setTransform(Transform* trans);
-  const Transform* transform() const;
+  [[nodiscard]] const Transform* transform() const;
   Transform* transform();
 
-  bool isVisible() const;
+  [[nodiscard]] bool isVisible() const;
   void setVisible(bool isVisible);
 
-  bool isStatic() const;
+  [[nodiscard]] bool isStatic() const;
   void setStatic(bool isStatic);
 
-  Scene* scene() const;
+  [[nodiscard]] AssetHandle meshHandle() const;
+
+  [[nodiscard]] Scene* scene() const;
 
   template <typename T>
   T* getComponent() const;
 
   template <typename T>
-  ComponentHandle getComponentInParent() const;
+  [[nodiscard]] ComponentHandle getComponentInParent() const;
 
   template <typename T>
-  ComponentHandle getComponentInChildren() const;
+  [[nodiscard]] ComponentHandle getComponentInChildren() const;
 
-  Array<Component*> getComponents() const;
+  [[nodiscard]] Array<Component*> getComponents() const;
 
   template <typename T>
   bool hasComponent() const;

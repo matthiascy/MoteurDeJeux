@@ -13,10 +13,10 @@ public:
   explicit Object(String name);
   virtual ~Object() = default;
 
-  virtual StringView name() const;
+  [[nodiscard]] virtual StringView name() const;
   virtual void setName(const String& name);
 
-  virtual StringView uuid() const;
+  [[nodiscard]] virtual StringView uuid() const;
 
   virtual inline bool operator==(const Object& other) const;
   virtual inline bool operator!=(const Object& other) const;

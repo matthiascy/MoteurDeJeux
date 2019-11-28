@@ -3,15 +3,16 @@
 
 #include <Core/Core.hpp>
 
-class Scene;
+//class Scene;
+class Engine;
 
-class System : Object {
+class System : public Object {
 public:
-  System(String name, Scene* scene);
+  System(String name, Engine* scene);
   virtual void init() = 0;
 
 protected:
-  Scene* m_scene;
+  Engine* m_engine;
 };
 
 

@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.10.0)
 
 project(Homeland)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 set(PROJECT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/Build/${BUILD_PLATFORM}/${CMAKE_BUILD_TYPE})
 set(OUTPUT_DIR_INTERMEDIATE ${OUTPUT_DIR}/Intermediate)
@@ -41,3 +44,7 @@ target_compile_definitions(Bullet3Test PRIVATE
     ${BULLET_DEFINITIONS})
 target_link_libraries(Bullet3Test PRIVATE
     Engine)
+
+add_executable(FboTest src/Tests/FboTest/main.cpp src/Tests/FboTest/MainWindow.cpp src/Tests/FboTest/MainWindow.ui)
+target_compile_definitions(FboTest PRIVATE ${BULLET_DEFINITIONS})
+target_link_libraries(FboTest PRIVATE Engine)
