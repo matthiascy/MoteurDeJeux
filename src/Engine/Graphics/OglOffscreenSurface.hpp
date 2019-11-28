@@ -9,20 +9,28 @@
 #include <QtGui/QOpenGLFunctions_4_0_Core>
 #include <QtGui/QExposeEvent>
 #include <QtGui/QResizeEvent>
+#include <QtGui/QOpenGLShaderProgram>
 
 #include <atomic>
 #include <mutex>
 #include <Core/BasicTypes.hpp>
+
+/**
+ * Constructor => .setFormat => .create => .init
+ */
 
 class OglOffscreenSurface : public QOffscreenSurface {
   Q_OBJECT
 
 private:
   std::atomic_bool m_is_initialized;
+  std::atomic_bool m_is_update_pending;
+  std::atomic_bool m_is_gl_initialized;
+
   std::mutex m_mutex;
 
   /** OpenGL context */
-  QOpenGLContext*           m_ctx;
+  QOpenGLContext*            m_ctx;
 
   QOpenGLFunctions*          m_fns;
   QOpenGLFunctions_4_0_Core* m_fns40;
@@ -39,13 +47,14 @@ private:
    */
   QOpenGLFramebufferObject* m_resolved_fbo;
 
+
+  /** Shader used for blitting m_fbo to screen if glBlitFrameBuffer is not available. */
+  QOpenGLShaderProgram* m_blit_shader;
+
   QSize m_size;
 
 private:
   Q_DISABLE_COPY(OglOffscreenSurface)
-
-  /** Internal method to initialize the window. */
-  void initialize_internal();
 
   /** Internal method to swap the buffer, not using mutex. */
   void swap_buffer_internal();
@@ -63,12 +72,16 @@ public:
   explicit OglOffscreenSurface(QScreen* targetScreen = nullptr, const QSize& size = QSize(800, 600));
   virtual ~OglOffscreenSurface();
 
+  void init();
+
   bool isValid() const;
-  QOpenGLContext* context() const;
-  QOpenGLFunctions* fns() const;
+
+  [[nodiscard]] QOpenGLContext* context() const;
+
+  [[nodiscard]] QOpenGLFunctions* fns() const;
 
   /** Return the OpenGL off-screen frame buffer object identifier. */
-  UInt32 framebufferObjectId();
+  [[nodiscard]] UInt32 framebufferObjectId() const;
 
   /** Return the OpenGL off-screen frame buffer object. */
   const QOpenGLFramebufferObject* framebufferObject() const;
