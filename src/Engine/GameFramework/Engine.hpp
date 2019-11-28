@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP
 
-//#include <Assets/AssetManager.hpp>
+#include <GameFramework/Assets/AssetManager.hpp>
 #include <GameFramework/Systems/RenderSystem.hpp>
 #include <GameFramework/Systems/PhysicsSystem.hpp>
 #include <GameFramework/Systems/InputSystem.hpp>
@@ -13,7 +13,7 @@ class GameApp;
 
 class Engine {
 private:
-  //UniquePtr<AssetManager>   m_asset_manager;
+  UniquePtr<AssetManager>   m_asset_manager;
   UniquePtr<RenderSystem>   m_render_sys;
   UniquePtr<PhysicsSystem>  m_physics_sys;
   UniquePtr<InputSystem>    m_input_sys;
@@ -25,6 +25,9 @@ public:
   ~Engine();
 
   bool init();
+
+  [[nodiscard]] AssetManager* assetManager() const;
+  [[nodiscard]] RenderSystem* renderSystem() const;
 
   //void update();
   //void start();

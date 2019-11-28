@@ -27,13 +27,15 @@ protected:
 public:
   Scene() = delete;
   explicit Scene(String name);
-  virtual ~Scene();
+  ~Scene() override;
 
   virtual Transform* root();
 
   virtual GameObject* createGameObject(String name, const String& tag);
 
   virtual Array<GameObject*> gameObjects() const;
+
+  virtual GameObject* mainCamera() const;
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SCENE_HPP */

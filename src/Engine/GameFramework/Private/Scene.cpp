@@ -66,3 +66,8 @@ Array<GameObject*> Scene::gameObjects() const
   }
   return ret;
 }
+
+GameObject* Scene::mainCamera() const
+{
+  return m_game_objects->operator[]("Camera")->operator[](0);
+}

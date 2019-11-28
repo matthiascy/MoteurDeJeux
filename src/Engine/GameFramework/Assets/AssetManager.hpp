@@ -5,6 +5,8 @@
 #include <Graphics/Mesh.hpp>
 #include <Graphics/GraphicsTypes.hpp>
 
+class Engine;
+
 enum class EAssetType {
   Texture,
   Audio,

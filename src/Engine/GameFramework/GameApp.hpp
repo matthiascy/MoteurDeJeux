@@ -14,7 +14,7 @@ class Engine;
 class QSplashScreen;
 
 class GameApp {
-private:
+protected:
   UniquePtr<QCoreApplication> m_app;
   UniquePtr<Engine>           m_engine;
   UniquePtr<QSplashScreen>    m_splash;

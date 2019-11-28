@@ -1,4 +1,5 @@
 #include <GameFramework/GameObject.hpp>
+#include <GameFramework/Components/Transform.hpp>
 
 #include <utility>
 
@@ -57,6 +58,11 @@ bool GameObject::isStatic() const
 void GameObject::setStatic(bool isStatic)
 {
   m_is_static = isStatic;
+}
+
+AssetHandle GameObject::meshHandle() const
+{
+  return m_mesh;
 }
 
 Scene* GameObject::scene() const

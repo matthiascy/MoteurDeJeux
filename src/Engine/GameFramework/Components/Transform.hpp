@@ -69,7 +69,7 @@ public:
   Mat4 localToWorldMatrix();
   Mat4 worldToLocalMatrix();
 
-  Transform* parent() const;
+  [[nodiscard]] Transform* parent() const;
   void setParent(Transform* parent);
 
   Transform* root();

@@ -1,3 +1,4 @@
+#include <Engine/GameFramework/Engine.hpp>
 #include <Homeland/HomelandApp.hpp>
 
 HomelandApp::HomelandApp(int argc, char** argv)
@@ -6,4 +7,5 @@ HomelandApp::HomelandApp(int argc, char** argv)
 
 void HomelandApp::run()
 {
+  m_engine->renderSystem()->renderScene(nullptr);
 }
