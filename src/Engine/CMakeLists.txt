@@ -117,7 +117,7 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.hpp
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
-    ${EditorSrcDir}/Vertex.cpp Graphics/AbstractWindow.hpp)
+    ${EditorSrcDir}/Vertex.cpp Graphics/Private/OglOffscreenSurface.cpp Graphics/OglOffscreenSurface.hpp Graphics/AbstractWindow.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 
