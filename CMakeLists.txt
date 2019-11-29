@@ -48,3 +48,10 @@ target_link_libraries(Bullet3Test PRIVATE
 add_executable(FboTest src/Tests/FboTest/main.cpp src/Tests/FboTest/MainWindow.cpp src/Tests/FboTest/MainWindow.ui)
 target_compile_definitions(FboTest PRIVATE ${BULLET_DEFINITIONS})
 target_link_libraries(FboTest PRIVATE Engine)
+
+add_executable(TestWindow src/Tests/OffscreenTest/TestWindow.hpp
+    src/Engine/Graphics/OglOffscreenSurface.hpp
+    src/Engine/Graphics/Private/OglOffscreenSurface.cpp
+    src/Tests/OffscreenTest/main.cpp)
+target_include_directories(TestWindow PRIVATE src)
+target_link_libraries(TestWindow PRIVATE Engine)

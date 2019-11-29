@@ -6,11 +6,9 @@
 #include <GameFramework/Engine.hpp>
 
 RenderSystem::RenderSystem(String name, Engine* engine)
-  : System(std::move(name), engine)
+  : System(std::move(name), engine), m_context{nullptr}, m_surface{nullptr}
 {
   qDebug() << "Render System creation =>" << m_name;
-  m_context = makeUnique<QOpenGLContext>();
-  m_surface = makeUnique<QOffscreenSurface>();
   m_vao = nullptr;
   m_vbos = {};
   m_ebos = {};
@@ -46,6 +44,7 @@ RenderSystem::~RenderSystem()
 void RenderSystem::init()
 {
   qDebug() << "\tRender system initialization";
+
   QSurfaceFormat format;
   format.setRenderableType(QSurfaceFormat::OpenGL);
   format.setProfile(QSurfaceFormat::CoreProfile);
@@ -53,14 +52,17 @@ void RenderSystem::init()
   format.setDepthBufferSize(24);
   format.setSamples(16);
   QSurfaceFormat::setDefaultFormat(format);
+
   qDebug() << "\t\t1. Context creation : OpenGL Core Profile 4.6.0.";
-  if (!m_context->create()) {
+  m_context = makeUnique<QOpenGLContext>();
+  if (!m_context->create())
     qDebug() << "\t\t\t!!!Creation failed";
-  }
 
   qDebug() << "\t\t2. OffScreenSurface creation.";
-  m_surface->setFormat(m_context->format());
+  m_surface = makeUnique<OglOffscreenSurface>();
   m_surface->create();
+  m_surface->init();
+
   if (!m_surface->isValid())
     qDebug() << "\t\t\tCreation failed";
 

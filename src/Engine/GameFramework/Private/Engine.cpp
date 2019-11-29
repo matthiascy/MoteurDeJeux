@@ -43,6 +43,7 @@ AssetManager* Engine::assetManager() const
 bool Engine::init()
 {
   m_render_sys->init();
+  return true;
 }
 
 RenderSystem *Engine::renderSystem() const

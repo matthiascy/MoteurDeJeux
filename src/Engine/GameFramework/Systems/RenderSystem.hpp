@@ -9,6 +9,7 @@
 #include <QtGui/QOpenGLShaderProgram>
 #include <QtGui/QOpenGLFramebufferObject>
 #include <QtGui/QOpenGLVertexArrayObject>
+#include <Graphics/OglOffscreenSurface.hpp>
 
 // TODO forward
 class GameObject;
@@ -25,7 +26,8 @@ private:
 
 private:
   UniquePtr<QOpenGLContext>       m_context;
-  UniquePtr<QOffscreenSurface>    m_surface;
+  //UniquePtr<QOffscreenSurface>    m_surface;
+  UniquePtr<OglOffscreenSurface>  m_surface;
   UniquePtr<QOpenGLVertexArrayObject> m_vao;
   UniquePtr<Array<QOpenGLBuffer*>>     m_vbos;
   UniquePtr<Array<QOpenGLBuffer*>>     m_ebos;
