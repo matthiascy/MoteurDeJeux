@@ -75,4 +75,6 @@
         <file alias="placedark.png">../../assets/icons/place-dark.png</file>
         <file alias="rotatelight.png">../../assets/icons/rotate-light.png</file>
     </qresource>
+    <qresource prefix="/UI">
+    </qresource>
 </RCC>

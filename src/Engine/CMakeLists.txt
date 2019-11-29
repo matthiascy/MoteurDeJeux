@@ -81,24 +81,14 @@ set(EngineSrc
 
     ${EngineSrcDir}/Graphics/Private/Mesh.cpp
     #${EngineSrcDir}/Core/Graphics/Private/OpenGLError.cpp
-    ${EngineSrcDir}/Graphics/Private/OpenGLWindow.cpp
     ${EngineSrcDir}/Graphics/Private/Shader.cpp
     ${EngineSrcDir}/Graphics/GraphicsTypes.hpp
     ${EngineSrcDir}/Graphics/Mesh.hpp
     #${EngineSrcDir}/Core/Graphics/OpenGLError.hpp
-    ${EngineSrcDir}/Graphics/OpenGLWindow.hpp
     ${EngineSrcDir}/Graphics/Shader.hpp
 
     ${EngineSrcDir}/Camera.hpp
     ${EngineSrcDir}/Camera.cpp
-    #${EngineSrcDir}/GLWidget.hpp
-    #${EngineSrcDir}/GLWidget.cpp
-    #${EngineSrcDir}/main.cpp
-    ${EngineSrcDir}/NameGenerator.hpp
-    ${EngineSrcDir}/NameGenerator.cpp
-    #${EngineSrcDir}/Terrain.hpp
-    #${EngineSrcDir}/Terrain.cpp
-    ${EngineSrcDir}/Types.hpp
 
     ${EditorSrcDir}/AssetPreviewer.cpp
     ${EditorSrcDir}/AssetPreviewer.hpp
@@ -117,7 +107,7 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.hpp
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
-    ${EditorSrcDir}/Vertex.cpp Graphics/Private/OglOffscreenSurface.cpp Graphics/OglOffscreenSurface.hpp Graphics/AbstractWindow.hpp)
+    ${EditorSrcDir}/Vertex.cpp Graphics/Private/OglOffscreenSurface.cpp Graphics/OglOffscreenSurface.hpp Graphics/AbstractWindow.hpp GameFramework/Private/EngineWindow.cpp GameFramework/EngineWindow.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 

@@ -52,6 +52,6 @@ target_link_libraries(FboTest PRIVATE Engine)
 add_executable(TestWindow src/Tests/OffscreenTest/TestWindow.hpp
     src/Engine/Graphics/OglOffscreenSurface.hpp
     src/Engine/Graphics/Private/OglOffscreenSurface.cpp
-    src/Tests/OffscreenTest/main.cpp)
+    src/Tests/OffscreenTest/main.cpp src/Tests/OffscreenTest/Offscreen.hpp src/Tests/OffscreenTest/Offscreen.cpp src/Tests/OffscreenTest/ExamplePaintSurface.cpp src/Tests/OffscreenTest/ExamplePaintSurface.hpp)
 target_include_directories(TestWindow PRIVATE src)
 target_link_libraries(TestWindow PRIVATE Engine)

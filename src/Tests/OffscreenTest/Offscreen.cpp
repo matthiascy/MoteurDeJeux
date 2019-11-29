@@ -1,8 +1,9 @@
-#include <Graphics/OglOffscreenSurface.hpp>
-#include <QCoreApplication>
-#include <QtGui/QImage>
+#include "Offscreen.hpp"
 
-OglOffscreenSurface::OglOffscreenSurface(
+#include <QtCore/QCoreApplication>
+#include <QtGui/QPainter>
+
+OpenGlOffscreenSurface::OpenGlOffscreenSurface(
     QScreen*     targetScreen,
     const QSize& size)
     : QOffscreenSurface(targetScreen)
@@ -23,7 +24,7 @@ OglOffscreenSurface::OglOffscreenSurface(
 }
 
 
-OglOffscreenSurface::~OglOffscreenSurface()
+OpenGlOffscreenSurface::~OpenGlOffscreenSurface()
 {
   // to delete the FBOs we first need to make the context current
   m_context->makeCurrent(this);
@@ -54,37 +55,37 @@ OglOffscreenSurface::~OglOffscreenSurface()
 }
 
 
-QOpenGLContext* OglOffscreenSurface::context() const
+QOpenGLContext* OpenGlOffscreenSurface::context() const
 {
   return (m_context);
 }
 
 
-QOpenGLFunctions* OglOffscreenSurface::functions() const
+QOpenGLFunctions* OpenGlOffscreenSurface::functions() const
 {
   return (m_functions);
 }
 
 
-GLuint OglOffscreenSurface::framebufferObjectHandle() const
+GLuint OpenGlOffscreenSurface::framebufferObjectHandle() const
 {
   return (m_fbo ? m_fbo->handle() : 0);
 }
 
 
-const QOpenGLFramebufferObject* OglOffscreenSurface::getFramebufferObject() const
+const QOpenGLFramebufferObject* OpenGlOffscreenSurface::getFramebufferObject() const
 {
   return (m_fbo);
 }
 
 
-QPaintDevice* OglOffscreenSurface::getPaintDevice() const
+QPaintDevice* OpenGlOffscreenSurface::getPaintDevice() const
 {
   return (m_paintDevice);
 }
 
 
-void OglOffscreenSurface::bindFramebufferObject()
+void OpenGlOffscreenSurface::bindFramebufferObject()
 {
   if (m_fbo) {
     m_fbo->bind();
@@ -94,29 +95,29 @@ void OglOffscreenSurface::bindFramebufferObject()
 }
 
 
-bool OglOffscreenSurface::isValid() const
+bool OpenGlOffscreenSurface::isValid() const
 {
   return (m_initialized && m_context && m_fbo);
 }
 
 
-void OglOffscreenSurface::makeCurrent()
+void OpenGlOffscreenSurface::makeCurrent()
 {
   makeCurrentInternal();
 }
 
 
-void OglOffscreenSurface::makeCurrentInternal()
+void OpenGlOffscreenSurface::makeCurrentInternal()
 {
   if (isValid()) {
     m_context->makeCurrent(this);
   } else {
-    throw ("OglOffscreenSurface::makeCurrent() - Window not yet properly initialized!");
+    throw ("OpenGlOffscreenSurface::makeCurrent() - Window not yet properly initialized!");
   }
 }
 
 
-void OglOffscreenSurface::doneCurrent()
+void OpenGlOffscreenSurface::doneCurrent()
 {
   if (m_context) {
     m_context->doneCurrent();
@@ -124,7 +125,7 @@ void OglOffscreenSurface::doneCurrent()
 }
 
 
-QImage OglOffscreenSurface::grabFramebuffer()
+QImage OpenGlOffscreenSurface::grabFramebuffer()
 {
   std::lock_guard <std::mutex> locker(m_mutex);
   makeCurrentInternal();
@@ -151,7 +152,7 @@ QImage OglOffscreenSurface::grabFramebuffer()
     }
     // check if OpenGL errors happened
     if (GLenum error = m_functions->glGetError() != GL_NO_ERROR) {
-      qDebug() << "OglOffscreenSurface::grabFramebuffer() - OpenGL error" << error;
+      qDebug() << "OpenGlOffscreenSurface::grabFramebuffer() - OpenGL error" << error;
     }
 
     // now grab from resolve FBO
@@ -160,10 +161,10 @@ QImage OglOffscreenSurface::grabFramebuffer()
     // no multi-sampling. grab directly from FBO
     return (grabFramebufferInternal(m_fbo));
   }
-}  // OglOffscreenSurface::grabFramebuffer
+}  // OpenGlOffscreenSurface::grabFramebuffer
 
 
-QImage OglOffscreenSurface::grabFramebufferInternal(QOpenGLFramebufferObject* fbo)
+QImage OpenGlOffscreenSurface::grabFramebufferInternal(QOpenGLFramebufferObject* fbo)
 {
   QImage image;
   // bind framebuffer first
@@ -183,23 +184,23 @@ QImage OglOffscreenSurface::grabFramebufferInternal(QOpenGLFramebufferObject* fb
     m_functions->glReadPixels(0, 0, fbo->size().width(),
                               fbo->size().height(), GL_RGBA, GL_UNSIGNED_BYTE, image.bits());
   } else {
-    qDebug() << "OglOffscreenSurface::grabFramebuffer() - Unsupported framebuffer format"
+    qDebug() << "OpenGlOffscreenSurface::grabFramebuffer() - Unsupported framebuffer format"
              << internalFormat << "!";
   }
   m_functions->glBindFramebuffer(GL_FRAMEBUFFER, m_fbo->handle());
 
   return (image.mirrored());
-}  // OglOffscreenSurface::grabFramebufferInternal
+}  // OpenGlOffscreenSurface::grabFramebufferInternal
 
 
-void OglOffscreenSurface::swapBuffers()
+void OpenGlOffscreenSurface::swapBuffers()
 {
   swapBuffersInternal();
   emit frameSwapped();
 }
 
 
-void OglOffscreenSurface::swapBuffersInternal()
+void OpenGlOffscreenSurface::swapBuffersInternal()
 {
   // blit framebuffer to back buffer
   m_context->makeCurrent(this);
@@ -227,14 +228,14 @@ void OglOffscreenSurface::swapBuffersInternal()
   }
   // check if OpenGL errors happened
   if (GLenum error = m_functions->glGetError() != GL_NO_ERROR) {
-    qDebug() << "OglOffscreenSurface::swapBuffersInternal() - OpenGL error" << error;
+    qDebug() << "OpenGlOffscreenSurface::swapBuffersInternal() - OpenGL error" << error;
   }
   // now swap back buffer to front buffer
   m_context->swapBuffers(this);
-}  // OglOffscreenSurface::swapBuffersInternal
+}  // OpenGlOffscreenSurface::swapBuffersInternal
 
 
-void OglOffscreenSurface::recreateFBOAndPaintDevice()
+void OpenGlOffscreenSurface::recreateFBOAndPaintDevice()
 {
   if (m_context && ((m_fbo == nullptr) || (m_fbo->size() != bufferSize()))) {
     m_context->makeCurrent(this);
@@ -253,11 +254,11 @@ void OglOffscreenSurface::recreateFBOAndPaintDevice()
 //        QOpenGLFramebufferObjectFormat format = QGLInfo::DefaultFramebufferFormat();
 //        format.setSamples(QGLInfo::HasMultisamplingSupport(m_context) ? 4 : 0);
     QOpenGLFramebufferObjectFormat format;
-    //format.setSamples(0);
+    format.setSamples(0);
 
     m_fbo = new QOpenGLFramebufferObject(bufferSize(), format);
     if (!m_fbo->isValid()) {
-      throw ("OglOffscreenSurface::recreateFbo() - Failed to create background FBO!");
+      throw ("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!");
     }
     // clear framebuffer
     m_fbo->bind();
@@ -267,10 +268,10 @@ void OglOffscreenSurface::recreateFBOAndPaintDevice()
     if (format.samples() > 0) {
       // create resolve framebuffer with only a color attachment
       format.setAttachment(QOpenGLFramebufferObject::NoAttachment);
-      //format.setSamples(0);
+      format.setSamples(0);
       m_resolvedFbo = new QOpenGLFramebufferObject(bufferSize(), format);
       if (!m_resolvedFbo->isValid()) {
-        throw ("OglOffscreenSurface::recreateFbo() - Failed to create resolve FBO!");
+        throw ("OpenGlOffscreenSurface::recreateFbo() - Failed to create resolve FBO!");
       }
       // clear resolve framebuffer
       m_resolvedFbo->bind();
@@ -286,10 +287,10 @@ void OglOffscreenSurface::recreateFBOAndPaintDevice()
   if (m_paintDevice->size() != bufferSize()) {
     m_paintDevice->setSize(bufferSize());
   }
-}  // OglOffscreenSurface::recreateFBOAndPaintDevice
+}  // OpenGlOffscreenSurface::recreateFBOAndPaintDevice
 
 
-void OglOffscreenSurface::initializeInternal()
+void OpenGlOffscreenSurface::initializeInternal()
 {
   if (!m_initialized.exchange(true)) {
     // create OpenGL context. we set the format requested by the user (default:
@@ -322,10 +323,10 @@ void OglOffscreenSurface::initializeInternal()
       throw ("Failed to create OpenGL context!");
     }
   }
-}  // OglOffscreenSurface::initializeInternal
+}  // OpenGlOffscreenSurface::initializeInternal
 
 
-void OglOffscreenSurface::update()
+void OpenGlOffscreenSurface::update()
 {
   // only queue an update if there's not already an update pending
   if (!m_updatePending.exchange(true)) {
@@ -334,7 +335,7 @@ void OglOffscreenSurface::update()
 }
 
 
-void OglOffscreenSurface::render()
+void OpenGlOffscreenSurface::render()
 {
   std::lock_guard <std::mutex> locker(m_mutex);
   // check if we need to initialize stuff
@@ -353,17 +354,17 @@ void OglOffscreenSurface::render()
   doneCurrent();
   // mark that we're done with updating
   m_updatePending = false;
-}  // OglOffscreenSurface::render
+}  // OpenGlOffscreenSurface::render
 
 
-void OglOffscreenSurface::exposeEvent(QExposeEvent* e)
+void OpenGlOffscreenSurface::exposeEvent(QExposeEvent* e)
 {
   // render window content if window is exposed
   render();
-}  // OglOffscreenSurface::exposeEvent
+}  // OpenGlOffscreenSurface::exposeEvent
 
 
-void OglOffscreenSurface::resizeEvent(QResizeEvent* e)
+void OpenGlOffscreenSurface::resizeEvent(QResizeEvent* e)
 {
   // call base implementation
   resize(e->size());
@@ -371,7 +372,7 @@ void OglOffscreenSurface::resizeEvent(QResizeEvent* e)
 }
 
 
-void OglOffscreenSurface::resize(const QSize& newSize)
+void OpenGlOffscreenSurface::resize(const QSize& newSize)
 {
   m_mutex.lock();
   // make context current first
@@ -384,10 +385,10 @@ void OglOffscreenSurface::resize(const QSize& newSize)
   m_mutex.unlock();
   // call user-defined resize method
   resizeGL(bufferSize().width(), bufferSize().height());
-}  // OglOffscreenSurface::resize
+}  // OpenGlOffscreenSurface::resize
 
 
-void OglOffscreenSurface::resize(
+void OpenGlOffscreenSurface::resize(
     int w,
     int h)
 {
@@ -395,7 +396,7 @@ void OglOffscreenSurface::resize(
 }
 
 
-bool OglOffscreenSurface::event(QEvent* event)
+bool OpenGlOffscreenSurface::event(QEvent* event)
 {
   switch (event->type()) {
     case QEvent::UpdateLater:
@@ -409,10 +410,10 @@ bool OglOffscreenSurface::event(QEvent* event)
     default:
       return (false);
   }  // switch
-}  // OglOffscreenSurface::event
+}  // OpenGlOffscreenSurface::event
 
 
-QSize OglOffscreenSurface::bufferSize() const
+QSize OpenGlOffscreenSurface::bufferSize() const
 {
   return (m_size);
 }

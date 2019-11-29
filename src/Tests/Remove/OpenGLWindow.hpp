@@ -4,8 +4,8 @@
 #include <Core/Core.hpp>
 #include <QWidget>
 #include <QtGui/QtGui>
-#include "GraphicsTypes.hpp"
-#include "AbstractWindow.hpp"
+#include "Engine/Graphics/GraphicsTypes.hpp"
+#include "Engine/Graphics/AbstractWindow.hpp"
 //#include "OpenGLError.hpp"
 
 

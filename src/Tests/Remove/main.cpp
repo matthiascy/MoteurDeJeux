@@ -12,7 +12,7 @@
 #include <QtCore/QUrl>
 #include <QSplashScreen>
 #include <QThread>
-#include "GLWidget.hpp"
+#include "GLWidget2.hpp"
 #include "EngineViewport.hpp"
 #include "mainwindow.h"
 #include "Editor/EditorMainWindow.hpp"

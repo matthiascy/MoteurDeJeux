@@ -15,6 +15,9 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
   Q_INIT_RESOURCE(resources);
 
   QCoreApplication::setApplicationName(name);
+
+  m_app = makeUnique<QApplication>(argc, argv);
+
   {
     QCommandLineParser parser;
     parser.setApplicationDescription(description);
@@ -23,43 +26,23 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
     QCommandLineOption withEditorOpt = {{"e", "with-editor"}, "Run with in-game editor."};
     parser.addOption(withEditorOpt);
 
-    QCoreApplication appTmp(argc, argv);
-    QCoreApplication::setApplicationVersion("0.1.0");
-    parser.process(appTmp);
+    parser.process(*m_app);
     m_is_with_editor = parser.isSet(withEditorOpt);
   }
 
   if (m_is_with_editor) {
     qDebug() << "\twith editor (Widget Application)";
-    m_app = makeUnique<QApplication>(argc, argv);
   } else {
     qDebug() << "\twithout editor (OpenGL Application)";
-    m_app = makeUnique<QGuiApplication>(argc, argv);
   }
-
-  /*
-  {
-    QSurfaceFormat format;
-    format.setRenderableType(QSurfaceFormat::OpenGL);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setVersion(4, 0);
-    format.setDepthBufferSize(24);
-    format.setSamples(16);
-    QSurfaceFormat::setDefaultFormat(format);
-  }
-   */
 
   m_engine = makeUnique<Engine>(this);
   m_engine->init();
 
-  if (m_is_with_editor) {
-    m_splash = makeUnique<QSplashScreen>(QPixmap{":/App/engine-logo"}, Qt::WindowStaysOnTopHint);
-    m_splash->show();
-    QTimer::singleShot(2000, m_splash.get(), &QSplashScreen::close);
-    QTimer::singleShot(1000, dynamic_cast<QMainWindow*>(m_engine->window()), &QMainWindow::show);
-  } else {
-    m_engine->window()->startShowing();
-  }
+  m_splash = makeUnique<QSplashScreen>(QPixmap{":/App/engine-logo"}, Qt::WindowStaysOnTopHint);
+  m_splash->show();
+  QTimer::singleShot(2000, m_splash.get(), &QSplashScreen::close);
+  QTimer::singleShot(1000, dynamic_cast<QWidget*>(m_engine->window()), &QWidget::show);
 
   QCoreApplication::exec();
 }

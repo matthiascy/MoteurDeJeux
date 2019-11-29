@@ -6,9 +6,10 @@
 #include <GameFramework/Engine.hpp>
 
 RenderSystem::RenderSystem(String name, Engine* engine)
-  : System(std::move(name), engine), m_context{nullptr}, m_surface{nullptr}
+  : System(std::move(name), engine), m_surface{nullptr}
 {
   qDebug() << "Render System creation =>" << m_name;
+  /*
   m_vao = nullptr;
   m_vbos = {};
   m_ebos = {};
@@ -22,12 +23,14 @@ RenderSystem::RenderSystem(String name, Engine* engine)
   m_painter = new QPainter(m_device);
   m_render_map = {};
   m_fns = nullptr;
+   */
 }
 
 RenderSystem::~RenderSystem()
 {
   m_surface.reset(nullptr);
-  m_context.reset(nullptr);
+  //m_context.reset(nullptr);
+  /*
   m_vao.reset(nullptr);
   for (auto& e : *m_vbos)
     delete e;
@@ -39,6 +42,7 @@ RenderSystem::~RenderSystem()
   m_program.reset(nullptr);
   delete m_device;
   delete m_painter;
+   */
 }
 
 void RenderSystem::init()
@@ -54,20 +58,21 @@ void RenderSystem::init()
   QSurfaceFormat::setDefaultFormat(format);
 
   qDebug() << "\t\t1. Context creation : OpenGL Core Profile 4.6.0.";
-  m_context = makeUnique<QOpenGLContext>();
-  if (!m_context->create())
-    qDebug() << "\t\t\t!!!Creation failed";
+  //m_context = makeUnique<QOpenGLContext>();
+  //if (!m_context->create())
+//    qDebug() << "\t\t\t!!!Creation failed";
 
   qDebug() << "\t\t2. OffScreenSurface creation.";
   m_surface = makeUnique<OglOffscreenSurface>();
   m_surface->create();
-  m_surface->init();
+  //m_surface->init();
 
   if (!m_surface->isValid())
     qDebug() << "\t\t\tCreation failed";
 
-  m_context->makeCurrent(m_surface.get());
-  m_fns = m_context->functions();
+  //m_context->makeCurrent(m_surface.get());
+  //m_fns = m_context->functions();
+  /*
   m_fbo = makeUnique<QOpenGLFramebufferObject>(m_size);
   m_vao = makeUnique<QOpenGLVertexArrayObject>();
   m_program = makeUnique<QOpenGLShaderProgram>();
@@ -90,11 +95,14 @@ void RenderSystem::init()
   m_fns->glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
   m_program->release();
   m_context->doneCurrent();
+  */
 }
 
 void RenderSystem::renderScene(Scene* scene)
 {
+  m_surface->render();
   //if (scene) {
+  /*
     m_device->setSize(m_size);
     qDebug() << "Is painter active ? " << m_painter->isActive();
     m_painter->setRenderHint(QPainter::RenderHint::Antialiasing, true);
@@ -119,7 +127,6 @@ void RenderSystem::renderScene(Scene* scene)
         render(obj);
       }
     }
-     */
   Q_INIT_RESOURCE(resources);
   auto meshHandle = m_engine->assetManager()->loadMesh("./sphere.obj");
   Mesh* mesh = m_engine->assetManager()->getMesh(meshHandle);
@@ -151,10 +158,12 @@ void RenderSystem::renderScene(Scene* scene)
     m_fbo->release();
     m_context->doneCurrent();
   //}
+   */
 }
 
 void RenderSystem::render(GameObject* gameObject)
 {
+  /*
   // TODO: set model view matrix
   m_program->setUniformValue("modelViewMatrix", m_view * m_model);
   // Not in render system
@@ -188,4 +197,10 @@ void RenderSystem::render(GameObject* gameObject)
     m_fns->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void*>(6*sizeof(float)));
     m_fns->glDrawElements(GL_TRIANGLES, mesh->indices().size(), GL_UNSIGNED_INT, (void*)nullptr);
   }
+  */
+}
+
+QImage RenderSystem::grabFramebuffer() const
+{
+  return m_surface->grabFramebuffer();
 }

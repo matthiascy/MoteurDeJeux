@@ -1,32 +1,25 @@
-#ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_OGL_OFFSCREEN_SURFACE_HPP
-#define MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_OGL_OFFSCREEN_SURFACE_HPP
-
-#include <QtGui/QOffscreenSurface>
-#include <QtGui/QOpenGLContext>
-#include <QtGui/QOpenGLPaintDevice>
-#include <QtGui/QOpenGLFramebufferObject>
-#include <QtGui/QOpenGLFunctions>
-#include <QtGui/QOpenGLFunctions_4_0_Core>
-#include <QtGui/QOpenGLFunctions_3_0>
-#include <QtGui/QExposeEvent>
-#include <QtGui/QResizeEvent>
-#include <QtGui/QOpenGLShaderProgram>
-
-#include <atomic>
-#include <mutex>
-#include <Core/BasicTypes.hpp>
-#include <Core/Core.hpp>
-
-/**
- * Constructor => .setFormat => .create => .init
- */
+#ifndef OPENGLOFFSCREENSURFACE_H
+#define OPENGLOFFSCREENSURFACE_H
 
 #pragma once
 
+#include <QtCore/QObject>
+#include <QtGui/QScreen>
+#include <QtGui/QOffscreenSurface>
+#include <QtGui/QPaintEvent>
+#include <QtGui/QResizeEvent>
+#include <QtGui/QOpenGLPaintDevice>
+#include <QtGui/QOpenGLFunctions>
+#include <QtGui/QOpenGLFunctions_3_0>
+#include <QtGui/QOpenGLFramebufferObject>
+#include <QtGui/QSurfaceFormat>
+#include <QtWidgets/QWidget>
+#include <QOpenGLShaderProgram>
+
 #include <atomic>
 #include <mutex>
 
-class OglOffscreenSurface
+class OpenGlOffscreenSurface
     : public QOffscreenSurface
 {
 Q_OBJECT
@@ -38,12 +31,12 @@ public:
   /// this is because before the FBO and off-screen surface haven't been created.
   /// By default this uses the QWindow::requestedFormat() for OpenGL context and off-screen
   /// surface.
-  explicit OglOffscreenSurface(
+  explicit OpenGlOffscreenSurface(
       QScreen* targetScreen = nullptr,
       const QSize& size = QSize (1, 1));
 
   /// @brief Destructor.
-  virtual ~OglOffscreenSurface();
+  virtual ~OpenGlOffscreenSurface();
 
   /// @brief Check if the window is initialized and can be used for rendering.
   /// @return Returns true if context, surface and FBO have been set up to start rendering.
@@ -123,7 +116,7 @@ signals:
 protected:
   virtual void exposeEvent(QExposeEvent* e);
   virtual void resizeEvent(QResizeEvent* e);
-  bool event(QEvent* e) override;
+  virtual bool event(QEvent* e) override;
 
 //    virtual int metric(QPaintDevice::PaintDeviceMetric metric) const override;
 
@@ -143,17 +136,17 @@ protected:
   /// When this function is called, the context is already current and the correct framebuffer is
   /// bound.
   virtual void paintGL() {
-    functions()->glClearColor(0.12,0.3,0.8,1);
+    functions()->glClearColor(1,0,1,1);
     functions()->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
-  /// @brief Called whenever the window needs to repaint itself. Override to draw QPainter
+  //      /// @brief Called whenever the window needs to repaint itself. Override to draw QPainter
   // content.
   //      /// @brief This is called AFTER paintGL()! Only needed when painting using a QPainter.
   //      virtual void paintEvent(QPainter & painter) = 0;
 
 private:
-  Q_DISABLE_COPY(OglOffscreenSurface)
+  Q_DISABLE_COPY(OpenGlOffscreenSurface)
   /// @brief Initialize the window.
   void initializeInternal();
 
@@ -198,5 +191,4 @@ private:
   QSize m_size;
 };
 
-
-#endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_OGL_OFFSCREEN_SURFACE_HPP */
+#endif  // OPENGLOFFSCREENSURFACE_H

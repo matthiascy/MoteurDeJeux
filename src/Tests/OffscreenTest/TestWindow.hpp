@@ -1,48 +1,40 @@
-#ifndef HOMELAND_TESTWINDOW_HPP
-#define HOMELAND_TESTWINDOW_HPP
+
+#ifndef TEST_MAINWINDOW_H
+#define TEST_MAINWINDOW_H
 
 #include <QMainWindow>
 #include <QPaintEvent>
-#include <QPainter>
+#include <QPaintEngine>
+#include <QtGui/QPainter>
+#include "ExamplePaintSurface.hpp"
+#include "Offscreen.hpp"
 #include <Graphics/OglOffscreenSurface.hpp>
 
-class TestWindow : public QMainWindow {
-  Q_OBJECT
-
-private:
-  OglOffscreenSurface* surface;
+class TestMainWindow : public QMainWindow
+{
+Q_OBJECT
 
 public:
-  explicit TestWindow(QWidget* parent = nullptr) : QMainWindow(parent) {
-
-    qDebug() << "\t\t2. OffScreenSurface creation.";
-    surface = new OglOffscreenSurface();
-    //surface->setFormat(surface->context()->format());
-    surface->create();
-    surface->init();
-
-    std::cout << surface->isValid() << std::endl;
-
-    qDebug() << "THERE";
-    if (!surface->isValid())
-      qDebug() << "\t\t\tCreation failed";
-
-    surface->resize({1024, 768});
+  explicit TestMainWindow(QWidget *parent = 0) : QMainWindow{parent} {
+    surface = new OglOffscreenSurface;
   }
 
-  ~TestWindow() override {
-    delete surface;
-  }
+  ~TestMainWindow() override { delete surface; };
+
+  OglOffscreenSurface* surface;
 
 protected:
-  void paintEvent(QPaintEvent*) override {
+
+  void paintEvent(QPaintEvent *) override {
+    surface->resize(300, 200);
     surface->render();
     QImage image = surface->grabFramebuffer();
-    QPainter p;
-    p.begin(this);
-    p.drawImage(rect(), image, image.rect());
-    p.end();
+
+    QPainter* p = new QPainter();
+    p->begin(this);
+    p->drawImage(rect(), image, image.rect());
+    p->end();
   }
 };
 
-#endif  /* !HOMELAND_TESTWINDOW_HPP */
+#endif // MAINWINDOW_H

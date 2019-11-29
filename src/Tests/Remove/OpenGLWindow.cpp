@@ -1,4 +1,4 @@
-#include "Graphics/OpenGLWindow.hpp"
+#include "OpenGLWindow.hpp"
 //#include "Graphics/OpenGLError.hpp"
 #include <QSlider>
 #include <QVBoxLayout>

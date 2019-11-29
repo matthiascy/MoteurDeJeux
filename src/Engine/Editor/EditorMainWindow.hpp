@@ -12,8 +12,8 @@
 #include <QLabel>
 #include <QActionGroup>
 #include <QLineEdit>
+#include <GameFramework/EngineWindow.hpp>
 //#include "Viewport.hpp"
-#include <Graphics/AbstractWindow.hpp>
 #include "CommandLine.hpp"
 #include "SimpleOutput.hpp"
 #include "AssetsBrowser.hpp"
@@ -26,14 +26,13 @@ class Viewport;
  * TODO: Color picker style
  */
 
-class EditorMainWindow : public QMainWindow, public AbstractWindow {
+class EditorMainWindow : public QMainWindow {
 
   Q_OBJECT
 
 public:
-  explicit EditorMainWindow(QWidget* parent = nullptr);
+  explicit EditorMainWindow(EngineWindow* viewport, QWidget* parent = nullptr);
   ~EditorMainWindow() override;
-  void startShowing() override { show(); }
 
 protected:
   void closeEvent(QCloseEvent* event) override;
@@ -68,7 +67,8 @@ private:
 
 private:
   //OglContext* _context;
-  QOpenGLWidget* viewport;
+
+  UniquePtr<EngineWindow> m_engine_window;
   //Viewport* viewport;
   //GLWidget* viewport;
   QToolBar* _toolBar;

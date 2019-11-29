@@ -17,7 +17,7 @@ private:
   UniquePtr<RenderSystem>   m_render_sys;
   UniquePtr<PhysicsSystem>  m_physics_sys;
   UniquePtr<InputSystem>    m_input_sys;
-  UniquePtr<AbstractWindow> m_window;
+  UniquePtr<QWidget>        m_window;
   GameApp*                  m_app;
 
 public:
@@ -26,13 +26,21 @@ public:
 
   bool init();
 
-  [[nodiscard]] AssetManager* assetManager() const;
-  [[nodiscard]] RenderSystem* renderSystem() const;
+  [[nodiscard]]
+  AssetManager* assetManager() const;
 
-  //void update();
-  //void start();
+  [[nodiscard]]
+  RenderSystem* renderSystem() const;
 
-  AbstractWindow* window();
+  /*
+  [[nodiscard]]
+  PhysicsSystem* physicsSystem() const;
+
+  [[nodiscard]]
+  InputSystem* inputSystem() const;
+   */
+
+  QWidget* window();
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP */

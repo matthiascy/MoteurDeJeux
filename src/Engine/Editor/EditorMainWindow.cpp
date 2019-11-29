@@ -4,10 +4,9 @@
 #include "EditorMainWindow.hpp"
 #include "Viewport.hpp"
 
-EditorMainWindow::EditorMainWindow(QWidget *parent)
+EditorMainWindow::EditorMainWindow(EngineWindow* viewport, QWidget *parent)
   : QMainWindow(parent),
-    AbstractWindow(),
-    viewport(nullptr),
+    m_engine_window{viewport},
     _toolBar(nullptr),
     mainSplitter{nullptr},
     botLRSplitter{nullptr},
@@ -60,8 +59,7 @@ EditorMainWindow::~EditorMainWindow()
   if (_toolBar)
     delete _toolBar;
 
-  if (viewport)
-    delete viewport;
+  m_engine_window.reset(nullptr);
 
   if (palette)
     delete palette;
@@ -82,7 +80,6 @@ EditorMainWindow::~EditorMainWindow()
 
   _toolBar = nullptr;
   //left_sidebar = nullptr;
-  viewport = nullptr;
   palette = nullptr;
 
   fullscreen_toggle_act = nullptr;
@@ -109,7 +106,7 @@ void EditorMainWindow::setupLayout()
   blank->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   this->botLRSplitter->addWidget(blank);
 
-  this->mainSplitter->addWidget(viewport);
+  this->mainSplitter->addWidget(m_engine_window.get());
 
   this->setCentralWidget(mainSplitter);
 }
@@ -131,7 +128,6 @@ void EditorMainWindow::setupViewport()
 {
   //viewport = new Exercise02;
   //viewport = new Viewport;
-  viewport = new QOpenGLWidget;
   //viewport = new GLWidget;
   //viewport->SetClearColor(scene_bg_color);
 }
@@ -449,7 +445,7 @@ void EditorMainWindow::applyStyles()
                             "QMenu::item:selected:!enabled{ background:transparent;}");
   }
 
-  this->viewport->setStyleSheet("QMenuBar { color: #EEEEEE; background-color: #414345;}"
+  this->m_engine_window->setStyleSheet("QMenuBar { color: #EEEEEE; background-color: #414345;}"
                                 "QMenuBar::item:selected:enabled{ background:#4286f4; }"
                                 "QMenuBar::item:selected:!enabled{ background:transparent;}"
                                 "QMenu{ color: #EEEEEE; padding:5px; border:1px solid gray;}"
@@ -518,7 +514,7 @@ void EditorMainWindow::change_scene_bg()
     //viewport->SetClearColor(scene_bg_color);
   }
 
-  viewport->update();
+  m_engine_window->update();
 }
 
 void EditorMainWindow::windows_preferences()

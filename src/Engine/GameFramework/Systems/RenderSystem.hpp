@@ -25,12 +25,11 @@ private:
   };
 
 private:
-  UniquePtr<QOpenGLContext>       m_context;
-  //UniquePtr<QOffscreenSurface>    m_surface;
-  UniquePtr<OglOffscreenSurface>  m_surface;
+  UniquePtr<OglOffscreenSurface>      m_surface;
+  /*
   UniquePtr<QOpenGLVertexArrayObject> m_vao;
-  UniquePtr<Array<QOpenGLBuffer*>>     m_vbos;
-  UniquePtr<Array<QOpenGLBuffer*>>     m_ebos;
+  UniquePtr<Array<QOpenGLBuffer*>>    m_vbos;
+  UniquePtr<Array<QOpenGLBuffer*>>    m_ebos;
   UniquePtr<QOpenGLFramebufferObject> m_fbo;
   UniquePtr<QOpenGLShaderProgram>     m_program;
   QSize m_size;
@@ -40,6 +39,7 @@ private:
 
   QOpenGLPaintDevice* m_device;
   QPainter*           m_painter;
+   */
 
   HashMap<GameObject*, RenderInfo> m_render_map;
 
@@ -52,6 +52,9 @@ public:
   void init() override;
 
   void renderScene(Scene* scene);
+
+  [[nodiscard]]
+  QImage grabFramebuffer() const;
 
 private:
   void render(GameObject* gameObject);
