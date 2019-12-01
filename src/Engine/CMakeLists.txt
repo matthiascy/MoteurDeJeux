@@ -107,7 +107,7 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.hpp
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
-    ${EditorSrcDir}/Vertex.cpp Graphics/Private/OglOffscreenSurface.cpp Graphics/OglOffscreenSurface.hpp Graphics/AbstractWindow.hpp GameFramework/Private/EngineWindow.cpp GameFramework/EngineWindow.hpp)
+    ${EditorSrcDir}/Vertex.cpp Graphics/Private/OglOffscreenSurface.cpp Graphics/OglOffscreenSurface.hpp Graphics/AbstractWindow.hpp GameFramework/Private/EngineWindow.cpp GameFramework/EngineWindow.hpp Graphics/SplashScreen.cpp Graphics/SplashScreen.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 
