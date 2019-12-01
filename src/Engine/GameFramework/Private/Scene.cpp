@@ -5,7 +5,6 @@
 #include <GameFramework/Systems/PhysicsSystem.hpp>
 #include <utility>
 #include "Camera.hpp"
-#include "Terrain.hpp"
 
 Scene::Scene(String name)
   : Object(std::move(name)), m_vbo_idx{0}

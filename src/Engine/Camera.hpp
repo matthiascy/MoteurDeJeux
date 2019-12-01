@@ -1,7 +1,6 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include "Types.hpp"
 #include <GameFramework/GameObject.hpp>
 
 #define DEFAULT_NEAR 0.25f

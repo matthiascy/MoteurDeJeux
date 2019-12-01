@@ -3,7 +3,6 @@
 
 #include <Core/Core.hpp>
 #include "GameObject.hpp"
-#include "NameGenerator.hpp"
 
 // TODO vbo index for Creating and Destroying GameObject
 

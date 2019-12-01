@@ -42,6 +42,8 @@
     </qresource>
     <qresource prefix="/App">
         <file alias="engine-logo">../../assets/textures/ephemeral-engine.png</file>
+        <file alias="loading-engine">../../assets/textures/loading-engine.png</file>
+        <file alias="loading-game">../../assets/textures/loading-game.png</file>
     </qresource>
     <qresource prefix="/Assets">
         <file alias="fontawesome.otf">../../assets/fonts/fontawesome-free-5.4.1-desktop/otfs/FontAwesome5Free-Regular-400.otf</file>
