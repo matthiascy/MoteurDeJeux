@@ -22,8 +22,8 @@ class AssetManager : Object {
 public:
 
 protected:
-  Array<Mesh*>          m_meshes;
-  Array<OpenGLTexture*> m_textures;
+  Array<Mesh*>       m_meshes;
+  Array<OglTexture*> m_textures;
 
 public:
   AssetManager() = delete;
@@ -35,7 +35,7 @@ public:
 
   // TODO
   //Asset* getAsset(AssetHandle handle);
-  OpenGLTexture* getTexture(AssetHandle handle);
+  OglTexture* getTexture(AssetHandle handle);
   Mesh* getMesh(AssetHandle handle);
 };
 

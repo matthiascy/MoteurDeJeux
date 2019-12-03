@@ -3,5 +3,6 @@
 int main(int argc, char** argv)
 {
   HomelandApp app(argc, argv);
+  app.init();
   app.run();
 }

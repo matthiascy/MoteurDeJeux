@@ -1,7 +1,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <GameFramework/GameObject.hpp>
+#include <Core/Core.hpp>
 
 #define DEFAULT_NEAR 0.25f
 #define DEFAULT_FAR  1024.0f
@@ -13,11 +13,11 @@ const float kSpeed       = 2.5f;
 const float kSensitivity = 0.1f;
 const float kZoom        = 45.0f;
 
-class Camera {
+class EditorCamera {
 public:
-  explicit Camera(const String& name);
-  Camera(Vec3 pos = {0.0f, 0.0f, 0.0f}, Vec3 up = {0.0f, 1.0f, 0.0f}, float yaw = kYaw, float pitch = kPitch);
-  ~Camera() = default;
+  explicit EditorCamera(const String& name);
+  EditorCamera(Vec3 pos = {0.0f, 0.0f, 0.0f}, Vec3 up = {0.0f, 1.0f, 0.0f}, float yaw = kYaw, float pitch = kPitch);
+  ~EditorCamera() = default;
 
 public:
   QMatrix4x4 ViewMatrix();

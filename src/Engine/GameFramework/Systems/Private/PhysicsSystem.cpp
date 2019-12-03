@@ -29,11 +29,17 @@ void PhysicsSystem::setGravity(const Vec3& gravity)
 
 inline Vec3 PhysicsSystem::gravity() const
 {
-  return vec3::fromBTVec3(m_world->getGravity());
+  return Math::fromBTVec3(m_world->getGravity());
 }
 
 void PhysicsSystem::update(Real dt)
 {
   m_world->stepSimulation(dt, 10);
   m_collision_objects = m_world->getCollisionObjectArray();
+}
+
+void PhysicsSystem::init()
+{
+  qInfo() << "\tPhysics system initialization...";
+  // TODO
 }

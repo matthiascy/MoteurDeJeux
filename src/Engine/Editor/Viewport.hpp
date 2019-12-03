@@ -12,7 +12,7 @@
 #include <QOpenGLBuffer>
 #include <QMatrix4x4>
 //#include <Framework/Camera.hpp>
-#include "Camera.hpp"
+#include "EditorCamera.hpp"
 //#include <Framework/Vertex.hpp>
 #include "Vertex.hpp"
 //#include <Framework/Graphics/OglContext.hpp>
@@ -72,7 +72,7 @@ private:
   QMatrix4x4 proj_mat;
   QMatrix4x4 view_mat;
   QMatrix4x4 model_mat;
-  Camera _camera;
+  EditorCamera _camera;
   MouseState _mouseState;
   KeyState _keyState;
   float _gridStep = 1.0;

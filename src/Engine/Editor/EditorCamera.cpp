@@ -1,22 +1,22 @@
 #include <Core/Core.hpp>
-#include "Camera.hpp"
+#include "EditorCamera.hpp"
 
 
-Camera::Camera(const String& name)
-  : pos{vec3::Zero}, up{0.0f, 1.0f, 0.0f}, worldUp{up}, yaw{kYaw}, pitch{kPitch},
+EditorCamera::EditorCamera(const String& name)
+  : pos{Math::Zero}, up{0.0f, 1.0f, 0.0f}, worldUp{up}, yaw{kYaw}, pitch{kPitch},
     zoom{kZoom}
 {
   update_camera_vectors();
 }
 
-Camera::Camera(Vec3 pos, Vec3 up, float yaw, float pitch)
+EditorCamera::EditorCamera(Vec3 pos, Vec3 up, float yaw, float pitch)
   : pos{pos}, up{up}, worldUp{up}, yaw{yaw}, pitch{pitch},
     zoom{kZoom}
 {
   update_camera_vectors();
 }
 
-Mat4 Camera::ViewMatrix()
+Mat4 EditorCamera::ViewMatrix()
 {
   update_camera_vectors();
 
@@ -26,7 +26,7 @@ Mat4 Camera::ViewMatrix()
   return out;
 }
 
-void Camera::update_camera_vectors()
+void EditorCamera::update_camera_vectors()
 {
   Vec3 new_front;
   new_front.setX(std::cos(qDegreesToRadians(yaw)) * std::cos(qDegreesToRadians(pitch)));
@@ -37,13 +37,13 @@ void Camera::update_camera_vectors()
   up    = Vec3::crossProduct(right, front).normalized();
 }
 
-void Camera::SetYaw(float yaw)
+void EditorCamera::SetYaw(float yaw)
 {
   this->yaw = yaw;
   update_camera_vectors();
 }
 
-void Camera::SetPitch(float pitch)
+void EditorCamera::SetPitch(float pitch)
 {
   this->pitch = pitch;
   update_camera_vectors();

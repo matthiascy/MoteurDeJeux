@@ -1,7 +1,10 @@
 set(BULLET3_DIR ${EngineSrcDir}/Thirdparty/bullet3)
 set(BULLET3_OUTPUT_DIR  ${OUTPUT_DIR_LIBRARY})
 
-set(USE_MSVC_RUNTIME_LIBRARY_DLL ON)
+if (WIN32)
+  set(USE_MSVC_RUNTIME_LIBRARY_DLL ON)
+endif()
+
 set(USE_GRAPHICAL_BENCHMARK OFF CACHE BOOL "Use Graphical Benchmark" FORCE)
 set(BUILD_CPU_DEMOS OFF CACHE BOOL "Build original Bullet CPU examples" FORCE)
 set(BUILD_BULLET3 ON CACHE BOOL "Set when you want to build Bullet 3" FORCE)

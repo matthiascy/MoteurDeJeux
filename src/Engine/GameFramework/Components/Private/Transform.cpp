@@ -15,9 +15,9 @@ Transform::Transform(String name, GameObject* gameObject, Transform* parent, con
     m_position = m_local_position;
     m_rotation = m_local_rotation;
     m_scale = m_local_scale;
-    m_local_position = vec3::Zero;
-    m_local_rotation = quat::Identity;
-    m_local_scale = vec3::mkVec3(1);
+    m_local_position = Math::Zero;
+    m_local_rotation = Math::QuatIdentity;
+    m_local_scale = Math::mkVec3(1);
   }
   instant_update();
 }
@@ -41,7 +41,7 @@ void Transform::setPosition(const Vec3& position)
   if (m_parent) {
     m_local_position = m_position - m_parent->position();
   } else {
-    m_local_position = vec3::Zero;
+    m_local_position = Math::Zero;
   }
   set_has_changed();
 }
@@ -66,7 +66,7 @@ void Transform::setLocalPosition(const Vec3& position)
     m_position = m_parent->position() + m_local_position;
   } else {
     m_position = m_local_position;
-    m_local_position = vec3::Zero;
+    m_local_position = Math::Zero;
   }
   set_has_changed();
 }
@@ -90,7 +90,7 @@ void Transform::setScale(const Vec3 & scale)
   if (m_parent) {
     m_local_scale = m_scale / m_parent->scale();
   } else {
-    m_local_scale = vec3::mkVec3(1);
+    m_local_scale = Math::mkVec3(1);
   }
   set_has_changed();
 }
@@ -115,7 +115,7 @@ void Transform::setLocalScale(const Vec3 & scale)
     m_scale = m_parent->scale() * m_local_scale;
   } else {
     m_scale = m_local_scale;
-    m_local_scale = vec3::mkVec3(1);
+    m_local_scale = Math::mkVec3(1);
   }
   set_has_changed();
 }
@@ -136,11 +136,11 @@ void Transform::setRotation(const Quat& rotation)
     m_has_changed = false;
   }
   m_rotation = rotation;
-  // Qr = Ql * Qp, Qr * Qp.inversed = Ql * Qp * Qp.inversed
+  // Qr = Ql * Qp, Qr * Qp.inverted = Ql * Qp * Qp.inverted
   if (m_parent) {
     m_local_rotation = m_rotation * m_parent->m_rotation.inverted();
   } else {
-    m_local_rotation = quat::Identity;
+    m_local_rotation = Math::QuatIdentity;
   }
   set_has_changed();
 }
@@ -166,7 +166,7 @@ void Transform::setLocalRotation(const Quat& rotation)
     m_rotation = m_local_rotation * m_parent->rotation();
   } else {
     m_rotation = m_local_rotation;
-    m_local_rotation = quat::Identity;
+    m_local_rotation = Math::QuatIdentity;
   }
   set_has_changed();
 }
@@ -177,7 +177,7 @@ Vec3 Transform::forward()
     instant_update();
     m_has_changed = false;
   }
-  return m_rotation * vec3::Forward;
+  return m_rotation * Math::Forward;
 }
 
 Vec3 Transform::up()
@@ -186,7 +186,7 @@ Vec3 Transform::up()
     instant_update();
     m_has_changed = false;
   }
-  return m_rotation * vec3::Up;
+  return m_rotation * Math::Up;
 }
 
 Vec3 Transform::right()
@@ -195,7 +195,7 @@ Vec3 Transform::right()
     instant_update();
     m_has_changed = false;
   }
-  return m_rotation * vec3::Right;
+  return m_rotation * Math::Right;
 }
 
 Mat4 Transform::localToWorldMatrix()
@@ -376,9 +376,9 @@ void Transform::instant_update()
     m_rotation = m_local_rotation;
     m_position = m_local_position;
     m_scale = m_local_scale;
-    m_local_rotation = quat::Identity;
-    m_local_position = vec3::Zero;
-    m_local_scale = vec3::mkVec3(1);
+    m_local_rotation = Math::QuatIdentity;
+    m_local_position = Math::Zero;
+    m_local_scale = Math::mkVec3(1);
   }
   m_local_to_world_matrix.setToIdentity();
   m_local_to_world_matrix.scale(m_scale);

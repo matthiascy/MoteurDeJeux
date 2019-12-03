@@ -15,7 +15,7 @@ Collider::Collider(String name, GameObject* gameObject, btCollisionShape* shape,
     m_shape->calculateLocalInertia(mass, local_inertial);
 
   auto* transform = gameObject->transform();
-  m_motion_state = makeUnique<btDefaultMotionState>(btTransform(quat::toBTQuat(transform->rotation()), btVector3(0, 0, 0)));
+  m_motion_state = makeUnique<btDefaultMotionState>(btTransform(Math::toBTQuat(transform->rotation()), btVector3(0, 0, 0)));
   m_rigid_body = makeUnique<btRigidBody>(mass, m_motion_state.get(), m_shape.get(), local_inertial);
 }
 

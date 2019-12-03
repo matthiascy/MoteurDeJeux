@@ -1,5 +1,5 @@
-//
-// Created by matth on 11/13/2019.
-//
+#include <GameFramework/Components/Renderer.hpp>
 
-#include "GameFramework/Components/Renderer.hpp"
+Renderer::Renderer(String name, GameObject *gameObject)
+  : Component(std::move(name), gameObject)
+{ }

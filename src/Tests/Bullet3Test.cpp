@@ -76,9 +76,8 @@ public:
 
 int main(int argc, char** argv)
 {
-  GameApp app(argc, argv);
-  app.run();
-  /*
+  //GameApp app(argc, argv);
+  //app.run();
   ///-----includes_end-----
 
   int i;
@@ -235,5 +234,4 @@ int main(int argc, char** argv)
 
   //next line is optional: it will be cleared by the destructor when the array goes out of scope
   collisionShapes.clear();
-   */
 }

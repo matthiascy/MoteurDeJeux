@@ -1,13 +1,12 @@
 #include <GameFramework/Scene.hpp>
+#include <GameFramework/Engine.hpp>
 #include <GameFramework/Assets/AssetManager.hpp>
 #include <GameFramework/Systems/RenderSystem.hpp>
 #include <GameFramework/Component.hpp>
 #include <GameFramework/Systems/PhysicsSystem.hpp>
-#include <utility>
-#include "Camera.hpp"
 
 Scene::Scene(String name)
-  : Object(std::move(name)), m_vbo_idx{0}
+  : Object(std::move(name))
 {
   m_game_objects = makeUnique<TaggedGameObjects>();
   m_game_objects->insert("Untagged", new GameObjectsArray());
@@ -17,11 +16,6 @@ Scene::Scene(String name)
 
 Scene::~Scene()
 {
-  //m_asset_manager.reset();
-  //m_renderer_sys.reset();
-  //m_physics_sys.reset();
-  //m_input_sys.reset();
-
   for (auto& comp : *m_components)
     delete comp;
   m_components.reset();
@@ -69,4 +63,9 @@ Array<GameObject*> Scene::gameObjects() const
 GameObject* Scene::mainCamera() const
 {
   return m_game_objects->operator[]("Camera")->operator[](0);
+}
+
+Component* Scene::addComponent(GameObject* gameObject, Component* component)
+{
+  //gameObject->addComponent(component);
 }

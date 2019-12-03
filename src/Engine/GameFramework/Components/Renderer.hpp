@@ -5,9 +5,9 @@
 
 class Renderer : public Component {
 private:
-
 public:
   Renderer(String name, GameObject* gameObject);
+  ~Renderer() override = default;
 };
 
 

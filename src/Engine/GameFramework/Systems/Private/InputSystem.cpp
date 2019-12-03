@@ -2,6 +2,28 @@
 #include <algorithm>
 #include <QCursor>
 
+InputSystem::InputSystem(String name, Engine *engine)
+  : System(std::move(name), engine)
+{
+  qInfo() << "Input System creation  =>" << m_name;
+}
+
+InputSystem::~InputSystem()
+{
+  // TODO
+}
+
+void InputSystem::init()
+{
+  qInfo() << "- Input system initialization...";
+  // TODO
+}
+
+void InputSystem::update(Real dt)
+{
+  // TODO
+}
+
 /*
 template <typename T>
 struct InputInstance : std::pair<T, InputState> {

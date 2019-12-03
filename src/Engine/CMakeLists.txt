@@ -48,6 +48,7 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Components/Private/MeshRenderer.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Renderer.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Transform.cpp
+    ${EngineSrcDir}/GameFramework/Components/Private/Camera.cpp
     ${EngineSrcDir}/GameFramework/Components/Behavior.hpp
     ${EngineSrcDir}/GameFramework/Components/BoxCollider.hpp
     ${EngineSrcDir}/GameFramework/Components/Collider.hpp
@@ -56,6 +57,7 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Components/MeshRenderer.hpp
     ${EngineSrcDir}/GameFramework/Components/Renderer.hpp
     ${EngineSrcDir}/GameFramework/Components/Transform.hpp
+    ${EngineSrcDir}/GameFramework/Components/Camera.hpp
 
     ${EngineSrcDir}/GameFramework/Systems/Private/InputSystem.cpp
     ${EngineSrcDir}/GameFramework/Systems/Private/PhysicsSystem.cpp
@@ -87,9 +89,8 @@ set(EngineSrc
     #${EngineSrcDir}/Core/Graphics/OpenGLError.hpp
     ${EngineSrcDir}/Graphics/Shader.hpp
 
-    ${EngineSrcDir}/Camera.hpp
-    ${EngineSrcDir}/Camera.cpp
-
+    ${EditorSrcDir}/EditorCamera.hpp
+    ${EditorSrcDir}/EditorCamera.cpp
     ${EditorSrcDir}/AssetPreviewer.cpp
     ${EditorSrcDir}/AssetPreviewer.hpp
     ${EditorSrcDir}/AssetsBrowser.cpp
@@ -107,7 +108,21 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.hpp
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
-    ${EditorSrcDir}/Vertex.cpp Graphics/Private/OglOffscreenSurface.cpp Graphics/OglOffscreenSurface.hpp Graphics/AbstractWindow.hpp GameFramework/Private/EngineWindow.cpp GameFramework/EngineWindow.hpp Graphics/SplashScreen.cpp Graphics/SplashScreen.hpp)
+    ${EditorSrcDir}/Vertex.cpp
+    ${EngineSrcDir}/Graphics/Private/OglOffscreenSurface.cpp
+    ${EngineSrcDir}/Graphics/OglOffscreenSurface.hpp
+    ${EngineSrcDir}/Graphics/AbstractWindow.hpp
+    ${EngineSrcDir}/GameFramework/Private/EngineWindow.cpp
+    ${EngineSrcDir}/GameFramework/EngineWindow.hpp
+    ${EngineSrcDir}/Graphics/Private/SplashScreen.cpp
+    ${EngineSrcDir}/Graphics/SplashScreen.hpp
+    Core/Math/Private/Math.cpp
+    GameFramework/Components/Private/OrthogonalCamera.cpp
+    GameFramework/Components/OrthogonalCamera.hpp
+    GameFramework/Components/Private/PerspectiveCamera.cpp
+    GameFramework/Components/PerspectiveCamera.hpp
+    Graphics/OglTypes.hpp
+    GameFramework/Components.hpp GameFramework/Private/SceneManager.cpp GameFramework/SceneManager.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 

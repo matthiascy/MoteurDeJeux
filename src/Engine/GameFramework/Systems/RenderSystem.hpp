@@ -24,26 +24,13 @@ private:
     Int32 eboIdx {};
   };
 
-private:
-  UniquePtr<OglOffscreenSurface>      m_surface;
-  /*
-  UniquePtr<QOpenGLVertexArrayObject> m_vao;
-  UniquePtr<Array<QOpenGLBuffer*>>    m_vbos;
-  UniquePtr<Array<QOpenGLBuffer*>>    m_ebos;
-  UniquePtr<QOpenGLFramebufferObject> m_fbo;
-  UniquePtr<QOpenGLShaderProgram>     m_program;
-  QSize m_size;
-  Mat4 m_projection;
-  Mat4 m_view;
-  Mat4 m_model;
+  UniquePtr<OglOffscreenSurface>   m_surface;
 
-  QOpenGLPaintDevice* m_device;
-  QPainter*           m_painter;
-   */
+  HashMap<GameObject*, RenderInfo> m_render_infos;
 
-  HashMap<GameObject*, RenderInfo> m_render_map;
-
-  QOpenGLFunctions* m_fns;
+  Mat4 m_view_matrix;
+  Mat4 m_model_matrix;
+  Mat4 m_projection_matrix;
 
 public:
   RenderSystem(String name, Engine* engine);

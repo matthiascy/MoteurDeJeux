@@ -43,7 +43,9 @@ add_executable(Bullet3Test src/Tests/Bullet3Test.cpp)
 target_compile_definitions(Bullet3Test PRIVATE
     ${BULLET_DEFINITIONS})
 target_link_libraries(Bullet3Test PRIVATE
-    Engine)
+    Engine Bullet3Common BulletSoftBody Bullet3Dynamics
+    Bullet3Collision LinearMath Bullet3Geometry
+    BulletDynamics BulletCollision)
 
 add_executable(FboTest src/Tests/FboTest/main.cpp src/Tests/FboTest/MainWindow.cpp src/Tests/FboTest/MainWindow.ui)
 target_compile_definitions(FboTest PRIVATE ${BULLET_DEFINITIONS})

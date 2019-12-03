@@ -6,120 +6,46 @@
 #include <GameFramework/Engine.hpp>
 
 RenderSystem::RenderSystem(String name, Engine* engine)
-  : System(std::move(name), engine), m_surface{nullptr}
+  : System(std::move(name), engine),
+    m_surface{nullptr}, m_render_infos{},
+    m_projection_matrix{Math::Mat4Identity},
+    m_model_matrix{Math::Mat4Identity},
+    m_view_matrix{Math::Mat4Identity}
 {
-  qDebug() << "Render System creation =>" << m_name;
-  /*
-  m_vao = nullptr;
-  m_vbos = {};
-  m_ebos = {};
-  m_fbo = nullptr;
-  m_program = nullptr;
-  m_size = {800, 600};
-  m_projection.setToIdentity();
-  m_view.setToIdentity();
-  m_model.setToIdentity();
-  m_device = new QOpenGLPaintDevice(m_size);
-  m_painter = new QPainter(m_device);
-  m_render_map = {};
-  m_fns = nullptr;
-   */
+  qInfo() << "Render System creation =>" << m_name;
 }
 
 RenderSystem::~RenderSystem()
 {
   m_surface.reset(nullptr);
-  //m_context.reset(nullptr);
-  /*
-  m_vao.reset(nullptr);
-  for (auto& e : *m_vbos)
-    delete e;
-  m_vbos.reset(nullptr);
-  for (auto& e : *m_ebos)
-    delete e;
-  m_ebos.reset(nullptr);
-  m_fbo.reset(nullptr);
-  m_program.reset(nullptr);
-  delete m_device;
-  delete m_painter;
-   */
 }
 
 void RenderSystem::init()
 {
-  qDebug() << "\tRender system initialization";
+  qInfo() << "- Render system initialization...\n"
+          << "\t- OffScreenSurface creation.";
 
-  QSurfaceFormat format;
-  format.setRenderableType(QSurfaceFormat::OpenGL);
-  format.setProfile(QSurfaceFormat::CoreProfile);
-  format.setVersion(4, 0);
-  format.setDepthBufferSize(24);
-  format.setSamples(16);
-  QSurfaceFormat::setDefaultFormat(format);
-
-  qDebug() << "\t\t1. Context creation : OpenGL Core Profile 4.6.0.";
-  //m_context = makeUnique<QOpenGLContext>();
-  //if (!m_context->create())
-//    qDebug() << "\t\t\t!!!Creation failed";
-
-  qDebug() << "\t\t2. OffScreenSurface creation.";
   m_surface = makeUnique<OglOffscreenSurface>();
   m_surface->create();
-  //m_surface->init();
-
   if (!m_surface->isValid())
-    qDebug() << "\t\t\tCreation failed";
-
-  //m_context->makeCurrent(m_surface.get());
-  //m_fns = m_context->functions();
-  /*
-  m_fbo = makeUnique<QOpenGLFramebufferObject>(m_size);
-  m_vao = makeUnique<QOpenGLVertexArrayObject>();
-  m_program = makeUnique<QOpenGLShaderProgram>();
-
-  m_program->addShaderFromSourceFile(QOpenGLShader::Vertex, ":/Shaders/BasicVert");
-  m_program->addShaderFromSourceFile(QOpenGLShader::Fragment, ":/Shaders/BasicFrag");
-  m_program->bindAttributeLocation("inPosition", 0);
-  m_program->bindAttributeLocation("inNormal", 1);
-  m_program->bindAttributeLocation("inTexCoord", 2);
-  m_program->link();
-  m_program->bind();
-  m_program->setUniformValue("texture0", 0);
-  m_program->setUniformValue("texture1", 1);
-  m_program->setUniformValue("texture2", 2);
-  m_program->setUniformValue("texture3", 3);
-  m_program->setUniformValue("lightPos", QVector3D(0, 0, 70));
-  m_vao->create();
-  m_fns->glEnable(GL_DEPTH_TEST);
-  m_fns->glDepthFunc(GL_LESS);
-  m_fns->glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
-  m_program->release();
-  m_context->doneCurrent();
-  */
+    qFatal("OffScreenSurface Creation failed!!!");
 }
 
 void RenderSystem::renderScene(Scene* scene)
 {
   m_surface->render();
-  //if (scene) {
-  /*
-    m_device->setSize(m_size);
-    qDebug() << "Is painter active ? " << m_painter->isActive();
-    m_painter->setRenderHint(QPainter::RenderHint::Antialiasing, true);
 
-    m_context->makeCurrent(m_surface.get());
-    m_painter->beginNativePainting();
-    m_fns->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    m_fbo->bind();
-    m_vao->bind();
-    m_program->bind();
+  if (scene) {
 
     //GameObject *camera = scene->mainCamera();
 
-    //m_program->setUniformValue("projMatrix", camera->getComponent<Camera>()->projectionMatrix());
-    m_projection.perspective(45.0f, GLfloat(m_size.width()) / m_size.height(), 0.01f, 500000.0f);
-    m_program->setUniformValue("projMatrix", m_projection);
-    m_program->setUniformValue("normalMatrix", m_model);
+    //m_projection_matrix.perspective(45.0f, GLfloat(m_size.width()) / m_size.height(), 0.01f, 500000.0f);
+    //m_program->setUniformValue("projMatrix", m_projection);
+    //m_program->setUniformValue("normalMatrix", m_model);
+  }
+
+  //m_program->setUniformValue("projMatrix", camera->getComponent<Camera>()->projectionMatrix());
+
 
     /*
     for (auto& obj : scene->gameObjects()) {
@@ -167,7 +93,7 @@ void RenderSystem::render(GameObject* gameObject)
   // TODO: set model view matrix
   m_program->setUniformValue("modelViewMatrix", m_view * m_model);
   // Not in render system
-  if (m_render_map.find(gameObject) == m_render_map.end()) {
+  if (m_render_infos.find(gameObject) == m_render_infos.end()) {
 
     auto vbo = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
     auto ebo = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
@@ -181,14 +107,14 @@ void RenderSystem::render(GameObject* gameObject)
     ebo->setUsagePattern(QOpenGLBuffer::StaticDraw);
     ebo->allocate(mesh->indices().data(), mesh->vertexCount() * sizeof(UInt32));
     m_ebos->push_back(ebo);
-    m_render_map.insert(gameObject, {
+    m_render_infos.insert(gameObject, {
         m_vbos->size()-1, m_ebos->size()-1
     });
 
   } else {
 
     Mesh* mesh = m_engine->assetManager()->getMesh(gameObject->meshHandle());
-    (*m_vbos)[m_render_map[gameObject].vboIdx]->bind();
+    (*m_vbos)[m_render_infos[gameObject].vboIdx]->bind();
     m_fns->glEnableVertexAttribArray(0);
     m_fns->glEnableVertexAttribArray(1);
     m_fns->glEnableVertexAttribArray(2);

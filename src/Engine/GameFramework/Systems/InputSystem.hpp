@@ -1,9 +1,18 @@
-#ifndef MOTEUR_DE_JEUX_SRC_INPUT_HPP
-#define MOTEUR_DE_JEUX_SRC_INPUT_HPP
+#ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SYSTEMS_INPUT_SYSTEM_HPP
+#define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SYSTEMS_INPUT_SYSTEM_HPP
 
 #include <Core/Core.hpp>
+#include <GameFramework/System.hpp>
 
-class InputSystem {
+class InputSystem : System {
+public:
+  InputSystem(String name, Engine* engine);
+  ~InputSystem() override;
+
+  void init() override;
+
+  void update(Real dt);
+  /*
 public:
   static InputState keyState(Qt::Key key);
   static bool isKeyTriggered(Qt::Key key);
@@ -25,6 +34,7 @@ private:
   static void reset();
 
   friend class Window;
+   */
 };
 
-#endif  /* !MOTEUR_DE_JEUX_SRC_INPUT_HPP */
+#endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SYSTEMS_INPUT_SYSTEM_HPP */

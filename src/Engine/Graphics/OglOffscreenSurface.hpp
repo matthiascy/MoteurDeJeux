@@ -2,73 +2,81 @@
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_OGL_OFFSCREEN_SURFACE_HPP
 
 #include <QtGui/QOffscreenSurface>
-#include <QtGui/QOpenGLContext>
-#include <QtGui/QOpenGLPaintDevice>
-#include <QtGui/QOpenGLFramebufferObject>
-#include <QtGui/QOpenGLFunctions>
-#include <QtGui/QOpenGLFunctions_4_0_Core>
-#include <QtGui/QOpenGLFunctions_3_0>
 #include <QtGui/QExposeEvent>
 #include <QtGui/QResizeEvent>
-#include <QtGui/QOpenGLShaderProgram>
 
 #include <atomic>
 #include <mutex>
 #include <Core/BasicTypes.hpp>
 #include <Core/Core.hpp>
 
+#include <Graphics/GraphicsTypes.hpp>
+
 /**
  * Constructor => .setFormat => .create => .init
  */
 
-#pragma once
-
 #include <atomic>
 #include <mutex>
 
-class OglOffscreenSurface
-    : public QOffscreenSurface
-{
-Q_OBJECT
+class OglOffscreenSurface : public QOffscreenSurface {
+
+  Q_OBJECT
+
+private:
+  /** Arrays own the memory. */
+  Array<OglVAO*>     m_vaos;
+  Array<OglBuffer*>  m_vbos;
+  Array<OglBuffer*>  m_ebos;
+  Array<OglProgram*> m_programs;
 
 public:
-  /// @brief Constructor. Creates a render window.
-  /// @param targetScreen Target screen.
-  /// @param size Initial size of a surface buffer.
-  /// this is because before the FBO and off-screen surface haven't been created.
-  /// By default this uses the QWindow::requestedFormat() for OpenGL context and off-screen
-  /// surface.
-  explicit OglOffscreenSurface(
-      QScreen* targetScreen = nullptr,
-      const QSize& size = QSize (1, 1));
+  explicit OglOffscreenSurface(QScreen* targetScreen = nullptr, const QSize& size = QSize (1, 1));
 
-  /// @brief Destructor.
-  virtual ~OglOffscreenSurface();
+  ~OglOffscreenSurface() override;
+
+  [[nodiscard]]
+  UInt32 createVAO();
+
+  [[nodiscard]]
+  UInt32 createVBO(UInt32 vao);
+
+  [[nodiscard]]
+  UInt32 createEBO(UInt32 vao);
+
+  [[nodiscard]]
+  UInt32 createProgram(const String& vert, const String& frag);
 
   /// @brief Check if the window is initialized and can be used for rendering.
   /// @return Returns true if context, surface and FBO have been set up to start rendering.
+  [[nodiscard]]
   bool isValid() const;
 
   /// @brief Return the context used in this window.
   /// @return The context used in this window or nullptr if it hasn't been created yet.
-  QOpenGLContext* context() const;
+  [[nodiscard]]
+  OglContext* context() const;
 
   /// @brief Return the OpenGL function object that can be used the issue OpenGL commands.
   /// @return The functions for the context or nullptr if it the context hasn't been created yet.
-  QOpenGLFunctions* functions() const;
+  [[nodiscard]]
+  OglFns* fns() const;
 
   /// @brief Return the OpenGL off-screen frame buffer object identifier.
   /// @return The OpenGL off-screen frame buffer object identifier or 0 if no FBO has been created
   /// yet.
   /// @note This changes on every resize!
-  GLuint framebufferObjectHandle() const;
+  [[nodiscard]]
+  UInt32 framebufferObjectHandle() const;
 
   /// @brief Return the OpenGL off-screen frame buffer object.
   /// @return The OpenGL off-screen frame buffer object or nullptr if no FBO has been created yet.
   /// @note This changes on every resize!
-  const QOpenGLFramebufferObject* getFramebufferObject() const;
+  [[nodiscard]]
+  const OglFBO* getFramebufferObject() const;
 
   /// @brief Return the QPaintDevice for paint into it.
+  [[nodiscard]]
   QPaintDevice* getPaintDevice() const;
 
   /// @brief Return the OpenGL off-screen frame buffer object identifier.
@@ -96,6 +104,7 @@ public:
   void swapBuffers();
 
   /// @brief Use bufferSize() instead size() for get a size of a surface buffer. We can't override size() as it is not virtual.
+  [[nodiscard]]
   QSize bufferSize() const;
 
   /// @brief Resize surface buffer to newSize.
@@ -114,7 +123,7 @@ public slots:
   void render();
 
 signals:
-  /// @brief Emitted when swapBuffers() was called and bufferswapping is done.
+  /// @brief Emitted when swapBuffers() was called and buffer swapping is done.
   void frameSwapped();
 
   /// @brief Emitted after a resizeEvent().
@@ -124,8 +133,6 @@ protected:
   virtual void exposeEvent(QExposeEvent* e);
   virtual void resizeEvent(QResizeEvent* e);
   bool event(QEvent* e) override;
-
-//    virtual int metric(QPaintDevice::PaintDeviceMetric metric) const override;
 
   /// @brief Called exactly once when the window is first exposed OR render() is called when the
   /// widget is invisible.
@@ -143,8 +150,8 @@ protected:
   /// When this function is called, the context is already current and the correct framebuffer is
   /// bound.
   virtual void paintGL() {
-    functions()->glClearColor(0.12,0.3,0.8,1);
-    functions()->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    fns()->glClearColor(0.12,0.3,0.8,1);
+    fns()->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
   /// @brief Called whenever the window needs to repaint itself. Override to draw QPainter
@@ -155,16 +162,13 @@ protected:
 private:
   Q_DISABLE_COPY(OglOffscreenSurface)
   /// @brief Initialize the window.
-  void initializeInternal();
+  void initialize_internal_();
 
   /// @brief Internal method that does the actual swap work, NOT using a mutex.
   void swapBuffersInternal();
 
-  /// @brief Internal method that checks state and makes the context current, NOT using a mutex.
-  void makeCurrentInternal();
-
   /// @brief Internal method to grab content of a specific framebuffer.
-  QImage grabFramebufferInternal(QOpenGLFramebufferObject* fbo);
+  QImage grabFramebufferInternal(OglFBO* fbo);
 
   /// @brief (Re-)allocate FBO and paint device if needed due to size changes etc.
   void recreateFBOAndPaintDevice();
@@ -179,18 +183,18 @@ private:
   std::mutex m_mutex;
 
   /// @brief OpenGL render context.
-  QOpenGLContext* m_context;
+  OglContext* m_context;
   /// @brief The OpenGL 2.1 / ES 2.0 function object that can be used the issue OpenGL commands.
-  QOpenGLFunctions* m_functions;
+  OglFns* m_fns;
   /// @brief The OpenGL 3.0 function object that can be used the issue OpenGL commands.
-  QOpenGLFunctions_3_0* m_functions_3_0;
+  OglFnsCore4_0* m_fns4_0;
   /// @brief OpenGL paint device for painting with a QPainter.
-  QOpenGLPaintDevice* m_paintDevice;
+  OglPaintDevice* m_paintDevice;
   /// @brief Background FBO for off-screen rendering when the window is not exposed.
-  QOpenGLFramebufferObject* m_fbo;
+  OglFBO* m_fbo;
   /// @brief Background FBO resolving a multi sampling frame buffer in m_fbo to a frame buffer
   /// that can be grabbed to a QImage.
-  QOpenGLFramebufferObject* m_resolvedFbo;
+  OglFBO* m_resolvedFbo;
 
   /// @brief Shader used for blitting m_fbo to screen if glBlitFrameBuffer is not available.
   QOpenGLShaderProgram* m_blitShader;

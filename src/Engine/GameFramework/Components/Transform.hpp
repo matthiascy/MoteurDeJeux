@@ -35,7 +35,9 @@ private:
   Array<Transform*> m_children;
 
 public:
-  Transform(String name, GameObject* gameObject, Transform* parent, const Vec3& localPosition = vec3::Zero, const Quat& localRotation = quat::Identity, const Vec3& localScale = vec3::mkVec3(1));
+  Transform(String name, GameObject* gameObject, Transform* parent, const Vec3& localPosition = Math::Zero,
+            const Quat& localRotation = Math::QuatIdentity, const Vec3& localScale = Math::mkVec3(1));
+
   ~Transform() override = default;
 
   /* The position of the transform in world space. */

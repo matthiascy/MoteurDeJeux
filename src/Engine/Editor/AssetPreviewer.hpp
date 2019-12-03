@@ -12,7 +12,7 @@
 //#include <Framework/Vertex.hpp>
 //#include <Framework/Camera.hpp>
 #include "Vertex.hpp"
-#include "Camera.hpp"
+#include "EditorCamera.hpp"
 
 //#include <Framework/Graphics/Types.hpp>
 //#include <Framework/Graphics/Model3D.hpp>
@@ -67,7 +67,7 @@ private:
   QMatrix4x4 _proj_mat;
   QMatrix4x4 _view_mat;
   QMatrix4x4 _model_mat;
-  Camera _camera;
+  EditorCamera _camera;
   MouseState _mouse_state;
 
   uint vao, vbo, ebo;

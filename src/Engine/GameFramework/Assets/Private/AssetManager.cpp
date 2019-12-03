@@ -3,7 +3,9 @@
 
 AssetManager::AssetManager(String name)
   : Object(std::move(name))
-{ }
+{
+  qInfo() << "Asset Manager creation =>" << m_name;
+}
 
 AssetManager::~AssetManager()
 {
@@ -26,11 +28,11 @@ AssetHandle AssetManager::loadMesh(const String & path)
 AssetHandle AssetManager::loadTexture(const String & path)
 {
   auto idx = static_cast<UInt32>(m_meshes.size());
-  m_textures.push_back(new OpenGLTexture(Image(path).mirrored()));
+  m_textures.push_back(new OglTexture(Image(path).mirrored()));
   return {idx, EAssetType::Texture};
 }
 
-OpenGLTexture* AssetManager::getTexture(AssetHandle handle)
+OglTexture* AssetManager::getTexture(AssetHandle handle)
 {
   return m_textures[handle.idx];
 }

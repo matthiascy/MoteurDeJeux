@@ -21,7 +21,6 @@ protected:
   UniquePtr<TaggedGameObjects> m_game_objects;
   UniquePtr<ComponentsArray>   m_components;
   Transform* m_root;
-  Int32      m_vbo_idx;
 
 public:
   Scene() = delete;
@@ -32,8 +31,12 @@ public:
 
   virtual GameObject* createGameObject(String name, const String& tag);
 
+  virtual Component* addComponent(GameObject* gameObject, Component* component);
+
+  [[nodiscard]]
   virtual Array<GameObject*> gameObjects() const;
 
+  [[nodiscard]]
   virtual GameObject* mainCamera() const;
 };
 

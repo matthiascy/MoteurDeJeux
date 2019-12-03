@@ -39,7 +39,8 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
   m_engine = makeUnique<Engine>(this);
   m_engine->init();
 
-  m_engine->window()->showFullScreen();
+  m_engine->window()->showMaximized();
+  //m_engine->window()->showFullscreen();
   m_engine->window()->hide();
 
   m_splash = makeUnique<SplashScreen>(QPixmap{":/App/loading-engine"}, Qt::WindowStaysOnTopHint);
@@ -48,7 +49,7 @@ GameApp::GameApp(const String& name, const String& description, int argc, char**
     m_splash->setPixmap(QPixmap{":/App/loading-game"});
     QTimer::singleShot(3000, m_splash.get(), &QSplashScreen::close);
   });
-  QTimer::singleShot(5000, dynamic_cast<QWidget*>(m_engine->window()), &QWidget::showFullScreen);
+  QTimer::singleShot(5000, dynamic_cast<QWidget*>(m_engine->window()), &QWidget::showMaximized);
 
 
   QCoreApplication::exec();

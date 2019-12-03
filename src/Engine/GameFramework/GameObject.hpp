@@ -62,7 +62,9 @@ public:
   bool hasComponent() const;
 
   template <typename T, class... Args>
-  T* addComponent(Args&&... args);
+  T* createComponent(Args&&... args);
+
+  void addComponent(Component* component);
 
   template <typename T>
   void removeComponent();

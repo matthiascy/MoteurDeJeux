@@ -12,10 +12,10 @@ enum class EComponentType {
 };
 
 /**
- * Base class for everything attached to Gameobjects.
+ * Base class for everything attached to GameObjects.
  */
 class Component : public Object {
-private:
+protected:
   /* The game object this component is attached to. */
   GameObject* m_game_object;
   /* The tag of this game object. */
