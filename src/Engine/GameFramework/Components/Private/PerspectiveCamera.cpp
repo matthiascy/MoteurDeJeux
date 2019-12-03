@@ -1,8 +1,8 @@
 #include <GameFramework/Components/PerspectiveCamera.hpp>
 
-PerspectiveCamera::PerspectiveCamera(String name, GameObject* gameObject,
+PerspectiveCamera::PerspectiveCamera(const String& name, GameObject* gameObject,
                                      float fov, float aspect, float zNear, float zFar)
-  : Camera(std::move(name), gameObject, aspect, zNear, zFar),
+  : Camera(name, gameObject, aspect, zNear, zFar),
     m_fov{fov}
 { }
 

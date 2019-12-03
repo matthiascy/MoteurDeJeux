@@ -42,13 +42,13 @@ set(EngineSrc
 
     ${EngineSrcDir}/GameFramework/Components/Private/Behavior.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/BoxCollider.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/Collider.cpp
+    ${EngineSrcDir}/GameFramework/Components/Private/Collider.inl
     ${EngineSrcDir}/GameFramework/Components/Private/DirectionalLight.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Light.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/MeshRenderer.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/Renderer.cpp
+    ${EngineSrcDir}/GameFramework/Components/Private/Renderer.inl
     ${EngineSrcDir}/GameFramework/Components/Private/Transform.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/Camera.cpp
+    ${EngineSrcDir}/GameFramework/Components/Private/Camera.inl
     ${EngineSrcDir}/GameFramework/Components/Behavior.hpp
     ${EngineSrcDir}/GameFramework/Components/BoxCollider.hpp
     ${EngineSrcDir}/GameFramework/Components/Collider.hpp
@@ -66,7 +66,7 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Systems/PhysicsSystem.hpp
     ${EngineSrcDir}/GameFramework/Systems/RenderSystem.hpp
 
-    ${EngineSrcDir}/GameFramework/Private/Component.cpp
+    ${EngineSrcDir}/GameFramework/Private/Component.inl
     ${EngineSrcDir}/GameFramework/Private/Engine.cpp
     ${EngineSrcDir}/GameFramework/Private/GameApp.cpp
     ${EngineSrcDir}/GameFramework/Private/GameObject.cpp
@@ -122,7 +122,7 @@ set(EngineSrc
     GameFramework/Components/Private/PerspectiveCamera.cpp
     GameFramework/Components/PerspectiveCamera.hpp
     Graphics/OglTypes.hpp
-    GameFramework/Components.hpp GameFramework/Private/SceneManager.cpp GameFramework/SceneManager.hpp)
+    GameFramework/Components.hpp GameFramework/Managers/Private/SceneManager.cpp GameFramework/Managers/SceneManager.hpp GameFramework/Managers/Private/ComponentManager.cpp GameFramework/Managers/ComponentManager.hpp GameFramework/Types.hpp GameFramework/TypeID.hpp GameFramework/TypeID.hpp GameFramework/Private/AbstractComponent.cpp GameFramework/AbstractComponent.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 

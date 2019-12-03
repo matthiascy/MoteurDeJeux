@@ -8,19 +8,21 @@
 #include <Graphics/AbstractWindow.hpp>
 
 #include <QtWidgets/QSplashScreen>
-#include "SceneManager.hpp"
+#include <GameFramework/Managers/ComponentManager.hpp>
+#include "GameFramework/Managers/SceneManager.hpp"
 
 class GameApp;
 
 class Engine {
 private:
-  UniquePtr<AssetManager>   m_asset_manager;
-  UniquePtr<SceneManager>   m_scene_manager;
-  UniquePtr<RenderSystem>   m_render_sys;
+  UniquePtr<AssetManager>     m_asset_manager;
+  UniquePtr<ComponentManager> m_component_manager;
+  UniquePtr<SceneManager>     m_scene_manager;
+  UniquePtr<RenderSystem>     m_render_sys;
 //  UniquePtr<PhysicsSystem>  m_physics_sys;
-  UniquePtr<InputSystem>    m_input_sys;
-  UniquePtr<QWidget>        m_window;
-  GameApp*                  m_app;
+  UniquePtr<InputSystem>      m_input_sys;
+  UniquePtr<QWidget>          m_window;
+  GameApp*                    m_app;
 
 public:
   explicit Engine(GameApp* app);
@@ -30,6 +32,9 @@ public:
 
   [[nodiscard]]
   AssetManager* assetManager() const;
+
+  [[nodiscard]]
+  ComponentManager* componentManager() const;
 
   [[nodiscard]]
   SceneManager* sceneManager() const;

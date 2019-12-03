@@ -3,12 +3,12 @@
 
 #include "Camera.hpp"
 
-class OrthogonalCamera : Camera {
+class OrthogonalCamera : Camera<OrthogonalCamera> {
 private:
   Real m_scale  {};
 
 public:
-  OrthogonalCamera(String name, GameObject* gameObject, Real aspect, Real scale, Real zNear, Real zFar);
+  OrthogonalCamera(const String& name, GameObject* gameObject, Real aspect, Real scale, Real zNear, Real zFar);
   ~OrthogonalCamera() override = default;
 
   [[nodiscard]]

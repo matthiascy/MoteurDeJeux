@@ -3,11 +3,13 @@
 #include <GameFramework/GameApp.hpp>
 #include <Editor/EditorMainWindow.hpp>
 #include <GameFramework/EngineWindow.hpp>
+#include <GameFramework/Managers/ComponentManager.hpp>
 
 Engine::Engine(GameApp* app)
   : m_app{app}
 {
   qDebug() << "Engine instance creation.";
+  m_component_manager = makeUnique<ComponentManager>(m_app->name() + "ComponentManager");
   m_asset_manager = makeUnique<AssetManager>(m_app->name() + "AssetManager");
   m_scene_manager = makeUnique<SceneManager>(m_app->name() + "SceneManager");
   m_render_sys = makeUnique<RenderSystem>(m_app->name() + "RenderSystem", this);
@@ -55,18 +57,22 @@ bool Engine::init()
   return true;
 }
 
-RenderSystem *Engine::renderSystem() const
+RenderSystem* Engine::renderSystem() const
 {
   return m_render_sys.get();
 }
 
-PhysicsSystem *Engine::physicsSystem() const
+PhysicsSystem* Engine::physicsSystem() const
 {
   return nullptr;//m_physics_sys.get();
 }
 
-InputSystem *Engine::inputSystem() const
+InputSystem* Engine::inputSystem() const
 {
   return m_input_sys.get();
+}
+
+ComponentManager* Engine::componentManager() const {
+  return m_component_manager.get();
 }
 

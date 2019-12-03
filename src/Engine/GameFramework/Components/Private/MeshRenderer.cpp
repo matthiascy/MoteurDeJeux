@@ -1,7 +1,7 @@
 #include <GameFramework/Components/MeshRenderer.hpp>
 
-MeshRenderer::MeshRenderer(String name, GameObject* gameObject, const AssetHandle& handle)
-  : Renderer(std::move(name), gameObject), m_mesh_handle{handle}
+MeshRenderer::MeshRenderer(const String& name, GameObject* gameObject, const AssetHandle& handle)
+  : Renderer<MeshRenderer>(name, gameObject), m_mesh_handle{handle}
 { }
 
 AssetHandle MeshRenderer::meshHandle() const

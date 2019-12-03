@@ -25,23 +25,33 @@ struct Math {
 
   constexpr static const Vec3 Backward = Vec3(1.0, 0.0, 0.0);
 
-  inline static Vec3 mkVec3(Real a);
+  inline static Vec3 mkVec3(Real a) {
+    return Vec3(a, a, a);
+  }
 
-  inline static btVector3 toBTVec3(const Vec3& v);
+  inline static btVector3 toBTVec3(const Vec3& v) {
+    return {v.x(), v.y(), v.z()};
+  }
 
-  inline static Vec3 fromBTVec3(const btVector3& v);
+  inline static Vec3 fromBTVec3(const btVector3 &v) {
+    return {v.x(), v.y(), v.z()};
+  }
 
-  inline static btQuaternion toBTQuat(const Quat& q);
+  inline static btQuaternion toBTQuat(const Quat& q) {
+    return {q.x(), q.y(), q.z(), q.scalar()};
+  }
 
-  inline static Quat fromBTQuat(const btQuaternion& q);
+  inline static Quat fromBTQuat(const btQuaternion& q) {
+    return {q.w(), q.x(), q.y(), q.z()};
+  }
 
   static const Mat4 Mat4Identity;
 
   static const Quat QuatIdentity;
 
-  inline static Mat4 ortho(Real left, Real right, Real bottom, Real top, Real znear, Real zfar);
+  static Mat4 ortho(Real left, Real right, Real bottom, Real top, Real znear, Real zfar);
 
-  inline static Mat4 perspective(Real fov, Real aspect, Real znear, Real zfar);
+  static Mat4 perspective(Real fov, Real aspect, Real znear, Real zfar);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_MATH_MATH_HPP */

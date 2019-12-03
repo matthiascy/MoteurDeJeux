@@ -2,8 +2,8 @@
 #include "GameFramework/GameObject.hpp"
 
 // TODO:
-PhysicsSystem::PhysicsSystem(String name, Engine* engine, const Vec3& gravity)
-  : System(std::move(name), engine)
+PhysicsSystem::PhysicsSystem(const String& name, Engine* engine, Object* parent, const Vec3& gravity)
+  : System(name, engine, parent)
 {
   m_config = new btDefaultCollisionConfiguration();
   m_dispatcher = new btCollisionDispatcher(m_config);

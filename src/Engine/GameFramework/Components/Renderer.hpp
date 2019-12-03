@@ -3,12 +3,14 @@
 
 #include <GameFramework/Component.hpp>
 
-class Renderer : public Component {
+template <typename T>
+class Renderer : public Component<T> {
 private:
 public:
-  Renderer(String name, GameObject* gameObject);
+  Renderer(const String& name, GameObject* gameObject);
   ~Renderer() override = default;
 };
 
+#include "Private/Renderer.inl"
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_RENDERER_HPP */

@@ -7,14 +7,19 @@
 #include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <GameFramework/Assets/AssetsTypes.hpp>
+#include "AbstractComponent.hpp"
+#include <GameFramework/Components/Transform.hpp>
 
 class Scene;
 
-// TODO: instantly all objects have a collider, seperate
+// TODO: instantly all objects have a collider, separate
 // TODO: final
 
 class GameObject : public Object {
+  Q_OBJECT
+
   using ComponentHandle = Handle;
+
 private:
   String m_tag;
   Transform* m_transform;
@@ -22,12 +27,13 @@ private:
   bool m_is_visible;  // is the GameObject active in the scene ?
   Scene* m_scene;
   AssetHandle m_mesh;
-  Array<ComponentHandle> m_components;
+  Array<AbstractComponent*> m_components;
+  // TODO::using handle to retrieve components
 
 public:
   GameObject() = delete;
-  GameObject(String name, Scene* scene);
-  GameObject(String name, Scene* scene, String tag);
+  GameObject(const String& name, Scene* scene, Object* parent = nullptr);
+  GameObject(const String& name, Scene* scene, const String& tag, Object* parent = nullptr);
   ~GameObject() override = default;
 
   [[nodiscard]] StringView tag() const;
@@ -51,33 +57,66 @@ public:
   T* getComponent() const;
 
   template <typename T>
-  [[nodiscard]] ComponentHandle getComponentInParent() const;
+  [[nodiscard]]
+  T* getComponentInParent() const;
 
   template <typename T>
-  [[nodiscard]] ComponentHandle getComponentInChildren() const;
+  [[nodiscard]]
+  T* getComponentInChildren() const;
 
-  [[nodiscard]] Array<Component*> getComponents() const;
+  [[nodiscard]]
+  Array<AbstractComponent*>& getComponents();
 
-  template <typename T>
-  bool hasComponent() const;
-
-  template <typename T, class... Args>
-  T* createComponent(Args&&... args);
-
-  void addComponent(Component* component);
+  [[nodiscard]]
+  const Array<AbstractComponent*>& getComponents() const;
 
   template <typename T>
-  void removeComponent();
+  [[nodiscard]] bool hasComponent() const;
 
-  void removeAllComponents();
+  void addComponent(AbstractComponent* comp);
 };
 
 template <typename T>
 T* GameObject::getComponent() const
 {
-  static_assert(std::is_base_of<Component, T>(), "T is not a Component");
+  static_assert(std::is_base_of<AbstractComponent, T>(), "T is not a Component");
+
+  for (auto* c : m_components) {
+    if (c->typeID() == T::componentTypeID) {
+      return c;
+    }
+  }
+
+  return nullptr;
 }
 
+template <typename T>
+bool GameObject::hasComponent() const
+{
+  for (auto* c : m_components) {
+    if (c->typeID() == T::componentTypeID) {
+      return true;
+    }
+  }
+  return false;
+}
+
+template <typename T>
+[[nodiscard]]
+T* GameObject::getComponentInParent() const
+{
+  return m_transform->parent()->gameObject()->getComponent<T>();
+}
+
+template <typename T>
+[[nodiscard]]
+T* GameObject::getComponentInChildren() const
+{
+  for (auto& c : m_transform->children()) {
+    if (c->gameObject()->hasComponent<T>())
+      return c->gameObject()->getComponent<T>();
+  }
+}
 
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP */

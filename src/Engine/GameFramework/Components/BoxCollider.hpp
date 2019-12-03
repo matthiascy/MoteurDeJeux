@@ -3,9 +3,9 @@
 
 #include "Collider.hpp"
 
-class BoxCollider : public Collider {
+class BoxCollider : public Collider<BoxCollider> {
 public:
-  BoxCollider(String name, GameObject* gameObject, const Vec3& size, Real mass);
+  BoxCollider(const String& name, GameObject* gameObject, const Vec3& size, Real mass);
   ~BoxCollider() override = default;
 };
 

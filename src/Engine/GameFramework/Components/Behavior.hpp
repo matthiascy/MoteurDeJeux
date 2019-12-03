@@ -6,9 +6,9 @@
 
 //class InputState;
 
-class Behavior : Component {
+class Behavior : Component<Behavior> {
 public:
-  Behavior(String name, GameObject* gameObject);
+  Behavior(const String& name, GameObject* gameObject);
 //  virtual void update(Real deltaTime, InputState input) = 0;
 };
 

@@ -1,11 +1,10 @@
 #include <GameFramework/Systems/InputSystem.hpp>
-#include <algorithm>
 #include <QCursor>
 
-InputSystem::InputSystem(String name, Engine *engine)
-  : System(std::move(name), engine)
+InputSystem::InputSystem(const String& name, Engine* engine, Object* parent)
+  : System(name, engine, parent)
 {
-  qInfo() << "Input System creation  =>" << m_name;
+  qInfo() << "Input System creation  =>" << objectName();
 }
 
 InputSystem::~InputSystem()
@@ -16,11 +15,6 @@ InputSystem::~InputSystem()
 void InputSystem::init()
 {
   qInfo() << "- Input system initialization...";
-  // TODO
-}
-
-void InputSystem::update(Real dt)
-{
   // TODO
 }
 

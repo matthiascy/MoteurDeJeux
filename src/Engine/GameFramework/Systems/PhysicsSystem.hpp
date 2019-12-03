@@ -9,7 +9,7 @@
 
 class Engine;
 
-class PhysicsSystem : System {
+class PhysicsSystem : public System {
 protected:
   btDefaultCollisionConfiguration*     m_config;
   btCollisionDispatcher*               m_dispatcher;
@@ -21,7 +21,7 @@ protected:
   btCollisionObjectArray   m_collision_objects;
 
 public:
-  PhysicsSystem(String name, Engine* engine, const Vec3& gravity = Math::Down);
+  PhysicsSystem(const String& name, Engine* engine, Object* parent = nullptr, const Vec3& gravity = Math::Down);
   ~PhysicsSystem() override;
 
   void init() override;

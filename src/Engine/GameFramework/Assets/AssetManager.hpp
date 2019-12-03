@@ -18,7 +18,7 @@ struct AssetHandle {
   EAssetType type;
 };
 
-class AssetManager : Object {
+class AssetManager : public Object {
 public:
 
 protected:
@@ -27,7 +27,7 @@ protected:
 
 public:
   AssetManager() = delete;
-  explicit AssetManager(String name);
+  explicit AssetManager(const String& name, Object* parent = nullptr);
   ~AssetManager() override;
 
   AssetHandle loadMesh(const String& path);

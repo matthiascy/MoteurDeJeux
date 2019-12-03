@@ -4,14 +4,20 @@
 #include <Core/Core.hpp>
 #include <GameFramework/System.hpp>
 
-class InputSystem : System {
+class InputSystem : public System {
 public:
-  InputSystem(String name, Engine* engine);
+  InputSystem(const String& name, Engine* engine, Object* parent = nullptr);
   ~InputSystem() override;
 
   void init() override;
 
-  void update(Real dt);
+  void fixedUpdate(Real dt) override { };
+
+  void preUpdate(Real dt) override { };
+
+  void update(Real dt) override { };
+
+  void postUpdate(Real dt) override { };
   /*
 public:
   static InputState keyState(Qt::Key key);

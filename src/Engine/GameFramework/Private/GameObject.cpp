@@ -3,16 +3,16 @@
 
 #include <utility>
 
-GameObject::GameObject(String name, Scene* scene)
-  : Object(std::move(name)), m_tag{"None"}, m_transform{nullptr},
+GameObject::GameObject(const String& name, Scene* scene, Object* parent)
+  : Object(name, parent), m_tag{"None"}, m_transform{nullptr},
     m_is_static{false}, m_is_visible{true},
-    m_scene{scene}, m_components{}
+    m_scene{scene}, m_components{}, m_mesh{}
 { }
 
-GameObject::GameObject(String name, Scene* scene, String tag)
-    : Object(std::move(name)), m_tag{std::move(tag)}, m_transform{nullptr},
+GameObject::GameObject(const String& name, Scene* scene, const String& tag, Object* parent)
+    : Object(name, parent), m_tag{tag}, m_transform{nullptr},
       m_is_static{false}, m_is_visible{true},
-      m_scene{scene}, m_components{}
+      m_scene{scene}, m_components{}, m_mesh{}
 { }
 
 StringView GameObject::tag() const
@@ -68,4 +68,21 @@ AssetHandle GameObject::meshHandle() const
 Scene* GameObject::scene() const
 {
   return m_scene;
+}
+
+void GameObject::addComponent(AbstractComponent* component)
+{
+  if (!m_components.contains(component)) {
+    m_components.push_back(component);
+  }
+}
+
+const Array<AbstractComponent*>& GameObject::getComponents() const
+{
+  return m_components;
+}
+
+Array<AbstractComponent*>& GameObject::getComponents()
+{
+  return m_components;
 }

@@ -1,10 +1,10 @@
-#include <GameFramework/Components/Collider.hpp>
-#include <Core/Math/Math.hpp>
-#include <Core/Memory.hpp>
-#include <LinearMath/btDefaultMotionState.h>
+#ifndef MOTEUR_DE_JEUX_SRC_PHYSICS_COLLIDER_HPP
+  #error "Collider.inl must be included from Collider.hpp"
+#endif
 
-Collider::Collider(String name, GameObject* gameObject, btCollisionShape* shape, Real mass)
-  : Component(std::move(name), gameObject)
+template <typename T>
+Collider<T>::Collider(const String& name, GameObject* gameObject, btCollisionShape* shape, Real mass)
+  : Component<T>(name, gameObject)
 {
   m_shape.reset(shape);
 
@@ -19,23 +19,27 @@ Collider::Collider(String name, GameObject* gameObject, btCollisionShape* shape,
   m_rigid_body = makeUnique<btRigidBody>(mass, m_motion_state.get(), m_shape.get(), local_inertial);
 }
 
-Collider::~Collider()
+template <typename T>
+Collider<T>::~Collider()
 {
   m_motion_state.reset();
   m_rigid_body.reset();
 }
 
-btCollisionShape* Collider::collisionShape()
+template <typename T>
+btCollisionShape* Collider<T>::collisionShape()
 {
   return m_shape.get();
 }
 
-btRigidBody* Collider::rigidBody()
+template <typename T>
+btRigidBody* Collider<T>::rigidBody()
 {
   return m_rigid_body.get();
 }
 
-btMotionState* Collider::motionState()
+template <typename T>
+btMotionState* Collider<T>::motionState()
 {
   return m_motion_state.get();
 }

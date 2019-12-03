@@ -3,12 +3,12 @@
 
 #include "Camera.hpp"
 
-class PerspectiveCamera : Camera {
+class PerspectiveCamera : Camera<PerspectiveCamera> {
 private:
   Real m_fov {};
 
 public:
-  PerspectiveCamera(String name, GameObject* gameObject,
+  PerspectiveCamera(const String& name, GameObject* gameObject,
                     float fov, float aspect, float zNear, float zFar);
   ~PerspectiveCamera() override = default;
 

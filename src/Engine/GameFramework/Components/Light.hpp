@@ -5,7 +5,7 @@
 #include <GameFramework/Forward.hpp>
 #include <GameFramework/Component.hpp>
 
-class Light : public Component {
+class Light : public Component<Light> {
 protected:
   Vec3 m_color;
   Real m_intensity;
@@ -14,7 +14,10 @@ public:
   Light(String name, GameObject* gameObject, const Vec3& color, Real intensity);
   ~Light() override = default;
 
+  [[nodiscard]]
   const Vec3& color() const;
+
+  [[nodiscard]]
   Real intensity() const;
 };
 

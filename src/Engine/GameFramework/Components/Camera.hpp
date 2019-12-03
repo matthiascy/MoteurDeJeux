@@ -6,14 +6,15 @@
 
 class GameObject;
 
-class Camera : public Component {
+template <typename T>
+class Camera : public Component<T> {
 protected:
   Real m_aspect {};
   Real m_z_near {};
   Real m_z_far  {};
 
 public:
-  Camera(String name, GameObject* gameObject, Real aspect, Real zNear, Real zFar);
+  Camera(const String& name, GameObject* gameObject, Real aspect, Real zNear, Real zFar);
   ~Camera() override = default;
 
   [[nodiscard]]
@@ -34,5 +35,7 @@ public:
   virtual Real zFar() const;
   virtual void setZFar(Real z);
 };
+
+#include "Private/Camera.inl"
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_CAMERA_HPP */

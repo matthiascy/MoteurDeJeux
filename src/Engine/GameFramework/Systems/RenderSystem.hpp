@@ -33,10 +33,18 @@ private:
   Mat4 m_projection_matrix;
 
 public:
-  RenderSystem(String name, Engine* engine);
+  RenderSystem(const String& name, Engine* engine, Object* parent = nullptr);
   ~RenderSystem() override;
 
   void init() override;
+
+  void fixedUpdate(Real dt) override { };
+
+  void preUpdate(Real dt) override { };
+
+  void update(Real dt) override { };
+
+  void postUpdate(Real dt) override { };
 
   void renderScene(Scene* scene);
 

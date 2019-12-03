@@ -1,8 +1,8 @@
 #include <GameFramework/Components/OrthogonalCamera.hpp>
 
-OrthogonalCamera::OrthogonalCamera(String name, GameObject* gameObject,
+OrthogonalCamera::OrthogonalCamera(const String& name, GameObject* gameObject,
                                    Real aspect, Real scale, Real zNear, Real zFar)
-  : Camera(std::move(name), gameObject, aspect, zNear, zFar),
+  : Camera(name, gameObject, aspect, zNear, zFar),
     m_scale{scale}
 { }
 

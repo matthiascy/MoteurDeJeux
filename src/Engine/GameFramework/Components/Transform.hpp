@@ -5,9 +5,8 @@
 #include <Core/Math/Math.hpp>
 #include <Core/Core.hpp>
 #include <GameFramework/Component.hpp>
-//#include <GameFramework/GameObject.hpp>
 
-class Transform : public Component {
+class Transform : public Component<Transform> {
 public:
   enum class ESpace {
     World,
@@ -35,7 +34,7 @@ private:
   Array<Transform*> m_children;
 
 public:
-  Transform(String name, GameObject* gameObject, Transform* parent, const Vec3& localPosition = Math::Zero,
+  Transform(const String& name, GameObject* gameObject, Transform* parent, const Vec3& localPosition = Math::Zero,
             const Quat& localRotation = Math::QuatIdentity, const Vec3& localScale = Math::mkVec3(1));
 
   ~Transform() override = default;
@@ -108,6 +107,10 @@ public:
   Transform* child(Int32 index);
 
   UInt32 childCount() const;
+
+  const Array<Transform*>& children() const;
+
+  Array<Transform*>& children();
 
 private:
   void set_has_changed();

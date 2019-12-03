@@ -1,10 +1,10 @@
 #include <GameFramework/Assets/AssetManager.hpp>
 #include <GameFramework/Assets/MeshLoader.hpp>
 
-AssetManager::AssetManager(String name)
-  : Object(std::move(name))
+AssetManager::AssetManager(const String& name, Object* parent)
+  : Object(name, parent)
 {
-  qInfo() << "Asset Manager creation =>" << m_name;
+  qInfo() << "Asset Manager creation =>" << objectName();
 }
 
 AssetManager::~AssetManager()

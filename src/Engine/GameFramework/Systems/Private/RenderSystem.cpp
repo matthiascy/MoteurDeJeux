@@ -5,14 +5,14 @@
 #include <GameFramework/Scene.hpp>
 #include <GameFramework/Engine.hpp>
 
-RenderSystem::RenderSystem(String name, Engine* engine)
-  : System(std::move(name), engine),
+RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
+  : System(name, engine, parent),
     m_surface{nullptr}, m_render_infos{},
     m_projection_matrix{Math::Mat4Identity},
     m_model_matrix{Math::Mat4Identity},
     m_view_matrix{Math::Mat4Identity}
 {
-  qInfo() << "Render System creation =>" << m_name;
+  qInfo() << "Render System creation =>" << objectName();
 }
 
 RenderSystem::~RenderSystem()

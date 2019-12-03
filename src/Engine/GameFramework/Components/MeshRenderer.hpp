@@ -4,12 +4,12 @@
 #include "Renderer.hpp"
 #include <GameFramework/Assets/AssetsTypes.hpp>
 
-class MeshRenderer : Renderer {
+class MeshRenderer : Renderer<MeshRenderer> {
 private:
   AssetHandle m_mesh_handle;
 
 public:
-  MeshRenderer(String name, GameObject* gameObject, const AssetHandle& handle);
+  MeshRenderer(const String& name, GameObject* gameObject, const AssetHandle& handle);
 
   [[nodiscard]]
   AssetHandle meshHandle() const;

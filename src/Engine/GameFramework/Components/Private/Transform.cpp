@@ -1,7 +1,8 @@
 #include <GameFramework/Components/Transform.hpp>
+#include <GameFramework/GameObject.hpp>
 
-Transform::Transform(String name, GameObject* gameObject, Transform* parent, const Vec3& localPosition, const Quat& localRotation, const Vec3& localScale)
-  : Component(std::move(name), gameObject),
+Transform::Transform(const String& name, GameObject* gameObject, Transform* parent, const Vec3& localPosition, const Quat& localRotation, const Vec3& localScale)
+  : Component<Transform>(name, gameObject),
     m_position{}, m_rotation{}, m_scale{},
     m_local_position{localPosition}, m_local_rotation{localRotation}, m_local_scale{localScale},
     m_local_to_world_matrix{}, m_world_to_local_matrix{},
@@ -331,7 +332,7 @@ void Transform::detachChildren()
 Transform* Transform::find(const String& name)
 {
   for (auto* child : m_children) {
-    if (child->m_name == name) {
+    if (child->gameObject()->name() == name) {
       return child;
     }
   }
@@ -391,4 +392,14 @@ void Transform::instant_update()
       child->instant_update();
     }
   }
+}
+
+const Array<Transform*>& Transform::children() const
+{
+  return m_children;
+}
+
+Array<Transform*>& Transform::children()
+{
+  return m_children;
 }

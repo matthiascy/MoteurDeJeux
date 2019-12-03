@@ -2,24 +2,28 @@
 #define MOTEUR_DE_JEUX_SRC_CORE_OBJECT_HPP
 
 #include "Container.hpp"
+#include <QObject>
 
-class Object {
+class Object : public QObject {
+  Q_OBJECT
+
 protected:
-  String m_name;
   String m_uuid;
 
 public:
   Object() = delete;
-  explicit Object(String name);
-  virtual ~Object() = default;
+  explicit Object(const String& name, Object* parent = nullptr);
+  ~Object() override = default;
 
-  [[nodiscard]] virtual StringView name() const;
-  virtual void setName(const String& name);
+  [[nodiscard]]
+  StringView name() const;
+  void setName(String&& name);
 
-  [[nodiscard]] virtual StringView uuid() const;
+  [[nodiscard]]
+  StringView uuid() const;
 
-  virtual inline bool operator==(const Object& other) const;
-  virtual inline bool operator!=(const Object& other) const;
+  [[nodiscard]]
+  inline bool compareUUID(const Object& other) const;
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_OBJECT_HPP */

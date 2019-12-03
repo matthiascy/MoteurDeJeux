@@ -1,20 +1,21 @@
 #include <Core/Object.hpp>
 #include <Core/Core.hpp>
-#include <utility>
 
-Object::Object(String name)
-  : m_name{std::move(name)},
+Object::Object(const String& name, Object* parent)
+  : QObject(parent),
     m_uuid{Uuid::createUuid().toString()}
-{ }
+{
+  setObjectName(name);
+}
 
 inline StringView Object::name() const
 {
-  return m_name;
+  return objectName();
 }
 
-void Object::setName(const String& name)
+void Object::setName(String&& name)
 {
-  m_name = name;
+  setObjectName(name);
 }
 
 inline StringView Object::uuid() const
@@ -22,12 +23,6 @@ inline StringView Object::uuid() const
   return m_uuid;
 }
 
-bool Object::operator==(const Object& other) const
-{
-  return (m_uuid == other.m_uuid);
-}
-
-bool Object::operator!=(const Object & other) const
-{
-  return !(*this == other);
+bool Object::compareUUID(const Object& other) const {
+  return m_uuid == other.m_uuid;
 }

@@ -1,6 +1,6 @@
 #include <GameFramework/System.hpp>
 
-System::System(String name, Engine* engine)
-  : Object(std::move(name)), m_engine{engine}
+System::System(const String& name, Engine* engine, Object* parent)
+  : Object(name, parent), m_engine{engine}
 { }
 

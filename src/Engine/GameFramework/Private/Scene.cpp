@@ -5,21 +5,18 @@
 #include <GameFramework/Component.hpp>
 #include <GameFramework/Systems/PhysicsSystem.hpp>
 
-Scene::Scene(String name)
-  : Object(std::move(name))
+Scene::Scene(const String& name, Object* parent)
+  : Object(name, parent)
 {
   m_game_objects = makeUnique<TaggedGameObjects>();
   m_game_objects->insert("Untagged", new GameObjectsArray());
   m_game_objects->insert("Camera", new GameObjectsArray());
   m_root = createGameObject("Root", "Untagged")->transform();
+  m_is_active = false;
 }
 
 Scene::~Scene()
 {
-  for (auto& comp : *m_components)
-    delete comp;
-  m_components.reset();
-
   for (auto& objs : *m_game_objects) {
     for (auto& obj : *objs) {
       delete obj;
@@ -36,9 +33,9 @@ Transform* Scene::root()
   return m_root;
 }
 
-GameObject* Scene::createGameObject(String name, const String& tag)
+GameObject* Scene::createGameObject(const String& name, const String& tag)
 {
-  auto obj = new GameObject(std::move(name), this, tag);
+  auto obj = new GameObject(name, this, tag, nullptr);
 
   if (!contains(*m_game_objects, tag)) {
     m_game_objects->operator[](tag) = new GameObjectsArray();
@@ -65,7 +62,12 @@ GameObject* Scene::mainCamera() const
   return m_game_objects->operator[]("Camera")->operator[](0);
 }
 
-Component* Scene::addComponent(GameObject* gameObject, Component* component)
+bool Scene::isActive() const
 {
-  //gameObject->addComponent(component);
+  return m_is_active;
+}
+
+void Scene::setActive(bool status)
+{
+  m_is_active = status;
 }

@@ -11,33 +11,39 @@ class RenderSystem;
 class PhysicsSystem;
 class InputSystem;
 
-class Scene : Object {
+class Scene : public Object {
 public:
   typedef Array<GameObject*> GameObjectsArray;
   typedef HashMap<String, GameObjectsArray*> TaggedGameObjects;
-  typedef Array<Component*> ComponentsArray;
+  //typedef Array<Component*> ComponentsArray;
 
 protected:
   UniquePtr<TaggedGameObjects> m_game_objects;
-  UniquePtr<ComponentsArray>   m_components;
+  //UniquePtr<ComponentsArray>   m_components;
   Transform* m_root;
+  bool m_is_active;
 
 public:
   Scene() = delete;
-  explicit Scene(String name);
+  explicit Scene(const String& name, Object* parent = nullptr);
   ~Scene() override;
 
   virtual Transform* root();
 
-  virtual GameObject* createGameObject(String name, const String& tag);
+  virtual GameObject* createGameObject(const String& name, const String& tag);
 
-  virtual Component* addComponent(GameObject* gameObject, Component* component);
+  //virtual Component* addComponent(GameObject* gameObject, Component* component);
 
   [[nodiscard]]
   virtual Array<GameObject*> gameObjects() const;
 
   [[nodiscard]]
   virtual GameObject* mainCamera() const;
+
+  [[nodiscard]]
+  bool isActive() const;
+
+  void setActive(bool status);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SCENE_HPP */
