@@ -52,6 +52,10 @@ struct Math {
   static Mat4 ortho(Real left, Real right, Real bottom, Real top, Real znear, Real zfar);
 
   static Mat4 perspective(Real fov, Real aspect, Real znear, Real zfar);
+
+  static Mat4 lookAtMatrix(const Vec3& eye, const Vec3& center, const Vec3& up);
+
+  static Quat lookAtQuaternion(const Vec3& eye, const Vec3& center, const Vec3& up);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_MATH_MATH_HPP */

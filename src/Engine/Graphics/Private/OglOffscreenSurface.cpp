@@ -213,7 +213,7 @@ QImage OglOffscreenSurface::grabFramebufferInternal(OglFBO* fbo)
   m_fns->glBindFramebuffer(GL_FRAMEBUFFER, m_fbo->handle());
 
   return (image.mirrored());
-}  // OglOffscreenSurface::grabFramebufferInternal
+}
 
 
 void OglOffscreenSurface::swapBuffers()
@@ -362,19 +362,23 @@ void OglOffscreenSurface::render()
   std::lock_guard <std::mutex> locker(m_mutex);
   // check if we need to initialize stuff
   initialize_internal_();
-  // check if we need to call the user initialization
-//    makeCurrent(); // TODO: may be makeCurrent() must be here, as noted for QOpenGLWidget.initializeGL()
+
   if (!m_initializedGL) {
     m_initializedGL = true;
     initializeGL();
   }
-  // make context current and bind framebuffer
+
   makeCurrent();
+
   bindFramebufferObject();
-  // call user paint function
-  paintGL();
+
+  //paintGL();
+  //fns()->glClearColor(0.4,0.4,0.4,0.5);
+
+  fns()->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   doneCurrent();
-  // mark that we're done with updating
+
   m_updatePending = false;
 }
 
@@ -491,4 +495,37 @@ UInt32 OglOffscreenSurface::createProgram(const String& vert, const String& frag
   m_programs.push_back(program);
   doneCurrent();
   return m_programs.size() - 1;
+}
+
+
+OglProgram* OglOffscreenSurface::programAt(UInt32 idx)
+{
+  if (idx < m_programs.size()) {
+    return m_programs[idx];
+  }
+  return nullptr;
+}
+
+OglBuffer* OglOffscreenSurface::vertexBufferAt(UInt32 idx)
+{
+  if (idx < m_vbos.size()) {
+    return m_vbos[idx];
+  }
+  return nullptr;
+}
+
+OglVAO* OglOffscreenSurface::vertexArrayAt(UInt32 idx)
+{
+  if (idx < m_vaos.size()) {
+    return m_vaos[idx];
+  }
+  return nullptr;
+}
+
+OglBuffer* OglOffscreenSurface::indexBufferAt(UInt32 idx)
+{
+  if (idx < m_ebos.size()) {
+    return m_ebos[idx];
+  }
+  return nullptr;
 }

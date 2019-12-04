@@ -28,6 +28,11 @@ private:
 
   HashMap<GameObject*, RenderInfo> m_render_infos;
 
+  Array<UInt32> m_vaos;
+  Array<UInt32> m_vbos;
+  Array<UInt32> m_ebos;
+  Array<UInt32> m_programs;
+
   Mat4 m_view_matrix;
   Mat4 m_model_matrix;
   Mat4 m_projection_matrix;

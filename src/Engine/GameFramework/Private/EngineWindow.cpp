@@ -4,7 +4,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QPushButton>
-#include <QtUiTools/QUiLoader>
+//#include <QtUiTools/QUiLoader>
 #include <QtWidgets/QLCDNumber>
 #include <GameFramework/GameApp.hpp>
 
@@ -20,7 +20,6 @@ EngineWindow::EngineWindow(GameApp* app, QWidget* parent)
   file.close();
    */
   // TODO:: set render system size
-  setMinimumSize(1024, 768);
 
   QFont font("Arial", 16, QFont::Bold);
   auto* fpsLabel = new QLabel("FPS : ", this);

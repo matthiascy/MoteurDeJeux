@@ -4,7 +4,7 @@
 #include <Homeland/HomelandApp.hpp>
 
 HomelandApp::HomelandApp(int argc, char** argv)
-  : GameApp("家·Homeland", "Strategy island defense game.", argc, argv),
+  : GameApp("家·Homeland", "Strategy island defense game.", {800, 600}, argc, argv),
     m_main_scene{nullptr}
 { }
 
@@ -18,7 +18,7 @@ bool HomelandApp::init_main_scene_()
   m_main_scene = m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->createScene("MainScene"));
 
   auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
-  camera->transform()->lookAt(Vec3{0, 0, 0}, Math::Up);
+  //camera->transform()->lookAt(Vec3{0, 0, 0}, Math::Up);
 
   auto sphereMeshHandle = m_engine->assetManager()->loadMesh("./assets/models/sphere.obj");
   auto* sphere = m_main_scene->createGameObject("Sphere", "default");

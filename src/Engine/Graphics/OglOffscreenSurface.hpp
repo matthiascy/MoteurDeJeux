@@ -115,6 +115,14 @@ public:
   /// @param h Height.
   void resize(int w, int h);
 
+  OglProgram* programAt(UInt32 idx);
+
+  OglBuffer* vertexBufferAt(UInt32 idx);
+
+  OglVAO* vertexArrayAt(UInt32 idx);
+
+  OglBuffer* indexBufferAt(UInt32 idx);
+
 public slots:
   /// @brief Lazy update routine like QWidget::update().
   void update();
@@ -149,9 +157,17 @@ protected:
   /// @brief Called whenever the window needs to repaint itself. Override to draw OpenGL content.
   /// When this function is called, the context is already current and the correct framebuffer is
   /// bound.
-  virtual void paintGL() {
+  virtual void paintGL()
+  {
     fns()->glClearColor(0.12,0.3,0.8,1);
     fns()->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //m_programs[0]->bind();
+    //m_vaos[0]->bind();
+
+    //fns()->glDrawElements(GL_TRIANGLES,)
+
+    //m_vaos[0]->release();
+    //m_programs[0]->release();
   }
 
   /// @brief Called whenever the window needs to repaint itself. Override to draw QPainter

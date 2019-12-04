@@ -31,20 +31,41 @@ void RenderSystem::init()
   m_surface->create();
   if (!m_surface->isValid())
     qFatal("OffScreenSurface Creation failed!!!");
+
+  //m_programs[0] = m_surface->createProgram(":/Shaders/CubeVert", ":/Shaders/CubeFrag");
+  //m_vaos[0] = m_surface->createVAO();
 }
 
 void RenderSystem::renderScene(Scene* scene)
 {
+  qInfo() << "Render ";// << scene->objectName();
+  m_surface->makeCurrent();
+  /*
+  if (scene) {
+    GameObject* camera = scene->mainCamera();
+
+    for (GameObject *gameObject : scene->gameObjects()) {
+      if (gameObject->isVisible()) {
+        render(gameObject);
+      }
+    }
+  }
+   */
+  m_surface->fns()->glClearColor(0.8, 0.4, 0.5, 1.0);
+  m_surface->doneCurrent();
+
+
   m_surface->render();
 
-  if (scene) {
+  //if (scene) {
+
 
     //GameObject *camera = scene->mainCamera();
 
     //m_projection_matrix.perspective(45.0f, GLfloat(m_size.width()) / m_size.height(), 0.01f, 500000.0f);
     //m_program->setUniformValue("projMatrix", m_projection);
     //m_program->setUniformValue("normalMatrix", m_model);
-  }
+  //}
 
   //m_program->setUniformValue("projMatrix", camera->getComponent<Camera>()->projectionMatrix());
 
@@ -126,6 +147,9 @@ void RenderSystem::render(GameObject* gameObject)
     m_fns->glDrawElements(GL_TRIANGLES, mesh->indices().size(), GL_UNSIGNED_INT, (void*)nullptr);
   }
   */
+  m_surface->makeCurrent();
+
+  m_surface->doneCurrent();
 }
 
 QImage RenderSystem::grabFramebuffer() const

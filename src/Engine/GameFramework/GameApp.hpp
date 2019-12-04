@@ -24,12 +24,17 @@ protected:
   UInt64 m_frames;
   UInt64 m_start_time;
   QElapsedTimer m_elapsed_timer;
+  QSize  m_win_min_size;
 
 public:
-  GameApp(const String& name, const String& description, int argc, char** argv);
+  GameApp(const String& name, const String& description, QSize&& minSize, int argc, char** argv);
   ~GameApp() override;
-  [[nodiscard]] bool isEditorEnabled() const;
-  [[nodiscard]] StringView name() const;
+
+  [[nodiscard]]
+  bool isEditorEnabled() const;
+
+  [[nodiscard]]
+  StringView name() const;
 
   [[nodiscard]]
   inline QWidget* window() const { return m_window.get(); }
@@ -38,7 +43,9 @@ public:
   inline Engine* engine() const { return m_engine.get(); }
 
   [[nodiscard]]
-  inline float fps() const { return m_fps; }
+  inline double fps() const { return m_fps; }
+
+  void setMinimumSize(QSize&& size);
 
   void run();
 

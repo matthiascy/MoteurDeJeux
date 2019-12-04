@@ -15,7 +15,8 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOROC ON)
 set(CMAKE_AUTOUIC_ON)
 
-find_package(Qt5 COMPONENTS Widgets Core Gui UiTools REQUIRED)
+# QtUiTools used for load .ui file dynamically UiTools
+find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
 qt5_add_resources(QRcs ${EngineSrcDir}/resources.qrc)
 
@@ -132,8 +133,9 @@ set_target_properties(Engine PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR_BINARY}
     LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR_BINARY})
 
+# Qt5::UiTools
 target_link_libraries(Engine PUBLIC
-    Qt5::Widgets Qt5::Core Qt5::Gui Qt5::UiTools
+    Qt5::Widgets Qt5::Core Qt5::Gui
     assimp Bullet3Common BulletSoftBody Bullet3Dynamics
     Bullet3Collision LinearMath Bullet3Geometry
     BulletDynamics BulletCollision)

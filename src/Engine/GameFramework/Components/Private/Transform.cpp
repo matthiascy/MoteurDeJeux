@@ -322,6 +322,11 @@ void Transform::translate(const Vec3& t, ESpace relativeTo)
   set_has_changed();
 }
 
+void Transform::lookAt(const Vec3& worldPos, const Vec3& worldUp)
+{
+  setLocalRotation(Math::lookAtQuaternion(localPosition(), worldPos, worldUp));
+}
+
 void Transform::detachChildren()
 {
   for (auto* child : m_children) {
