@@ -11,9 +11,11 @@ private:
 
 public:
   HomelandApp(int argc, char** argv);
-  ~HomelandApp() override;
+  ~HomelandApp() override = default;
   void init();
-  void run() override;
+
+private:
+  bool init_main_scene_();
 };
 
 

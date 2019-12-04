@@ -9,7 +9,7 @@
 
 #include <QtWidgets/QSplashScreen>
 #include <GameFramework/Managers/ComponentManager.hpp>
-#include "GameFramework/Managers/SceneManager.hpp"
+#include <GameFramework/Managers/SceneManager.hpp>
 
 class GameApp;
 
@@ -18,10 +18,10 @@ private:
   UniquePtr<AssetManager>     m_asset_manager;
   UniquePtr<ComponentManager> m_component_manager;
   UniquePtr<SceneManager>     m_scene_manager;
+
   UniquePtr<RenderSystem>     m_render_sys;
-//  UniquePtr<PhysicsSystem>  m_physics_sys;
+  //UniquePtr<PhysicsSystem>    m_physics_sys;
   UniquePtr<InputSystem>      m_input_sys;
-  UniquePtr<QWidget>          m_window;
   GameApp*                    m_app;
 
 public:
@@ -47,8 +47,6 @@ public:
 
   [[nodiscard]]
   InputSystem* inputSystem() const;
-
-  QWidget* window();
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP */

@@ -4,40 +4,31 @@
 #include <Editor/EditorMainWindow.hpp>
 #include <GameFramework/EngineWindow.hpp>
 #include <GameFramework/Managers/ComponentManager.hpp>
+#include <QtCore/QTime>
+#include <QLCDNumber>
 
 Engine::Engine(GameApp* app)
   : m_app{app}
 {
   qDebug() << "Engine instance creation.";
+
   m_component_manager = makeUnique<ComponentManager>(m_app->name() + "ComponentManager");
   m_asset_manager = makeUnique<AssetManager>(m_app->name() + "AssetManager");
-  m_scene_manager = makeUnique<SceneManager>(m_app->name() + "SceneManager");
+  m_scene_manager = makeUnique<SceneManager>(m_app->name() + "SceneManager", this);
   m_render_sys = makeUnique<RenderSystem>(m_app->name() + "RenderSystem", this);
   //m_physics_sys = makeUnique<PhysicsSystem>(m_app->name() + "PhysicsSystem", this);
   m_input_sys = makeUnique<InputSystem>(m_app->name() + "InputSystem", this);
-
-  auto engine_window = new EngineWindow(this);
-
-  if (m_app->isEditorEnabled()) {
-    m_window = makeUnique<EditorMainWindow>(engine_window);
-  } else {
-    m_window = std::unique_ptr<EngineWindow>(engine_window);
-  }
 }
 
 Engine::~Engine()
 {
+  qDebug() << "Shut down Engine...";
   m_asset_manager.reset(nullptr);
   m_scene_manager.reset(nullptr);
   m_render_sys.reset(nullptr);
   //m_physics_sys.reset(nullptr);
   m_input_sys.reset(nullptr);
-  m_window.reset(nullptr);
-}
-
-QWidget* Engine::window()
-{
-  return m_window.get();
+  qDebug() << "Shut down Engine... [Done]";
 }
 
 AssetManager* Engine::assetManager() const

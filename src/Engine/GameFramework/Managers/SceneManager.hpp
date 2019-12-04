@@ -3,6 +3,8 @@
 
 #include <GameFramework/Scene.hpp>
 
+class Engine;
+
 struct SceneHandle {
   UInt32 idx;
 };
@@ -10,7 +12,7 @@ struct SceneHandle {
 class SceneManager : public Object {
 public:
   SceneManager() = delete;
-  explicit SceneManager(const String& name, Object* parent = nullptr);
+  explicit SceneManager(const String& name, Engine* engine, Object* parent = nullptr);
   ~SceneManager() override;
 
   SceneHandle createScene(const String& name);
@@ -25,6 +27,7 @@ public:
 
 protected:
   Array<Scene*> m_scenes;
+  Engine* m_engine;
 };
 
 

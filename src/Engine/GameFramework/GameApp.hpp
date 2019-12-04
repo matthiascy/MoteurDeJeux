@@ -7,21 +7,45 @@
 class Engine;
 class SplashScreen;
 
-class GameApp {
+class GameApp : public QObject {
+  Q_OBJECT
+
 protected:
   UniquePtr<QCoreApplication> m_app;
+  UniquePtr<QWidget>          m_window;
   UniquePtr<Engine>           m_engine;
   UniquePtr<SplashScreen>     m_splash;
 
   bool m_is_with_editor;
+  bool m_is_initialized;
+
+  bool   m_is_quit;
+  double m_fps;
+  UInt64 m_frames;
+  UInt64 m_start_time;
+  QElapsedTimer m_elapsed_timer;
 
 public:
   GameApp(const String& name, const String& description, int argc, char** argv);
-  virtual ~GameApp();
+  ~GameApp() override;
   [[nodiscard]] bool isEditorEnabled() const;
   [[nodiscard]] StringView name() const;
 
-  virtual void run() { };
+  [[nodiscard]]
+  inline QWidget* window() const { return m_window.get(); }
+
+  [[nodiscard]]
+  inline Engine* engine() const { return m_engine.get(); }
+
+  [[nodiscard]]
+  inline float fps() const { return m_fps; }
+
+  void run();
+
+  void quit();
+
+signals:
+  void fpsChanged(double fps);
 };
 
 

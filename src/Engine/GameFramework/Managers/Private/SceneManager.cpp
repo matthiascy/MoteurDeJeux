@@ -1,23 +1,28 @@
 #include <GameFramework/Managers/SceneManager.hpp>
+#include <GameFramework/Scene.hpp>
+#include <GameFramework/Engine.hpp>
 
-SceneManager::SceneManager(const String& name, Object* parent)
-  : Object(name, parent), m_scenes{}
+SceneManager::SceneManager(const String& name, Engine* engine, Object* parent)
+  : Object(name, parent), m_scenes{}, m_engine{engine}
 {
   qInfo() << "Scene Manager creation =>" << objectName();
 }
 
 SceneManager::~SceneManager()
 {
-  for (auto& s : m_scenes) {
-    delete s;
-    s = nullptr;
-  }
+  qDebug() << "Shut down SceneManager...";
+  for (auto* scene : m_scenes)
+      delete scene;
+  qDebug() << "Shut down SceneManager... [Done]";
 }
 
 SceneHandle SceneManager::createScene(const String& name)
 {
-  auto* s = new Scene(name);
-  m_scenes.push_back(s);
+  auto* scene = new Scene(name);
+  auto* rootGameObject = scene->createGameObject("Root", "Untagged");
+  m_engine->componentManager()->addComponent<Transform>(rootGameObject, nullptr);
+  scene->setRoot(rootGameObject->transform());
+  m_scenes.push_back(new Scene(name));
   return {static_cast<UInt32>(m_scenes.size() - 1) };
 }
 
@@ -45,9 +50,6 @@ SceneHandle SceneManager::loadScene(const String& name)
 void SceneManager::setActiveScene(SceneHandle handle)
 {
   for (int i = 0; i < m_scenes.size(); ++i) {
-    if (handle.idx == i)
-      m_scenes[i]->setActive(true);
-    else
-      m_scenes[i]->setActive(false);
+    m_scenes[i]->setActive(handle.idx == i);
   }
 }

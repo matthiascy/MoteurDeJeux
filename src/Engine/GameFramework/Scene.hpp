@@ -2,7 +2,6 @@
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SCENE_HPP
 
 #include <Core/Core.hpp>
-#include "GameObject.hpp"
 
 // TODO vbo index for Creating and Destroying GameObject
 
@@ -10,6 +9,7 @@ class AssetManager;
 class RenderSystem;
 class PhysicsSystem;
 class InputSystem;
+class GameObject;
 
 class Scene : public Object {
 public:
@@ -18,7 +18,7 @@ public:
   //typedef Array<Component*> ComponentsArray;
 
 protected:
-  UniquePtr<TaggedGameObjects> m_game_objects;
+  TaggedGameObjects m_game_objects;
   //UniquePtr<ComponentsArray>   m_components;
   Transform* m_root;
   bool m_is_active;
@@ -28,17 +28,20 @@ public:
   explicit Scene(const String& name, Object* parent = nullptr);
   ~Scene() override;
 
-  virtual Transform* root();
+  Transform* root();
 
-  virtual GameObject* createGameObject(const String& name, const String& tag);
+  void setRoot(Transform* root);
+
+  [[nodiscard]]
+  GameObject* createGameObject(const String& name, const String& tag);
 
   //virtual Component* addComponent(GameObject* gameObject, Component* component);
 
   [[nodiscard]]
-  virtual Array<GameObject*> gameObjects() const;
+  Array<GameObject*> gameObjects() const;
 
   [[nodiscard]]
-  virtual GameObject* mainCamera() const;
+  GameObject* mainCamera() const;
 
   [[nodiscard]]
   bool isActive() const;

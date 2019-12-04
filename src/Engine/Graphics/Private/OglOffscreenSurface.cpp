@@ -314,21 +314,12 @@ void OglOffscreenSurface::recreateFBOAndPaintDevice()
 void OglOffscreenSurface::initialize_internal_()
 {
   if (!m_initialized.exchange(true)) {
-
-    QSurfaceFormat format;
-    format.setRenderableType(QSurfaceFormat::OpenGL);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setVersion(4, 0);
-    format.setDepthBufferSize(24);
-    format.setSamples(16);
-    QSurfaceFormat::setDefaultFormat(format);
-
     qInfo() << "\t\t- Context creation : OpenGL Core Profile "
-            << qPrintable(String::number(format.majorVersion())) << "."
-            << qPrintable(String::number(format.minorVersion()));
+            << qPrintable(String::number(QSurfaceFormat::defaultFormat().majorVersion())) << "."
+            << qPrintable(String::number(QSurfaceFormat::defaultFormat().minorVersion()));
 
     m_context = new OglContext(this);
-    m_context->setFormat(format);
+    //m_context->setFormat(format);
 
     if (m_context->create()) {
       m_context->makeCurrent(this);

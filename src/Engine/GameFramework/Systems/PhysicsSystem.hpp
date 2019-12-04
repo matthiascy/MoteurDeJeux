@@ -31,7 +31,13 @@ public:
 
   void setGravity(const Vec3& gravity);
 
-  void update(Real dt);
+  void fixedUpdate(Real dt) override;
+
+  void preUpdate(Real dt) override;
+
+  void update(Real dt) override;
+
+  void postUpdate(Real dt) override;
 };
 
 

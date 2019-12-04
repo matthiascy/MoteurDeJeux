@@ -4,17 +4,17 @@
 template <typename T>
 class FamilyTypeID {
 private:
-  static UInt64 m_count;
+  inline static UInt64 m_count;
 
 public:
   template <typename U>
-  static UInt64 next()
+  inline static UInt64 next()
   {
-    static const UInt64 typeID = m_count++;
+    static const UInt64 typeID { m_count++ };
     return m_count;
   }
 
-  static UInt64 id()
+  inline static UInt64 id()
   {
     return m_count;
   }

@@ -332,10 +332,11 @@ void Transform::detachChildren()
 Transform* Transform::find(const String& name)
 {
   for (auto* child : m_children) {
-    if (child->gameObject()->name() == name) {
+    if (child->gameObject()->objectName() == name) {
       return child;
     }
   }
+  return nullptr;
 }
 
 bool Transform::isChildOf(Transform* parent) const

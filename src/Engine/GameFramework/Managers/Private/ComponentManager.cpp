@@ -27,3 +27,14 @@ void ComponentManager::removeAllComponents(GameObject* gameObject)
     i.value()->removeAll(nullptr);
   }
 }
+
+ComponentManager::~ComponentManager()
+{
+  qDebug() << "Shut down ComponentManager";
+  for (ComponentContainer* cs : m_components) {
+    for (AbstractComponent* c : *cs) {
+      delete c; c = nullptr;
+    }
+  }
+  qDebug() << "Shut down ComponentManager [Done]";
+}

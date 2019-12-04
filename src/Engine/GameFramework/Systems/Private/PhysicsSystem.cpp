@@ -43,3 +43,18 @@ void PhysicsSystem::init()
   qInfo() << "\tPhysics system initialization...";
   // TODO
 }
+
+void PhysicsSystem::preUpdate(Real dt)
+{
+
+}
+
+void PhysicsSystem::fixedUpdate(Real dt)
+{
+
+}
+
+void PhysicsSystem::postUpdate(Real dt)
+{
+
+}

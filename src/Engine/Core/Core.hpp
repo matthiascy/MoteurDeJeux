@@ -8,6 +8,8 @@
 #include "Container.hpp"
 #include "Handle.hpp"
 
+#include <QtCore/QElapsedTimer>
+
 class Object;
 
 /* =================== Memory =================== */

@@ -7,6 +7,8 @@
 #include <QCommandLineOption>
 #include <QWindow>
 #include <QOpenGLWindow>
+#include <GameFramework/GameApp.hpp>
+
 /// This is a Hello World program for running a basic Bullet physics simulation
 
 struct GameApp {

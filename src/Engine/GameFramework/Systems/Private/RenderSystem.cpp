@@ -17,7 +17,9 @@ RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
 
 RenderSystem::~RenderSystem()
 {
+  qDebug() << "Shut down RenderSystem...";
   m_surface.reset(nullptr);
+  qDebug() << "Shut down RenderSystem... [Done]";
 }
 
 void RenderSystem::init()

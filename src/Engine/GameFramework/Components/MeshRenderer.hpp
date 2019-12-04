@@ -4,7 +4,7 @@
 #include "Renderer.hpp"
 #include <GameFramework/Assets/AssetsTypes.hpp>
 
-class MeshRenderer : Renderer<MeshRenderer> {
+class MeshRenderer : public Renderer<MeshRenderer> {
 private:
   AssetHandle m_mesh_handle;
 

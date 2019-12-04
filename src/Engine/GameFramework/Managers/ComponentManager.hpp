@@ -4,6 +4,7 @@
 #include <Core/Core.hpp>
 #include <GameFramework/Component.hpp>
 #include <GameFramework/Types.hpp>
+#include <GameFramework/GameObject.hpp>
 
 // TODO::using handle to retrieve components
 
@@ -24,7 +25,7 @@ private:
 
 public:
   explicit ComponentManager(const String& name, Object* parent = nullptr);
-  ~ComponentManager() override = default;
+  ~ComponentManager() override;
 
   template <typename T, typename... Args>
   T* addComponent(GameObject* gameObject, Args&&... params);

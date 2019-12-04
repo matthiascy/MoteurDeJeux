@@ -78,5 +78,6 @@
         <file alias="rotatelight.png">../../assets/icons/rotate-light.png</file>
     </qresource>
     <qresource prefix="/UI">
+        <file alias="MainMenu">../../assets/uis/MainMenu.ui</file>
     </qresource>
 </RCC>

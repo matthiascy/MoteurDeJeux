@@ -8,21 +8,20 @@ HomelandApp::HomelandApp(int argc, char** argv)
     m_main_scene{nullptr}
 { }
 
-void HomelandApp::run()
-{
-  m_engine->renderSystem()->renderScene(nullptr);
-}
-
 void HomelandApp::init()
 {
-  auto sphereMeshHandle = m_engine->assetManager()->loadMesh(":/Models/Sphere");
-
-  //m_main_scene = new Scene("HomelandMainScene", m_engine.get());
-  //auto sphere = m_main_scene->createGameObject("Sphere", "default");
-  //auto meshRenderer = new MeshRenderer("SphereMeshRenderer", sphere, sphereMeshHandle);
+  init_main_scene_();
 }
 
-HomelandApp::~HomelandApp()
+bool HomelandApp::init_main_scene_()
 {
-  delete m_main_scene;
+  m_main_scene = m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->createScene("MainScene"));
+
+  auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
+  camera->transform()->lookAt(Vec3{0, 0, 0}, Math::Up);
+
+  auto sphereMeshHandle = m_engine->assetManager()->loadMesh("./assets/models/sphere.obj");
+  auto* sphere = m_main_scene->createGameObject("Sphere", "default");
+  auto* meshRender = m_engine->componentManager()->addComponent<MeshRenderer>(sphere, sphereMeshHandle);
+  auto* transform = m_engine->componentManager()->addComponent<Transform>(sphere, nullptr);
 }

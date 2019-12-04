@@ -37,7 +37,7 @@ public:
 };
 
 template <typename T>
-const UInt64 Component<T>::m_type_id = FamilyTypeID<Component>::template next<T>();
+const UInt64 Component<T>::m_type_id = FamilyTypeID<AbstractComponent>::next<T>();
 
 #include "Private/Component.inl"
 

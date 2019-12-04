@@ -9,6 +9,7 @@ AssetManager::AssetManager(const String& name, Object* parent)
 
 AssetManager::~AssetManager()
 {
+  qDebug() << "Shut down AssetManager...";
   for (auto* mesh : m_meshes) {
     delete mesh;
   }
@@ -16,9 +17,10 @@ AssetManager::~AssetManager()
   for (auto* texture : m_textures) {
     delete texture;
   }
+  qDebug() << "Shut down AssetManager... [Done]";
 }
 
-AssetHandle AssetManager::loadMesh(const String & path)
+AssetHandle AssetManager::loadMesh(const String& path)
 {
   auto idx = static_cast<UInt32>(m_meshes.size());
   m_meshes.push_back(MeshLoader::loadMesh(path));
