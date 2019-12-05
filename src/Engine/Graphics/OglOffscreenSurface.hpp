@@ -23,15 +23,8 @@ class OglOffscreenSurface : public QOffscreenSurface {
 
   Q_OBJECT
 
-private:
-  /** Arrays own the memory. */
-  Array<OglVAO*>     m_vaos;
-  Array<OglBuffer*>  m_vbos;
-  Array<OglBuffer*>  m_ebos;
-  Array<OglProgram*> m_programs;
-
 public:
-  explicit OglOffscreenSurface(QScreen* targetScreen = nullptr, const QSize& size = QSize (1, 1));
+  explicit OglOffscreenSurface(QScreen* targetScreen = nullptr, const QSize& size = QSize (1280, 720));
 
   ~OglOffscreenSurface() override;
 
@@ -107,21 +100,7 @@ public:
   [[nodiscard]]
   QSize bufferSize() const;
 
-  /// @brief Resize surface buffer to newSize.
-  void resize(const QSize& newSize);
-
-  /// @brief Resize surface buffer to size with width w and height h.
-  /// @param w Width.
-  /// @param h Height.
-  void resize(int w, int h);
-
-  OglProgram* programAt(UInt32 idx);
-
-  OglBuffer* vertexBufferAt(UInt32 idx);
-
-  OglVAO* vertexArrayAt(UInt32 idx);
-
-  OglBuffer* indexBufferAt(UInt32 idx);
+  void resize(const QSize& size);
 
 public slots:
   /// @brief Lazy update routine like QWidget::update().
@@ -139,41 +118,7 @@ signals:
 
 protected:
   virtual void exposeEvent(QExposeEvent* e);
-  virtual void resizeEvent(QResizeEvent* e);
   bool event(QEvent* e) override;
-
-  /// @brief Called exactly once when the window is first exposed OR render() is called when the
-  /// widget is invisible.
-  /// @note After this the off-screen surface and FBO are available.
-  virtual void initializeGL() { };
-
-  /// @brief Called whenever the window size changes.
-  /// @param width New window width.
-  /// @param height New window height.
-  virtual void resizeGL(
-      int width,
-      int height) { };
-
-  /// @brief Called whenever the window needs to repaint itself. Override to draw OpenGL content.
-  /// When this function is called, the context is already current and the correct framebuffer is
-  /// bound.
-  virtual void paintGL()
-  {
-    fns()->glClearColor(0.12,0.3,0.8,1);
-    fns()->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //m_programs[0]->bind();
-    //m_vaos[0]->bind();
-
-    //fns()->glDrawElements(GL_TRIANGLES,)
-
-    //m_vaos[0]->release();
-    //m_programs[0]->release();
-  }
-
-  /// @brief Called whenever the window needs to repaint itself. Override to draw QPainter
-  // content.
-  //      /// @brief This is called AFTER paintGL()! Only needed when painting using a QPainter.
-  //      virtual void paintEvent(QPainter & painter) = 0;
 
 private:
   Q_DISABLE_COPY(OglOffscreenSurface)
@@ -181,13 +126,13 @@ private:
   void initialize_internal_();
 
   /// @brief Internal method that does the actual swap work, NOT using a mutex.
-  void swapBuffersInternal();
+  void swap_buffers_internal_();
 
   /// @brief Internal method to grab content of a specific framebuffer.
-  QImage grabFramebufferInternal(OglFBO* fbo);
+  QImage grab_framebuffer_internal_(OglFBO* fbo);
 
   /// @brief (Re-)allocate FBO and paint device if needed due to size changes etc.
-  void recreateFBOAndPaintDevice();
+  void recreate_fbo_and_paint_device_();
 
   /// @brief False before the window was first exposed OR render() was called.
   std::atomic_bool m_initialized;

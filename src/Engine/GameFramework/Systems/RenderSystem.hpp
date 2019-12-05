@@ -28,14 +28,20 @@ private:
 
   HashMap<GameObject*, RenderInfo> m_render_infos;
 
-  Array<UInt32> m_vaos;
-  Array<UInt32> m_vbos;
-  Array<UInt32> m_ebos;
-  Array<UInt32> m_programs;
+  /** Arrays own the memory. */
+  Array<OglVAO*>     m_vaos;
+  Array<OglBuffer*>  m_vbos;
+  Array<OglBuffer*>  m_ebos;
+  Array<OglProgram*> m_programs;
 
   Mat4 m_view_matrix;
   Mat4 m_model_matrix;
   Mat4 m_projection_matrix;
+
+  OglProgram* program;
+  OglVAO* vao;
+  OglBuffer* vbo;
+  OglBuffer* ebo;
 
 public:
   RenderSystem(const String& name, Engine* engine, Object* parent = nullptr);
@@ -59,6 +65,8 @@ public:
 private:
   void render(GameObject* gameObject);
 
+public slots:
+  void resize(const QSize& size);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SUBSYSTEMS_RENDERER_SYSTEM_HPP */

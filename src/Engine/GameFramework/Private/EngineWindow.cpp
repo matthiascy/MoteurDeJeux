@@ -7,6 +7,7 @@
 //#include <QtUiTools/QUiLoader>
 #include <QtWidgets/QLCDNumber>
 #include <GameFramework/GameApp.hpp>
+#include <QTimer>
 
 EngineWindow::EngineWindow(GameApp* app, QWidget* parent)
   : QWidget(parent), m_app{app}, m_image{}//, m_ui{nullptr}
@@ -33,11 +34,11 @@ EngineWindow::EngineWindow(GameApp* app, QWidget* parent)
   m_fps_widget->setFont(font);
 
   connect(m_app, SIGNAL(fpsChanged(double)), m_fps_widget.get(), SLOT(display(double)));
+  connect(this, &EngineWindow::windowResized, m_app->engine()->renderSystem(), &RenderSystem::resize);
 }
 
 void EngineWindow::paintEvent(QPaintEvent *)
 {
-  m_app->engine()->renderSystem()->renderScene(nullptr);
   m_image = m_app->engine()->renderSystem()->grabFramebuffer();
   {
     QPainter painter;
@@ -60,4 +61,10 @@ QLCDNumber* EngineWindow::fpsWidget() const
 void EngineWindow::closeEvent(QCloseEvent*)
 {
   m_app->quit();
+}
+
+void EngineWindow::resizeEvent(QResizeEvent* e)
+{
+  //qDebug() << "Window resize event" << e->size();
+  emit windowResized(e->size());
 }

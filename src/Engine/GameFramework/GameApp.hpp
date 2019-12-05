@@ -8,6 +8,7 @@ class Engine;
 class SplashScreen;
 
 class GameApp : public QObject {
+
   Q_OBJECT
 
 protected:

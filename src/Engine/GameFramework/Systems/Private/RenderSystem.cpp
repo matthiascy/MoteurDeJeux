@@ -10,7 +10,8 @@ RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
     m_surface{nullptr}, m_render_infos{},
     m_projection_matrix{Math::Mat4Identity},
     m_model_matrix{Math::Mat4Identity},
-    m_view_matrix{Math::Mat4Identity}
+    m_view_matrix{Math::Mat4Identity},
+    program{nullptr}, vao{nullptr}, vbo{nullptr}, ebo{nullptr}
 {
   qInfo() << "Render System creation =>" << objectName();
 }
@@ -34,12 +35,57 @@ void RenderSystem::init()
 
   //m_programs[0] = m_surface->createProgram(":/Shaders/CubeVert", ":/Shaders/CubeFrag");
   //m_vaos[0] = m_surface->createVAO();
+  float triangle[] = {
+      -0.5f, -0.5f, 0.0f,
+       0.5f, -0.5f, 0.0f,
+       0.0f, 0.5f,  0.0f,
+  };
+  UInt32 indices[] = {
+      0, 1, 2
+  };
+  //m_surface->makeCurrent();
+  program = new OglProgram;
+  program->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/SimplePosition");
+  program->addShaderFromSourceFile(OglShader::Fragment, ":/Shaders/SimpleColor");
+  program->bindAttributeLocation("inPosition", 0);
+  program->link();
+  program->bind();
+  vao = new OglVAO;
+  vao->create();
+  vao->bind();
+  vbo = new OglBuffer(OglBuffer::VertexBuffer);
+  vbo->create();
+  vbo->bind();
+  vbo->setUsagePattern(OglBuffer::StaticDraw);
+  vbo->allocate(triangle, 24 * sizeof(float));;
+  m_surface->fns()->glEnableVertexAttribArray(0);
+  m_surface->fns()->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+  ebo = new OglBuffer(OglBuffer::IndexBuffer);
+  ebo->create();
+  ebo->bind();
+  ebo->setUsagePattern(OglBuffer::StaticDraw);
+  ebo->allocate(indices, 3 * sizeof(UInt32));
+  program->release();
+  m_surface->fns()->glEnable(GL_DEPTH_TEST);
+  m_surface->fns()->glDepthFunc(GL_LESS);
+  m_surface->fns()->glViewport(0, 0, 1280, 720);
+  m_surface->fns()->glClearColor(0.5, 0.4, 0.8, 1.0);
+  m_surface->doneCurrent();
 }
 
 void RenderSystem::renderScene(Scene* scene)
 {
-  qInfo() << "Render ";// << scene->objectName();
   m_surface->makeCurrent();
+  vao->bind();
+  program->bind();
+  m_surface->fns()->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  m_surface->fns()->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)nullptr);
+
+  program->release();
+  vao->release();
+  m_surface->doneCurrent();
+  //m_surface->makeCurrent();
   /*
   if (scene) {
     GameObject* camera = scene->mainCamera();
@@ -51,8 +97,7 @@ void RenderSystem::renderScene(Scene* scene)
     }
   }
    */
-  m_surface->fns()->glClearColor(0.8, 0.4, 0.5, 1.0);
-  m_surface->doneCurrent();
+  //m_surface->doneCurrent();
 
 
   m_surface->render();
@@ -155,4 +200,11 @@ void RenderSystem::render(GameObject* gameObject)
 QImage RenderSystem::grabFramebuffer() const
 {
   return m_surface->grabFramebuffer();
+}
+
+void RenderSystem::resize(const QSize& size)
+{
+  m_surface->fns()->glViewport(0, 0, size.width(), size.height());
+  m_surface->resize(size);
+  //qDebug() << "receive resize event " << size;
 }

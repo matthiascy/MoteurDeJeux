@@ -34,6 +34,9 @@ public:
   explicit EditorMainWindow(EngineWindow* viewport, QWidget* parent = nullptr);
   ~EditorMainWindow() override;
 
+  [[nodiscard]]
+  EngineWindow* engineWindow() const { return m_engine_window.get(); }
+
 protected:
   void closeEvent(QCloseEvent* event) override;
   void updateStatusBar();

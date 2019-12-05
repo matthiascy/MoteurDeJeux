@@ -11,6 +11,7 @@
 #include <Graphics/SplashScreen.hpp>
 #include <GameFramework/EngineWindow.hpp>
 #include <QDesktopWidget>
+#include <QScreen>
 
 GameApp::GameApp(const String& name, const String& description, QSize&& minSize, int argc, char** argv)
   : QObject(nullptr), m_is_initialized{false}, m_is_quit{false},
@@ -46,44 +47,48 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
   m_engine = makeUnique<Engine>(this);
   m_engine->init();
 
-  auto engine_window = new EngineWindow(this);
-
   if (m_is_with_editor) {
+
     qDebug() << "GameApp creation : running with editor.";
-    m_window = makeUnique<EditorMainWindow>(engine_window);
+    m_window = makeUnique<EditorMainWindow>(new EngineWindow(this));
+
   } else {
-    m_window = std::unique_ptr<EngineWindow>(engine_window);
+
     qDebug() << "GameApp creation : running without editor.";
+    m_window = makeUnique<EngineWindow>(this);
+
   }
 
-  auto screenGeometry = QApplication::desktop()->availableGeometry();
+  auto screenGeometry = QApplication::screens()[0]->availableGeometry();
 
   m_window->setMinimumSize(m_win_min_size);
-  m_window->setGeometry(QStyle::alignedRect(Qt::LeftToRight,
-      Qt::AlignCenter,
-      m_window->size(),
-      screenGeometry));
+  m_window->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter,m_window->size(), screenGeometry));
+  //m_window->showMinimized();
   m_window->show();
-  //m_engine->window()->showFullscreen();
   m_window->hide();
 
-  m_splash = makeUnique<SplashScreen>(QPixmap{":/Textures/earth"}.scaled(m_window->geometry().size()), Qt::WindowStaysOnTopHint);
+  m_splash = makeUnique<SplashScreen>(QPixmap{":/App/loading-engine"}.scaled(m_window->geometry().size()), Qt::WindowStaysOnTopHint);
   m_splash->setMinimumSize(m_win_min_size);
-  m_splash->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, m_splash->size(), QApplication::desktop()->availableGeometry()));
+  m_splash->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, m_splash->size(), QApplication::screens()[0]->availableGeometry()));
   //m_splash->showFullScreen();
   //m_splash->showMaximized();
-  m_splash->show();
+  m_splash->showNormal();
+
   QTimer::singleShot(3000, m_splash.get(), [this](){
-    m_splash->setPixmap(QPixmap{":/Textures/mars"}.scaled(m_window->geometry().size()));
-    m_splash->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, m_splash->size(), QApplication::desktop()->availableGeometry()));
+    m_splash->setPixmap(QPixmap{":/App/loading-game"}.scaled(m_window->geometry().size()));
+    m_splash->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, m_splash->size(), QApplication::screens()[0]->availableGeometry()));
     QTimer::singleShot(3000, m_splash.get(), &QSplashScreen::close);
   });
 
-  QTimer::singleShot(5000, m_window.get(), &QWidget::show);
+  m_window->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter,m_window->size(), screenGeometry));
 
-  QObject::connect(m_window.get(), &QWidget::destroyed, m_app.get(), &QCoreApplication::quit);
+  QTimer::singleShot(5000, m_window.get(), [this](){
+    m_window->show();
+    m_is_initialized = true;
+    m_window->setFocus();
+  });
 
-  m_is_initialized = true;
+  // TODO::run after loading
 }
 
 GameApp::~GameApp()
@@ -156,7 +161,8 @@ void GameApp::quit()
   m_is_quit = true;
 }
 
-void GameApp::setMinimumSize(QSize&& size) {
+void GameApp::setMinimumSize(QSize&& size)
+{
   m_win_min_size = size;
   m_window->setMinimumSize(m_win_min_size);
 }

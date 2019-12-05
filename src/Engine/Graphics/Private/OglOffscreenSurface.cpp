@@ -4,18 +4,16 @@
 
 OglOffscreenSurface::OglOffscreenSurface(QScreen* targetScreen, const QSize& size)
   : QOffscreenSurface(targetScreen),
-    m_vaos{}, m_vbos{}, m_ebos{}, m_programs{}
-    , m_size(size)
-    , m_initializedGL(false)
-    , m_context(nullptr)
-    , m_fns(nullptr)
-    , m_fns4_0(nullptr)
-    , m_paintDevice(nullptr)
-    , m_fbo(nullptr)
-    , m_resolvedFbo(nullptr)
+    m_size(size),
+    m_initializedGL(false),
+    m_context(nullptr),
+    m_fns(nullptr),
+    m_fns4_0(nullptr),
+    m_paintDevice(nullptr),
+    m_resolvedFbo(nullptr),
+    m_initialized{false}
 {
   setFormat(QSurfaceFormat::defaultFormat());
-  m_initialized = false;
   m_updatePending = false;
   create();  // Some platforms require this function to be called on the main (GUI) thread.
   initialize_internal_();
@@ -25,38 +23,6 @@ OglOffscreenSurface::OglOffscreenSurface(QScreen* targetScreen, const QSize& siz
 OglOffscreenSurface::~OglOffscreenSurface()
 {
   m_context->makeCurrent(this);
-
-  for(auto& vao : m_vaos) {
-    if (vao) {
-      vao->release();
-      delete vao;
-      vao = nullptr;
-    }
-  }
-
-  for (auto& vbo : m_vbos) {
-    if (vbo) {
-      vbo->release();
-      delete vbo;
-      vbo = nullptr;
-    }
-  }
-
-  for (auto& ebo : m_ebos) {
-    if (ebo) {
-      ebo->release();
-      delete ebo;
-      ebo = nullptr;
-    };
-  }
-
-  for (auto& program : m_programs) {
-    if (program) {
-      program->release();
-      delete program;
-      program = nullptr;
-    }
-  }
 
   if (m_fbo) {
     m_fbo->release();
@@ -179,15 +145,15 @@ QImage OglOffscreenSurface::grabFramebuffer()
     }
 
     // now grab from resolve FBO
-    return (grabFramebufferInternal(m_resolvedFbo));
+    return (grab_framebuffer_internal_(m_resolvedFbo));
   } else {
     // no multi-sampling. grab directly from FBO
-    return (grabFramebufferInternal(m_fbo));
+    return (grab_framebuffer_internal_(m_fbo));
   }
 }  // OglOffscreenSurface::grabFramebuffer
 
 
-QImage OglOffscreenSurface::grabFramebufferInternal(OglFBO* fbo)
+QImage OglOffscreenSurface::grab_framebuffer_internal_(OglFBO* fbo)
 {
   QImage image;
   // bind framebuffer first
@@ -212,18 +178,20 @@ QImage OglOffscreenSurface::grabFramebufferInternal(OglFBO* fbo)
   }
   m_fns->glBindFramebuffer(GL_FRAMEBUFFER, m_fbo->handle());
 
+  //image.save("offscreen_debug.png");
+
   return (image.mirrored());
 }
 
 
 void OglOffscreenSurface::swapBuffers()
 {
-  swapBuffersInternal();
+  swap_buffers_internal_();
   emit frameSwapped();
 }
 
 
-void OglOffscreenSurface::swapBuffersInternal()
+void OglOffscreenSurface::swap_buffers_internal_()
 {
   // blit framebuffer to back buffer
   m_context->makeCurrent(this);
@@ -251,14 +219,14 @@ void OglOffscreenSurface::swapBuffersInternal()
   }
   // check if OpenGL errors happened
   if (GLenum error = m_fns->glGetError() != GL_NO_ERROR) {
-    qDebug() << "OglOffscreenSurface::swapBuffersInternal() - OpenGL error" << error;
+    qDebug() << "OglOffscreenSurface::swap_buffers_internal_() - OpenGL error" << error;
   }
   // now swap back buffer to front buffer
   m_context->swapBuffers(this);
-}  // OglOffscreenSurface::swapBuffersInternal
+}  // OglOffscreenSurface::swap_buffers_internal_
 
 
-void OglOffscreenSurface::recreateFBOAndPaintDevice()
+void OglOffscreenSurface::recreate_fbo_and_paint_device_()
 {
   if (m_context && ((m_fbo == nullptr) || (m_fbo->size() != bufferSize()))) {
     m_context->makeCurrent(this);
@@ -319,29 +287,25 @@ void OglOffscreenSurface::initialize_internal_()
             << qPrintable(String::number(QSurfaceFormat::defaultFormat().minorVersion()));
 
     m_context = new OglContext(this);
-    //m_context->setFormat(format);
 
     if (m_context->create()) {
+
       m_context->makeCurrent(this);
       m_fns = m_context->functions();
       m_fns->initializeOpenGLFunctions();
       m_fns4_0 = m_context->versionFunctions<OglFnsCore4_0>();
-      if (m_fns4_0) {
+
+      if (m_fns4_0)
         m_fns4_0->initializeOpenGLFunctions();
-      } else {
-        // if we do not have OpenGL 3.0 functions, glBlitFrameBuffer is not available, so we
-        // must do the blit
-        // using a shader and the framebuffer texture, so we need to create the shader
-        // here...
-        // --> allocate m_blitShader, a simple shader for drawing a textured quad
-        // --> build quad geometry, VBO, whatever
-      }
-      // now we have a context, create the FBO
-      recreateFBOAndPaintDevice();
+
+      recreate_fbo_and_paint_device_();
+
     } else {
+
       m_initialized = false;
       delete m_context;
       m_context = nullptr;
+
       qFatal("Failed to create OpenGL context 4.0");
     }
   }
@@ -360,22 +324,10 @@ void OglOffscreenSurface::update()
 void OglOffscreenSurface::render()
 {
   std::lock_guard <std::mutex> locker(m_mutex);
-  // check if we need to initialize stuff
-  initialize_internal_();
-
-  if (!m_initializedGL) {
-    m_initializedGL = true;
-    initializeGL();
-  }
 
   makeCurrent();
 
   bindFramebufferObject();
-
-  //paintGL();
-  //fns()->glClearColor(0.4,0.4,0.4,0.5);
-
-  fns()->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   doneCurrent();
 
@@ -389,15 +341,6 @@ void OglOffscreenSurface::exposeEvent(QExposeEvent* e)
   render();
 }
 
-
-void OglOffscreenSurface::resizeEvent(QResizeEvent* e)
-{
-  // call base implementation
-  resize(e->size());
-  emit resized();
-}
-
-
 void OglOffscreenSurface::resize(const QSize& newSize)
 {
   m_mutex.lock();
@@ -405,23 +348,14 @@ void OglOffscreenSurface::resize(const QSize& newSize)
   makeCurrent();
   m_size = QSize(newSize);
   // update FBO and paint device
-  recreateFBOAndPaintDevice();
+  recreate_fbo_and_paint_device_();
   m_mutex.unlock();
-  // call user-defined resize method
-  resizeGL(bufferSize().width(), bufferSize().height());
-}
-
-
-void OglOffscreenSurface::resize(
-    int w,
-    int h)
-{
-  resize(QSize(w, h));
 }
 
 
 bool OglOffscreenSurface::event(QEvent* event)
 {
+  qDebug() << "OglOffscreenSurface event";
   switch (event->type()) {
     case QEvent::UpdateLater: {
       update();
@@ -443,89 +377,4 @@ bool OglOffscreenSurface::event(QEvent* event)
 QSize OglOffscreenSurface::bufferSize() const
 {
   return m_size;
-}
-
-UInt32 OglOffscreenSurface::createVAO()
-{
-  makeCurrent();
-  auto* vao = new OglVAO;
-  vao->create();
-  m_vaos.push_back(vao);
-  doneCurrent();
-  return m_vaos.size() - 1;
-}
-
-UInt32 OglOffscreenSurface::createVBO(UInt32 vao)
-{
-  makeCurrent();
-  m_vaos[vao]->bind();
-  auto* vbo = new OglBuffer(OglBuffer::VertexBuffer);
-  vbo->create();
-  m_vbos.push_back(vbo);
-  doneCurrent();
-  return m_vbos.size() - 1;
-}
-
-UInt32 OglOffscreenSurface::createEBO(UInt32 vao)
-{
-  makeCurrent();
-  m_vaos[vao]->bind();
-  auto* ebo = new OglBuffer(OglBuffer::IndexBuffer);
-  ebo->create();
-  m_ebos.push_back(ebo);
-  doneCurrent();
-  return m_ebos.size() - 1;
-}
-
-UInt32 OglOffscreenSurface::createProgram(const String& vert, const String& frag)
-{
-  makeCurrent();
-  auto* program = new OglProgram;
-  program->addShaderFromSourceFile(OglShader::Vertex, vert);
-  program->addShaderFromSourceFile(OglShader::Fragment, frag);
-  program->bindAttributeLocation("inPosition", 0);
-  program->bindAttributeLocation("inNormal", 1);
-  program->bindAttributeLocation("inTexCoord", 2);
-  program->link();
-  program->bind();
-  program->setUniformValue("texture0", 0);
-  program->setUniformValue("texture1", 1);
-  program->setUniformValue("texture2", 2);
-  program->setUniformValue("texture3", 3);
-  m_programs.push_back(program);
-  doneCurrent();
-  return m_programs.size() - 1;
-}
-
-
-OglProgram* OglOffscreenSurface::programAt(UInt32 idx)
-{
-  if (idx < m_programs.size()) {
-    return m_programs[idx];
-  }
-  return nullptr;
-}
-
-OglBuffer* OglOffscreenSurface::vertexBufferAt(UInt32 idx)
-{
-  if (idx < m_vbos.size()) {
-    return m_vbos[idx];
-  }
-  return nullptr;
-}
-
-OglVAO* OglOffscreenSurface::vertexArrayAt(UInt32 idx)
-{
-  if (idx < m_vaos.size()) {
-    return m_vaos[idx];
-  }
-  return nullptr;
-}
-
-OglBuffer* OglOffscreenSurface::indexBufferAt(UInt32 idx)
-{
-  if (idx < m_ebos.size()) {
-    return m_ebos[idx];
-  }
-  return nullptr;
 }

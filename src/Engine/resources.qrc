@@ -36,6 +36,8 @@
         <file alias="preview.vert">../../assets/shaders/preview.vert</file>
         <file alias="previewimage.frag">../../assets/shaders/preview_image.frag</file>
         <file alias="previewimage.vert">../../assets/shaders/preview_image.vert</file>
+        <file alias="SimpleColor">../../assets/shaders/SimpleColor.frag</file>
+        <file alias="SimplePosition">../../assets/shaders/SimplePosition.vert</file>
     </qresource>
     <qresource prefix="/Models">
         <file alias="Sphere">../../assets/models/sphere.obj</file>

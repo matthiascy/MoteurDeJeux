@@ -8,6 +8,7 @@ class GameApp;
 class QLCDNumber;
 
 class EngineWindow : public QWidget {
+
   Q_OBJECT
 
 private:
@@ -16,18 +17,22 @@ private:
   //QWidget* m_ui;
   UniquePtr<QLCDNumber> m_fps_widget;
 
-
 protected:
   void paintEvent(QPaintEvent*) override;
 
   void closeEvent(QCloseEvent*) override;
 
+  void resizeEvent(QResizeEvent*) override;
+
 public:
-  explicit EngineWindow(GameApp* engine, QWidget* parent = nullptr);
+  explicit EngineWindow(GameApp* gameApp, QWidget* parent = nullptr);
   ~EngineWindow() override;
 
   [[nodiscard]]
   QLCDNumber* fpsWidget() const;
+
+signals:
+  void windowResized(QSize size);
 };
 
 

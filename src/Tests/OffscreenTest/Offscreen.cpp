@@ -228,11 +228,11 @@ void OpenGlOffscreenSurface::swapBuffersInternal()
   }
   // check if OpenGL errors happened
   if (GLenum error = m_functions->glGetError() != GL_NO_ERROR) {
-    qDebug() << "OpenGlOffscreenSurface::swapBuffersInternal() - OpenGL error" << error;
+    qDebug() << "OpenGlOffscreenSurface::swap_buffers_internal_() - OpenGL error" << error;
   }
   // now swap back buffer to front buffer
   m_context->swapBuffers(this);
-}  // OpenGlOffscreenSurface::swapBuffersInternal
+}  // OpenGlOffscreenSurface::swap_buffers_internal_
 
 
 void OpenGlOffscreenSurface::recreateFBOAndPaintDevice()
