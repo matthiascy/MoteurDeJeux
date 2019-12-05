@@ -4,7 +4,7 @@
 #include <Homeland/HomelandApp.hpp>
 
 HomelandApp::HomelandApp(int argc, char** argv)
-  : GameApp("家·Homeland", "Strategy island defense game.", {1280, 720}, argc, argv),
+  : GameApp("家·Homeland", "Strategy island defense game.", {1024, 768}, argc, argv),
     m_main_scene{nullptr}
 { }
 

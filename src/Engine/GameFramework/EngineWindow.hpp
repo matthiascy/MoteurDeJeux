@@ -6,6 +6,7 @@
 
 class GameApp;
 class QLCDNumber;
+class QPushButton;
 
 class EngineWindow : public QWidget {
 
@@ -15,7 +16,8 @@ private:
   GameApp* m_app;
   QImage   m_image;
   //QWidget* m_ui;
-  UniquePtr<QLCDNumber> m_fps_widget;
+  UniquePtr<QLCDNumber>  ui_fps;
+  UniquePtr<QPushButton> ui_exit_btn;
 
 protected:
   void paintEvent(QPaintEvent*) override;

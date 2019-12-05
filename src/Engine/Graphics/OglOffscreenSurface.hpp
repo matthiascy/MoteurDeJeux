@@ -28,18 +28,6 @@ public:
 
   ~OglOffscreenSurface() override;
 
-  [[nodiscard]]
-  UInt32 createVAO();
-
-  [[nodiscard]]
-  UInt32 createVBO(UInt32 vao);
-
-  [[nodiscard]]
-  UInt32 createEBO(UInt32 vao);
-
-  [[nodiscard]]
-  UInt32 createProgram(const String& vert, const String& frag);
-
   /// @brief Check if the window is initialized and can be used for rendering.
   /// @return Returns true if context, surface and FBO have been set up to start rendering.
   [[nodiscard]]
@@ -113,17 +101,13 @@ signals:
   /// @brief Emitted when swapBuffers() was called and buffer swapping is done.
   void frameSwapped();
 
-  /// @brief Emitted after a resizeEvent().
-  void resized();
-
 protected:
-  virtual void exposeEvent(QExposeEvent* e);
   bool event(QEvent* e) override;
 
 private:
   Q_DISABLE_COPY(OglOffscreenSurface)
   /// @brief Initialize the window.
-  void initialize_internal_();
+  void init();
 
   /// @brief Internal method that does the actual swap work, NOT using a mutex.
   void swap_buffers_internal_();
@@ -156,9 +140,6 @@ private:
   /// @brief Background FBO resolving a multi sampling frame buffer in m_fbo to a frame buffer
   /// that can be grabbed to a QImage.
   OglFBO* m_resolvedFbo;
-
-  /// @brief Shader used for blitting m_fbo to screen if glBlitFrameBuffer is not available.
-  QOpenGLShaderProgram* m_blitShader;
 
   QSize m_size;
 };

@@ -5,15 +5,15 @@
 SceneManager::SceneManager(const String& name, Engine* engine, Object* parent)
   : Object(name, parent), m_scenes{}, m_engine{engine}
 {
-  qInfo() << "Scene Manager creation =>" << objectName();
+  qInfo() << "Creation =>" << objectName();
 }
 
 SceneManager::~SceneManager()
 {
-  qDebug() << "Shut down SceneManager...";
+  qDebug() << "Shutting down...";
   for (auto* scene : m_scenes)
       delete scene;
-  qDebug() << "Shut down SceneManager... [Done]";
+  qDebug() << "Shutting down...[Finished]";
 }
 
 SceneHandle SceneManager::createScene(const String& name)
@@ -43,7 +43,7 @@ Scene *SceneManager::sceneAt(SceneHandle handle)
 SceneHandle SceneManager::loadScene(const String& name)
 {
   // TODO::load scene from file
-  qWarning("SceneManager::loadScene not implemented!");
+  qWarning("Not implemented!");
   return {};
 }
 

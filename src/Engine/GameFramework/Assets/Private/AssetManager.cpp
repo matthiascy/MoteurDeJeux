@@ -4,12 +4,12 @@
 AssetManager::AssetManager(const String& name, Object* parent)
   : Object(name, parent)
 {
-  qInfo() << "Asset Manager creation =>" << objectName();
+  qInfo() << "Creation =>" << objectName();
 }
 
 AssetManager::~AssetManager()
 {
-  qDebug() << "Shut down AssetManager...";
+  qDebug() << "Shutting down...";
   for (auto* mesh : m_meshes) {
     delete mesh;
   }
@@ -17,7 +17,7 @@ AssetManager::~AssetManager()
   for (auto* texture : m_textures) {
     delete texture;
   }
-  qDebug() << "Shut down AssetManager... [Done]";
+  qDebug() << "Shutting down...[Finished]";
 }
 
 AssetHandle AssetManager::loadMesh(const String& path)

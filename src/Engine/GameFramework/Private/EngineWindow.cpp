@@ -7,10 +7,10 @@
 //#include <QtUiTools/QUiLoader>
 #include <QtWidgets/QLCDNumber>
 #include <GameFramework/GameApp.hpp>
-#include <QTimer>
 
 EngineWindow::EngineWindow(GameApp* app, QWidget* parent)
-  : QWidget(parent), m_app{app}, m_image{}//, m_ui{nullptr}
+  : QWidget(parent), m_app{app}, m_image{},
+    ui_exit_btn{new QPushButton("EXIT", this)}//, m_ui{nullptr}
 {
   /*
   QUiLoader loader;
@@ -21,6 +21,7 @@ EngineWindow::EngineWindow(GameApp* app, QWidget* parent)
   file.close();
    */
   // TODO:: set render system size
+  //setWindowFlags(Qt::FramelessWindowHint);
 
   QFont font("Arial", 16, QFont::Bold);
   auto* fpsLabel = new QLabel("FPS : ", this);
@@ -28,18 +29,26 @@ EngineWindow::EngineWindow(GameApp* app, QWidget* parent)
   fpsLabel->setGeometry(16, 16, 48, 16);
   fpsLabel->setFont(font);
 
-  m_fps_widget = makeUnique<QLCDNumber>(this);
-  m_fps_widget->setGeometry(56, 16, 60, 16);
-  m_fps_widget->setStyleSheet("QLCDNumber{ background-color: rgba(0,0,0,0);}");
-  m_fps_widget->setFont(font);
+  ui_fps = makeUnique<QLCDNumber>(this);
+  ui_fps->setGeometry(56, 16, 60, 16);
+  ui_fps->setStyleSheet("QLCDNumber{ background-color: rgba(0,0,0,0);}");
+  ui_fps->setFont(font);
 
-  connect(m_app, SIGNAL(fpsChanged(double)), m_fps_widget.get(), SLOT(display(double)));
+  ui_exit_btn->setGeometry(16, 48, 64, 20);
+  ui_exit_btn->setFont(font);
+
+  connect(ui_exit_btn.get(), &QPushButton::pressed, m_app, &GameApp::quit);
+  connect(m_app, SIGNAL(fpsChanged(double)), ui_fps.get(), SLOT(display(double)));
   connect(this, &EngineWindow::windowResized, m_app->engine()->renderSystem(), &RenderSystem::resize);
 }
 
-void EngineWindow::paintEvent(QPaintEvent *)
+void EngineWindow::paintEvent(QPaintEvent*)
 {
-  m_image = m_app->engine()->renderSystem()->grabFramebuffer();
+  // TODO::Better way to deal with update mismatch while resizing
+  while (m_image.isNull()) {
+    m_image = m_app->engine()->renderSystem()->grabFramebuffer();
+  }
+
   {
     QPainter painter;
     painter.begin(this);
@@ -50,12 +59,13 @@ void EngineWindow::paintEvent(QPaintEvent *)
 
 EngineWindow::~EngineWindow()
 {
-  m_fps_widget.reset(nullptr);
+  ui_fps.reset(nullptr);
+  ui_exit_btn.reset(nullptr);
 }
 
 QLCDNumber* EngineWindow::fpsWidget() const
 {
-  return m_fps_widget.get();
+  return ui_fps.get();
 }
 
 void EngineWindow::closeEvent(QCloseEvent*)
@@ -65,6 +75,5 @@ void EngineWindow::closeEvent(QCloseEvent*)
 
 void EngineWindow::resizeEvent(QResizeEvent* e)
 {
-  //qDebug() << "Window resize event" << e->size();
   emit windowResized(e->size());
 }

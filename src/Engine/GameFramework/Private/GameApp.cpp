@@ -19,6 +19,10 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
 {
   Q_INIT_RESOURCE(resources);
 
+  qputenv("QT_MESSAGE_PATTERN",
+          "\033[32m%{time h:mm:ss.zzz} "
+          "\033[34m%{function}\033[0m: %{message}");
+
   QCoreApplication::setApplicationName(name);
   QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
@@ -93,12 +97,12 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
 
 GameApp::~GameApp()
 {
-  qDebug() << "Shut down GameApp...";
+  qDebug() << "Shutting down...";
   m_splash.reset(nullptr);
   m_window.reset(nullptr);
   m_engine.reset(nullptr);
   m_app.reset(nullptr);
-  qDebug() << "Shut donw GameApp... [Done]";
+  qDebug() << "Shutting down...[Finished]";
 }
 
 bool GameApp::isEditorEnabled() const
@@ -113,7 +117,7 @@ StringView GameApp::name() const
 
 void GameApp::run()
 {
-  qInfo() << "... Game loop running ...";
+  qInfo() << "Starting game loop";
 
   m_elapsed_timer.start();
   m_start_time = m_elapsed_timer.elapsed();
@@ -153,7 +157,7 @@ void GameApp::run()
     QCoreApplication::processEvents();
   }
 
-  qInfo() << "... Quit game loop ...";
+  qInfo() << "Quitting game loop.";
 }
 
 void GameApp::quit()

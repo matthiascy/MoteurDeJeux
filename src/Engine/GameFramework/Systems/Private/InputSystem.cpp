@@ -4,19 +4,19 @@
 InputSystem::InputSystem(const String& name, Engine* engine, Object* parent)
   : System(name, engine, parent)
 {
-  qInfo() << "Input System creation  =>" << objectName();
+  qInfo() << "Creation =>" << objectName();
 }
 
 InputSystem::~InputSystem()
 {
-  qDebug() << "Shut down InputSystem...";
-  qDebug() << "Shut down InputSystem... [Done]";
+  qDebug() << "Shutting down...";
+  qDebug() << "Shutting down... [Finished]";
   // TODO
 }
 
 void InputSystem::init()
 {
-  qInfo() << "- Input system initialization...";
+  qInfo() << "Initialization...";
   // TODO
 }
 

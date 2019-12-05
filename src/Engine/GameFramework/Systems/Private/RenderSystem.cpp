@@ -13,20 +13,19 @@ RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
     m_view_matrix{Math::Mat4Identity},
     program{nullptr}, vao{nullptr}, vbo{nullptr}, ebo{nullptr}
 {
-  qInfo() << "Render System creation =>" << objectName();
+  qInfo() << "Creation =>" << objectName();
 }
 
 RenderSystem::~RenderSystem()
 {
-  qDebug() << "Shut down RenderSystem...";
+  qDebug() << "Shutting down...";
   m_surface.reset(nullptr);
-  qDebug() << "Shut down RenderSystem... [Done]";
+  qDebug() << "Shutting down...[Done]";
 }
 
 void RenderSystem::init()
 {
-  qInfo() << "- Render system initialization...\n"
-          << "\t- OffScreenSurface creation.";
+  qInfo() << "Initialization...";
 
   m_surface = makeUnique<OglOffscreenSurface>();
   m_surface->create();
@@ -84,6 +83,7 @@ void RenderSystem::renderScene(Scene* scene)
 
   program->release();
   vao->release();
+  m_surface->swapBuffers();
   m_surface->doneCurrent();
   //m_surface->makeCurrent();
   /*
@@ -204,7 +204,5 @@ QImage RenderSystem::grabFramebuffer() const
 
 void RenderSystem::resize(const QSize& size)
 {
-  m_surface->fns()->glViewport(0, 0, size.width(), size.height());
   m_surface->resize(size);
-  //qDebug() << "receive resize event " << size;
 }
