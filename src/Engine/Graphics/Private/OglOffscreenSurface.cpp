@@ -15,10 +15,11 @@ OglOffscreenSurface::OglOffscreenSurface(QScreen* targetScreen, const QSize& siz
     m_fbo{nullptr},
     m_updatePending{false}
 {
-  qInfo() << "Creation.";
+  qInfo() << "Creation";
   setFormat(QSurfaceFormat::defaultFormat());
   create();  // Some platforms require this function to be called on the main (GUI) thread.
   init();
+  qInfo() << "Creation[Finished]";
 }
 
 
@@ -36,13 +37,9 @@ OglOffscreenSurface::~OglOffscreenSurface()
     delete m_resolvedFbo;
     m_resolvedFbo = nullptr;
   }
-  // destroy shader
-  //delete m_blitShader;
-  // free context
   m_context->doneCurrent();
   delete m_context;
   m_context = nullptr;
-  // free paint device
   delete m_paintDevice;
   m_paintDevice = nullptr;
   m_initialized = false;
@@ -295,9 +292,9 @@ void OglOffscreenSurface::recreate_fbo_and_paint_device_()
 void OglOffscreenSurface::init()
 {
   if (!m_initialized.exchange(true)) {
-    qInfo() << "Creation[OpenGL Context]: OpenGL Core Profile " +
+    qInfo() << qPrintable("Creation[OpenGL Context]: OpenGL Core Profile " +
                String::number(QSurfaceFormat::defaultFormat().majorVersion()) + "." +
-               String::number(QSurfaceFormat::defaultFormat().minorVersion());
+               String::number(QSurfaceFormat::defaultFormat().minorVersion()));
 
     m_context = new OglContext(this);
     //m_context->setFormat(QSurfaceFormat::defaultFormat());

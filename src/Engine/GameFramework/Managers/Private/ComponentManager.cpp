@@ -4,7 +4,7 @@
 ComponentManager::ComponentManager(const String &name, Object *parent)
   : Object(name, parent)
 {
-  qInfo() << "Component Manager creation =>" << objectName();
+  qInfo() << "Creation =>" << objectName();
 }
 
 void ComponentManager::removeAllComponents(GameObject* gameObject)
@@ -30,11 +30,11 @@ void ComponentManager::removeAllComponents(GameObject* gameObject)
 
 ComponentManager::~ComponentManager()
 {
-  qDebug() << "Shut down ComponentManager";
+  qDebug() << "Shutting down...";
   for (ComponentContainer* cs : m_components) {
     for (AbstractComponent* c : *cs) {
       delete c; c = nullptr;
     }
   }
-  qDebug() << "Shut down ComponentManager [Done]";
+  qDebug() << "Shutting down...[Finished]";
 }

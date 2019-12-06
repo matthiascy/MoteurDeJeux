@@ -20,7 +20,7 @@ RenderSystem::~RenderSystem()
 {
   qDebug() << "Shutting down...";
   m_surface.reset(nullptr);
-  qDebug() << "Shutting down...[Done]";
+  qDebug() << "Shutting down...[Finished]";
 }
 
 void RenderSystem::init()

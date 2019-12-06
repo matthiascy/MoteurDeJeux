@@ -21,7 +21,10 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
 
   qputenv("QT_MESSAGE_PATTERN",
           "\033[32m%{time h:mm:ss.zzz} "
-          "\033[34m%{function}\033[0m: %{message}");
+          "%{if-debug}\033[93m[%{type}] \033[34m%{function}:\033[0m %{message}%{endif}"
+          "%{if-info}\033[94m[%{type}] \033[34m%{function}:\033[0m %{message}%{endif}"
+          "%{if-warning}\033[95m[%{type}] \033[34m%{function}:\033[0m %{message}%{endif}"
+          "%{if-fatal}\033[91m[%{type}] \033[34m%{function}:\033[0m %{message}%{endif}");
 
   QCoreApplication::setApplicationName(name);
   QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
@@ -53,12 +56,12 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
 
   if (m_is_with_editor) {
 
-    qDebug() << "GameApp creation : running with editor.";
+    qInfo() << "Creation : running with editor";
     m_window = makeUnique<EditorMainWindow>(new EngineWindow(this));
 
   } else {
 
-    qDebug() << "GameApp creation : running without editor.";
+    qInfo() << "Creation : running without editor";
     m_window = makeUnique<EngineWindow>(this);
 
   }
@@ -157,7 +160,7 @@ void GameApp::run()
     QCoreApplication::processEvents();
   }
 
-  qInfo() << "Quitting game loop.";
+  qInfo() << "Quitting game loop";
 }
 
 void GameApp::quit()

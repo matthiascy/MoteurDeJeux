@@ -3,7 +3,6 @@
 #include <GameFramework/GameApp.hpp>
 #include <Editor/EditorMainWindow.hpp>
 #include <GameFramework/Managers/ComponentManager.hpp>
-#include <QtCore/QTime>
 
 Engine::Engine(GameApp* app)
   : m_app{app}
@@ -15,7 +14,7 @@ Engine::Engine(GameApp* app)
   m_render_sys = makeUnique<RenderSystem>(m_app->name() + "RenderSystem", this);
   //m_physics_sys = makeUnique<PhysicsSystem>(m_app->name() + "PhysicsSystem", this);
   m_input_sys = makeUnique<InputSystem>(m_app->name() + "InputSystem", this);
-  qInfo() << "Instance creation[Finished].";
+  qInfo() << "Instance creation[Finished]";
 }
 
 Engine::~Engine()
@@ -26,7 +25,7 @@ Engine::~Engine()
   m_render_sys.reset(nullptr);
   //m_physics_sys.reset(nullptr);
   m_input_sys.reset(nullptr);
-  qDebug() << "Shutting down...[Done]";
+  qDebug() << "Shutting down...[Finished]";
 }
 
 AssetManager* Engine::assetManager() const

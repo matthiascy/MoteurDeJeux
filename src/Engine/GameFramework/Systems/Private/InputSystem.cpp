@@ -10,7 +10,7 @@ InputSystem::InputSystem(const String& name, Engine* engine, Object* parent)
 InputSystem::~InputSystem()
 {
   qDebug() << "Shutting down...";
-  qDebug() << "Shutting down... [Finished]";
+  qDebug() << "Shutting down...[Finished]";
   // TODO
 }
 
