@@ -39,21 +39,21 @@ target_link_libraries(Homeland PRIVATE
 target_include_directories(Homeland PRIVATE
     src)
 
-add_executable(Bullet3Test src/Tests/Bullet3Test.cpp)
-target_compile_definitions(Bullet3Test PRIVATE
-    ${BULLET_DEFINITIONS})
-target_link_libraries(Bullet3Test PRIVATE
-    Engine Bullet3Common BulletSoftBody Bullet3Dynamics
-    Bullet3Collision LinearMath Bullet3Geometry
-    BulletDynamics BulletCollision)
+#add_executable(Bullet3Test src/Tests/Bullet3Test.cpp)
+#target_compile_definitions(Bullet3Test PRIVATE
+#    ${BULLET_DEFINITIONS})
+#target_link_libraries(Bullet3Test PRIVATE
+#    Engine Bullet3Common BulletSoftBody Bullet3Dynamics
+#    Bullet3Collision LinearMath Bullet3Geometry
+#    BulletDynamics BulletCollision)
 
-add_executable(FboTest src/Tests/FboTest/main.cpp src/Tests/FboTest/MainWindow.cpp src/Tests/FboTest/MainWindow.ui)
-target_compile_definitions(FboTest PRIVATE ${BULLET_DEFINITIONS})
-target_link_libraries(FboTest PRIVATE Engine)
+#add_executable(FboTest src/Tests/FboTest/main.cpp src/Tests/FboTest/MainWindow.cpp src/Tests/FboTest/MainWindow.ui)
+#target_compile_definitions(FboTest PRIVATE ${BULLET_DEFINITIONS})
+#target_link_libraries(FboTest PRIVATE Engine)
 
-add_executable(TestWindow src/Tests/OffscreenTest/TestWindow.hpp
-    src/Engine/Graphics/OglOffscreenSurface.hpp
-    src/Engine/Graphics/Private/OglOffscreenSurface.cpp
-    src/Tests/OffscreenTest/main.cpp src/Tests/OffscreenTest/Offscreen.hpp src/Tests/OffscreenTest/Offscreen.cpp src/Tests/OffscreenTest/ExamplePaintSurface.cpp src/Tests/OffscreenTest/ExamplePaintSurface.hpp)
-target_include_directories(TestWindow PRIVATE src)
-target_link_libraries(TestWindow PRIVATE Engine)
+#add_executable(TestWindow src/Tests/OffscreenTest/TestWindow.hpp
+#    src/Engine/Graphics/OglOffscreenSurface.hpp
+#    src/Engine/Graphics/Private/OglOffscreenSurface.cpp
+#    src/Tests/OffscreenTest/main.cpp src/Tests/OffscreenTest/Offscreen.hpp src/Tests/OffscreenTest/Offscreen.cpp src/Tests/OffscreenTest/ExamplePaintSurface.cpp src/Tests/OffscreenTest/ExamplePaintSurface.hpp)
+#target_include_directories(TestWindow PRIVATE src)
+#target_link_libraries(TestWindow PRIVATE Engine)

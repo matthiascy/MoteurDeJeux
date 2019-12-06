@@ -21,17 +21,17 @@ class RenderSystem : public System {
 private:
   struct RenderInfo {
     Int32 vboIdx {};
-    Int32 eboIdx {};
+    Int32 iboIdx {};
   };
 
   UniquePtr<OglOffscreenSurface>   m_surface;
 
-  HashMap<GameObject*, RenderInfo> m_render_infos;
+  HashMap<GameObject*, RenderInfo> m_render_graph;
 
   /** Arrays own the memory. */
   Array<OglVAO*>     m_vaos;
   Array<OglBuffer*>  m_vbos;
-  Array<OglBuffer*>  m_ebos;
+  Array<OglBuffer*>  m_ibos;
   Array<OglProgram*> m_programs;
 
   Mat4 m_view_matrix;
@@ -42,6 +42,8 @@ private:
   OglVAO* vao;
   OglBuffer* vbo;
   OglBuffer* ebo;
+
+  OglFns* m_fns;
 
 public:
   RenderSystem(const String& name, Engine* engine, Object* parent = nullptr);

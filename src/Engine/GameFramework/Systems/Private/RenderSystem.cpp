@@ -7,13 +7,16 @@
 
 RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
   : System(name, engine, parent),
-    m_surface{nullptr}, m_render_infos{},
+    m_surface{nullptr}, m_render_graph{},
     m_projection_matrix{Math::Mat4Identity},
     m_model_matrix{Math::Mat4Identity},
     m_view_matrix{Math::Mat4Identity},
-    program{nullptr}, vao{nullptr}, vbo{nullptr}, ebo{nullptr}
+    program{nullptr}, vao{nullptr}, vbo{nullptr}, ebo{nullptr},
+    m_fns{nullptr}
 {
   qInfo() << "Creation =>" << objectName();
+  m_programs.push_back(new OglProgram);
+  m_vaos.push_back(new OglVAO);
 }
 
 RenderSystem::~RenderSystem()
@@ -32,8 +35,23 @@ void RenderSystem::init()
   if (!m_surface->isValid())
     qFatal("OffScreenSurface Creation failed!!!");
 
-  //m_programs[0] = m_surface->createProgram(":/Shaders/CubeVert", ":/Shaders/CubeFrag");
-  //m_vaos[0] = m_surface->createVAO();
+  m_programs[0]->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/BasicVert");
+  m_programs[0]->addShaderFromSourceFile(OglShader::Fragment, ":/Shaders/BasicVert");
+  m_programs[0]->bindAttributeLocation("inPosition", 0);
+  m_programs[0]->bindAttributeLocation("inNormal", 1);
+  m_programs[0]->bindAttributeLocation("inTexCoord", 2);
+  m_programs[0]->link();
+  m_programs[0]->bind();
+  m_programs[0]->setUniformValue("texture0", 0);
+  m_programs[0]->setUniformValue("texture1", 1);
+  m_programs[0]->setUniformValue("texture2", 2);
+  m_programs[0]->setUniformValue("texture3", 3);
+  m_programs[0]->setUniformValue("lightPos", Vec3(0, 0, 70));
+  m_programs[0]->release();
+
+  m_vaos[0]->create();
+
+/*
   float triangle[] = {
       -0.5f, -0.5f, 0.0f,
        0.5f, -0.5f, 0.0f,
@@ -42,7 +60,6 @@ void RenderSystem::init()
   UInt32 indices[] = {
       0, 1, 2
   };
-  //m_surface->makeCurrent();
   program = new OglProgram;
   program->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/SimplePosition");
   program->addShaderFromSourceFile(OglShader::Fragment, ":/Shaders/SimpleColor");
@@ -65,9 +82,11 @@ void RenderSystem::init()
   ebo->setUsagePattern(OglBuffer::StaticDraw);
   ebo->allocate(indices, 3 * sizeof(UInt32));
   program->release();
+  */
+
   m_surface->fns()->glEnable(GL_DEPTH_TEST);
   m_surface->fns()->glDepthFunc(GL_LESS);
-  m_surface->fns()->glViewport(0, 0, 1280, 720);
+  m_surface->fns()->glViewport(0, 0, m_surface->size().width(), m_surface->size().height());
   m_surface->fns()->glClearColor(0.5, 0.4, 0.8, 1.0);
   m_surface->doneCurrent();
 }
@@ -75,6 +94,7 @@ void RenderSystem::init()
 void RenderSystem::renderScene(Scene* scene)
 {
   m_surface->makeCurrent();
+
   vao->bind();
   program->bind();
   m_surface->fns()->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -84,8 +104,41 @@ void RenderSystem::renderScene(Scene* scene)
   program->release();
   vao->release();
   m_surface->swapBuffers();
+
+  if (scene) {
+    GameObject* camera = scene->mainCamera();
+
+    for (GameObject* gameObject : scene->gameObjects()) {
+      if (gameObject->isVisible()) {
+        if (!m_render_graph.contains(gameObject)) {
+          m_render_graph.insert(gameObject, {m_vbos.size(), m_ibos.size()});
+          m_vbos.push_back(new OglBuffer(OglBuffer::VertexBuffer));
+          m_ibos.push_back(new OglBuffer(OglBuffer::IndexBuffer));
+          m_vbos[m_render_graph[gameObject].vboIdx]->create();
+          m_vbos[m_render_graph[gameObject].vboIdx]->bind();
+          m_vbos[m_render_graph[gameObject].vboIdx]->setUsagePattern(OglBuffer::StaticDraw);
+          Mesh* gameObjectMesh = m_engine->assetManager()->getMesh(gameObject->meshHandle());
+          m_vbos[m_render_graph[gameObject].vboIdx]->allocate(gameObjectMesh->constData(), gameObjectMesh->count() * sizeof(float));
+
+        }
+      }
+    }
+
+    m_programs[0]->bind();
+    m_programs[0]->setUniformValue("projMatrix", );
+    m_programs[0]->setUniformValue("modelViewMatrix", );
+
+    for (const auto& info : m_render_graph) {
+
+    }
+
+    m_programs[0]->release();
+
+  }
+
   m_surface->doneCurrent();
-  //m_surface->makeCurrent();
+  m_surface->render();
+
   /*
   if (scene) {
     GameObject* camera = scene->mainCamera();
@@ -97,10 +150,6 @@ void RenderSystem::renderScene(Scene* scene)
     }
   }
    */
-  //m_surface->doneCurrent();
-
-
-  m_surface->render();
 
   //if (scene) {
 

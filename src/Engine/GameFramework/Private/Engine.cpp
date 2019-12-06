@@ -33,7 +33,7 @@ AssetManager* Engine::assetManager() const
   return m_asset_manager.get();
 }
 
-SceneManager *Engine::sceneManager() const
+SceneManager* Engine::sceneManager() const
 {
   return m_scene_manager.get();
 }
