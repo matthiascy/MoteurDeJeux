@@ -9,7 +9,7 @@ private:
 
 public:
   PerspectiveCamera(const String& name, GameObject* gameObject,
-                    float fov, float aspect, float zNear, float zFar);
+                    Real fov, Real aspect, Real zNear, Real zFar);
   ~PerspectiveCamera() override = default;
 
   [[nodiscard]]

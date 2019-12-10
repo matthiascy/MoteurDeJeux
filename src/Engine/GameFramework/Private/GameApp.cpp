@@ -70,7 +70,10 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
   //m_window->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter,m_window->size(), screenGeometry));
 
   m_window->setMinimumSize(m_win_min_size);
-  m_window->showFullScreen();
+  //m_window->showFullScreen();
+  m_window->showNormal();
+
+  /*
   m_window->hide();
 
   //m_splash = makeUnique<SplashScreen>(QPixmap{":/App/loading-engine"}.scaled(m_window->geometry().size()), Qt::WindowStaysOnTopHint);
@@ -93,6 +96,7 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
     m_is_initialized = true;
     //m_window->setFocus();
   });
+   */
 }
 
 GameApp::~GameApp()

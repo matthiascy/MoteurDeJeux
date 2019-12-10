@@ -6,107 +6,79 @@ Transform::Transform(const String& name, GameObject* gameObject, Transform* pare
     m_world_position{}, m_world_rotation{}, m_world_scale{},
     m_local_position{localPosition}, m_local_rotation{localRotation}, m_local_scale{localScale},
     m_local_to_world_matrix{}, m_world_to_local_matrix{},
-    m_has_changed{false}, m_parent{parent}, m_children{}
+    m_parent{parent}, m_children{}
 {
-  instant_update();
+  QObject::connect(&m_private_signal, &TransformPrivateSignal::needToUpdate, [this](){
+    _update();
+  });
+  _update();
 }
 
-Vec3 Transform::worldPosition()
+Vec3 Transform::worldPosition() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
   return m_world_position;
 }
 
-Vec3 Transform::localPosition()
+Vec3 Transform::localPosition() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
   return m_local_position;
 }
 
-Quat Transform::worldRotation()
+Quat Transform::worldRotation() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
   return m_world_rotation;
 }
 
-Quat Transform::localRotation()
+Quat Transform::localRotation() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
   return m_local_rotation;
 }
 
-Vec3 Transform::worldScale()
+Vec3 Transform::worldScale() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
   return m_world_scale;
 }
 
-Vec3 Transform::localScale()
+Vec3 Transform::localScale() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
   return m_local_scale;
 }
 
-Vec3 Transform::forward()
+Mat4 Transform::worldMatrix() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
-  return (m_world_rotation * Math::Forward).normalized();
+  return m_world_matrix;
 }
 
-Vec3 Transform::up()
+Mat4 Transform::localMatrix() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
-  return (m_world_rotation * Math::Up).normalized();
+  return m_local_matrix;
 }
 
-Vec3 Transform::right()
+Vec3 Transform::right() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
-  return (m_world_rotation * Math::Right).normalized();
+  return Vec3{worldMatrix().column(0)}.normalized();
+  //return (m_world_rotation * Math::Right).normalized();
 }
 
-Mat4 Transform::localToWorldMatrix()
+Vec3 Transform::up() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
+  return Vec3{worldMatrix().column(1)}.normalized();
+  //return (m_world_rotation * Math::Up).normalized();
+}
+
+Vec3 Transform::forward() const
+{
+  return Vec3{worldMatrix().column(2)}.normalized();
+  //return (m_world_rotation * Math::Forward).normalized();
+}
+
+Mat4 Transform::localToWorldMatrix() const
+{
   return m_local_to_world_matrix;
 }
 
-Mat4 Transform::worldToLocalMatrix()
+Mat4 Transform::worldToLocalMatrix() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
   return m_world_to_local_matrix;
 }
 
@@ -129,7 +101,8 @@ void Transform::setParent(Transform* parent)
       parent->m_children.push_back(this);
     }
   }
-  set_has_changed();
+
+  emit m_private_signal.needToUpdate();
 }
 
 Transform* Transform::root()
@@ -141,25 +114,67 @@ Transform* Transform::root()
   }
 }
 
-void Transform::rotate(const Quat& q, ESpace relativeTo)
+UInt32 Transform::depth() const
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
+  return m_depth;
+}
+
+Vec3 Transform::worldEulerAngles() const
+{
+  Vec3 out;
+  m_world_rotation.getEulerAngles(&out[0], &out[1], &out[2]);
+  return out;
+}
+
+Vec3 Transform::localEulerAngles() const
+{
+  Vec3 out;
+  m_local_rotation.getEulerAngles(&out[0], &out[1], &out[2]);
+  return out;
+}
+
+void Transform::setLocalEulerAngles(const Vec3 &angles)
+{
+  setLocalEulerAngles(angles.x(), angles.y(), angles.z());
+}
+
+void Transform::setLocalEulerAngles(Real xAngle, Real yAngle, Real zAngle)
+{
+  m_local_rotation = Quat::fromEulerAngles(xAngle, yAngle, zAngle);
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::setWorldEulerAngles(const Vec3 &angles)
+{
+  setWorldEulerAngles(angles.x(), angles.y(), angles.z());
+}
+
+void Transform::setWorldEulerAngles(Real xAngle, Real yAngle, Real zAngle)
+{
+  m_local_rotation = Quat::fromEulerAngles(xAngle, yAngle, zAngle);
+
+  if (m_parent) {
+    Quat inv_parent = m_parent->worldRotation().inverted();
+    m_local_rotation = inv_parent * m_local_rotation;
   }
 
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::rotate(const Quat& q, ESpace relativeTo)
+{
   switch (relativeTo) {
     case ESpace::Local: {
-      //m_local_rotation = q.normalized() * m_local_rotation;
-      //m_world_rotation = m_local_rotation * m_parent->localRotation();
-      // TODO::
+      rotateLocal(q);
     } break;
 
     case ESpace::World: {
-      // TODO::
+      rotateWorld(q);
     } break;
   }
-  set_has_changed();
+
+  emit m_private_signal.needToUpdate();
 }
 
 void Transform::rotate(Real xAngle, Real yAngle, Real zAngle, ESpace relativeTo)
@@ -167,71 +182,220 @@ void Transform::rotate(Real xAngle, Real yAngle, Real zAngle, ESpace relativeTo)
   rotate(Quat::fromEulerAngles(xAngle, yAngle, zAngle), relativeTo);
 }
 
-void Transform::scale(const Vec3& s, ESpace relativeTo)
+void Transform::rotateWorld(Real xAngle, Real yAngle, Real zAngle)
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
+  rotateWorld(Quat::fromEulerAngles(xAngle, yAngle, zAngle));
+}
+
+void Transform::rotateWorld(const Quat& q)
+{
+  if (m_parent) {
+
+    Quat inv_parent = parent()->worldRotation().inverted();
+    m_local_rotation = (inv_parent * q) * worldRotation();
+
+  } else {
+
+    m_local_rotation = q * m_local_rotation;
   }
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::rotateLocal(Real xAngle, Real yAngle, Real zAngle)
+{
+  rotateLocal(Quat::fromEulerAngles(xAngle, yAngle, zAngle));
+}
+
+void Transform::rotateLocal(const Quat& q)
+{
+  m_local_rotation = m_local_rotation * q;
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::setRotation(const Quat& q, ESpace relativeTo)
+{
   switch (relativeTo) {
     case ESpace::Local: {
-      m_local_scale = s;
+      setLocalRotation(q);
     } break;
 
     case ESpace::World: {
-      if (m_parent)
-        m_local_scale = s / m_parent->worldScale();
-      else
-        m_local_scale = s;
+      setWorldRotation(q);
     } break;
   }
-  set_has_changed();
+}
+
+void Transform::setLocalRotation(const Quat& q)
+{
+  m_local_rotation = q;
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::setWorldRotation(const Quat& q)
+{
+  if (!m_parent) {
+
+    m_world_rotation = q;
+
+  } else {
+
+    Quat inv_parent = parent()->worldRotation().inverted();
+    m_local_rotation = inv_parent * q;
+
+  }
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::setRotation(Real xAngle, Real yAngle, Real zAngle, ESpace relativeTo)
+{
+  setRotation(Quat::fromEulerAngles(xAngle, yAngle, zAngle), relativeTo);
+}
+
+void Transform::scale(const Vec3& s, ESpace relativeTo)
+{
+  switch (relativeTo) {
+    case ESpace::Local: {
+      m_local_scale *= m_world_rotation * s;
+    } break;
+
+    case ESpace::World: {
+      m_local_scale *= s;
+    } break;
+  }
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::scale(Real xScale, Real yScale, Real zScale, ESpace relativeTo)
+{
+  return scale({xScale, yScale, zScale}, relativeTo);
+}
+
+void Transform::setScale(const Vec3& s, ESpace relativeTo)
+{
+  switch (relativeTo) {
+    case ESpace::Local: {
+      m_local_scale = m_world_rotation * s;
+    } break;
+
+    case ESpace::World: {
+      m_local_scale = s;
+    } break;
+  }
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::setScale(Real xScale, Real yScale, Real zScale, ESpace relativeTo)
+{
+  return setScale({xScale, yScale, zScale}, relativeTo);
 }
 
 void Transform::translate(const Vec3& t, ESpace relativeTo)
 {
-  if (m_has_changed) {
-    instant_update();
-    m_has_changed = false;
-  }
   switch (relativeTo) {
-    // TODO::
     case ESpace::Local: {
-
+      translateLocal(t);
     } break;
 
     case ESpace::World: {
-      translate(t);
+      translateWorld(t);
     } break;
   }
-  set_has_changed();
+
+  emit m_private_signal.needToUpdate();
 }
 
-void Transform::rotateAround(const Vec3 &point, const Vec3 &axis, Real angle)
+void Transform::translate(Real xTranslate, Real yTranslate, Real zTranslate, ESpace relativeTo)
 {
-  // TODO::
+  return translate({xTranslate, yTranslate, zTranslate}, relativeTo);
 }
 
-void Transform::lookAt(const Transform &target, const Vec3 &worldUp)
+void Transform::translateWorld(const Vec3& t)
 {
-  // TODO::
+  setWorldPosition(t + worldPosition());
+}
+
+void Transform::translateWorld(Real x, Real y, Real z)
+{
+  translateWorld({x, y, z});
+}
+
+void Transform::translateLocal(const Vec3& t)
+{
+  m_local_position += m_local_rotation.rotatedVector(t);
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::translateLocal(Real x, Real y, Real z)
+{
+  translateLocal({x, y, z});
+}
+
+void Transform::setLocalPosition(const Vec3& p)
+{
+  m_local_position = p;
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::setWorldPosition(const Vec3& p)
+{
+  m_world_position = p;
+
+  if (!m_parent) {
+    m_local_position = p;
+  } else {
+    Mat4 inv_parent = parent()->worldMatrix().inverted();
+    m_local_position = inv_parent * p;
+  }
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::setPosition(const Vec3& p, ESpace relativeTo)
+{
+  switch (relativeTo) {
+    case ESpace::Local: {
+      m_local_position = m_world_rotation * p;
+    } break;
+
+    case ESpace::World: {
+      m_local_position = p;
+    } break;
+  }
+
+  emit m_private_signal.needToUpdate();
+}
+
+void Transform::setPosition(Real x, Real y, Real z, ESpace relativeTo)
+{
+  setPosition({x, y, z}, relativeTo);
+}
+
+void Transform::lookAt(Transform* target, const Vec3 &worldUp)
+{
+  lookAt(target->worldPosition(), worldUp);
 }
 
 void Transform::lookAt(const Vec3& worldPos, const Vec3& worldUp)
 {
-  // TODO::
-  setLocalRotation(Math::lookAtQuaternion(localPosition(), worldPos, worldUp));
+  setWorldRotation(Math::lookAtQuaternion(worldPosition(), worldPos, worldUp));
 }
 
-Vec3 Transform::transformLocalPositionToWorld(const Vec3 &pos)
+Vec3 Transform::transformLocalPositionToWorld(const Vec3& pos) const
 {
-  // TODO::
+  return m_local_to_world_matrix * pos;
 }
 
-Vec3 Transform::transformWorldPositionToLocal(const Vec3 &pos)
+Vec3 Transform::transformWorldPositionToLocal(const Vec3& pos) const
 {
-  // TODO::
-  return Vec3();
+  return m_world_to_local_matrix * pos;
 }
 
 void Transform::detachChildren()
@@ -241,7 +405,7 @@ void Transform::detachChildren()
   }
 }
 
-Transform* Transform::find(const String& name)
+Transform* Transform::find(const String& name) const
 {
   for (auto* child : m_children) {
     if (child->gameObject()->objectName() == name) {
@@ -259,7 +423,7 @@ bool Transform::isChildOf(Transform* parent) const
     return m_parent == parent;
 }
 
-Transform* Transform::childAt(Int32 index)
+Transform* Transform::childAt(Int32 index) const
 {
   if (index >= m_children.size()) {
     qWarning("Index greater than the child count.");
@@ -273,50 +437,25 @@ UInt32 Transform::childCount() const
   return m_children.size();
 }
 
-void Transform::set_has_changed()
+void Transform::_update()
 {
-  if (!m_has_changed) {
-    m_has_changed = true;
-    for (auto* child : m_children) {
-      child->set_has_changed();
-    }
-  }
-}
+  qDebug() << "Update " << m_game_object->objectName() << " Transform.";
 
-void Transform::instant_update()
-{
+  m_local_matrix = Math::mat4FromTRS(m_local_position, m_local_rotation, m_local_scale);
+
   if (m_parent) {
 
-    m_world_rotation = m_local_rotation * m_parent->worldRotation();
-    m_world_position = m_local_position + m_parent->worldPosition();
-    m_world_scale    = m_local_scale    * m_parent->worldScale();
-
-    m_local_to_world_matrix.setToIdentity();
-    m_local_to_world_matrix.scale(m_world_scale);
-    m_local_to_world_matrix.rotate(m_world_rotation);
-    m_local_to_world_matrix.translate(m_world_position);
-    m_local_to_world_matrix = m_parent->localToWorldMatrix() * m_local_to_world_matrix;
-    m_world_to_local_matrix = m_local_to_world_matrix.inverted();
+    m_world_matrix = parent()->worldMatrix() * m_local_matrix;
 
   } else {
 
-    m_world_rotation = m_local_rotation;
-    m_world_position = m_local_position;
-    m_world_scale    = m_local_scale;
-    m_local_rotation = Math::QuatIdentity;
-    m_local_position = Math::Zero;
-    m_local_scale    = Math::mkVec3(1);
+    m_world_matrix = m_local_matrix;
 
-    m_local_to_world_matrix.setToIdentity();
-    m_local_to_world_matrix.scale(m_world_scale);
-    m_local_to_world_matrix.rotate(m_world_rotation);
-    m_local_to_world_matrix.translate(m_world_position);
-    m_world_to_local_matrix = m_local_to_world_matrix.inverted();
   }
 
   if (!m_children.isEmpty()) {
     for (auto* child : m_children) {
-      child->instant_update();
+      child->_update();
     }
   }
 }

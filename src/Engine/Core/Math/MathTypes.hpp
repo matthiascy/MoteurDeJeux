@@ -20,7 +20,7 @@ typedef QMatrix2x2 Mat2;
 typedef QMatrix3x3 Mat3;
 typedef QMatrix4x4 Mat4;
 typedef QQuaternion Quat;
-typedef qreal Real;
+typedef float Real;
 class Transform;
 
 struct BBox {

@@ -74,6 +74,10 @@ void GameObject::addComponent(AbstractComponent* component)
 {
   if (!m_components.contains(component)) {
     m_components.push_back(component);
+
+    if (component->typeID() == Transform::componentTypeID()) {
+      m_transform = dynamic_cast<Transform*>(component);
+    }
   }
 }
 

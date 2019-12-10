@@ -2,6 +2,8 @@
   #error "Camera.inl must be included from Camera.hpp"
 #endif
 
+#include <GameFramework/GameObject.hpp>
+
 template <typename T>
 Camera<T>::Camera(const String& name, GameObject *gameObject, Real aspect, Real zNear, Real zFar)
   : Component<T>(name, gameObject),
@@ -11,8 +13,7 @@ Camera<T>::Camera(const String& name, GameObject *gameObject, Real aspect, Real 
 template <typename T>
 Mat4 Camera<T>::viewMatrix() const
 {
-  // TODO::implementation::lookAt
-  return Math::Mat4Identity;
+  return Component<T>::m_game_object->transform()->worldMatrix().inverted();
 }
 
 template <typename T>

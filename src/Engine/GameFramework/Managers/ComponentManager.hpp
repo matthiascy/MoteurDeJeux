@@ -28,7 +28,7 @@ public:
   ~ComponentManager() override;
 
   template <typename T, typename... Args>
-  T* addComponent(GameObject* gameObject, Args&&... params);
+  T* addComponent(const String& name, GameObject* gameObject, Args&&... params);
 
   template <typename T>
   void removeComponent(GameObject* gameObject);
@@ -40,10 +40,10 @@ public:
 };
 
 template <typename T, typename... Args>
-T* ComponentManager::addComponent(GameObject* gameObject, Args&&... params)
+T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Args&&... params)
 {
   // TODO::specify names(name generator)
-  T* component = new T("Component", gameObject, std::forward<Args>(params)...);
+  T* component = new T(name, gameObject, std::forward<Args>(params)...);
   gameObject->addComponent(component);
 
   ComponentTypeID type = T::componentTypeID();

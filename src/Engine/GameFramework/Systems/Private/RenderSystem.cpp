@@ -46,10 +46,50 @@ void RenderSystem::init()
   m_textures.insert(2, new OglTexture(Image(":/Textures/venus").mirrored()));
   m_textures.insert(3, new OglTexture(Image(":/Textures/earth").mirrored()));
 
+  const char* vert_shader = "#version 330 core\n"
+                            "\n"
+                            "layout (location = 0) in vec3 inPosition;\n"
+                            "layout (location = 1) in vec3 inNormal;\n"
+                            "layout (location = 2) in vec2 inTexCoord;\n"
+                            "\n"
+                            "out vec3 aPosition;\n"
+                            "out vec3 aNormal;\n"
+                            "out vec2 aTexCoord;\n"
+                            "\n"
+                            "uniform mat4 modelMatrix;\n"
+                            "uniform mat4 viewMatrix;\n"
+                            "uniform mat4 projectionMatrix;\n"
+                            "uniform mat3 normalMatrix;\n"
+                            "\n"
+                            "\n"
+                            "void main()\n"
+                            "{\n"
+                            "    aPosition = inPosition;\n"
+                            "    aNormal = normalMatrix * inNormal;\n"
+                            "    aTexCoord = inTexCoord;\n"
+                            "    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPosition, 1.0);\n"
+                            "    //gl_Position = viewMatrix * modelMatrix * vec4(aPosition, 1.0);\n"
+                            "}";
+
+  const char* frag_shader = "#version 330 core\n"
+                            "\n"
+                            "in vec3 aPosition;\n"
+                            "in vec3 aNormal;\n"
+                            "in vec2 aTexCoord;\n"
+                            "\n"
+                            "out vec4 pixelColor;\n"
+                            "\n"
+                            "void main()\n"
+                            "{\n"
+                            "    pixelColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                            "}";
+
   m_programs.insert(0,new OglProgram);
   m_programs[0]->create();
-  m_programs[0]->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/SimplePosition");
-  m_programs[0]->addShaderFromSourceFile(OglShader::Fragment, ":/Shaders/SimpleColor");
+  //m_programs[0]->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/SimplePosition");
+  m_programs[0]->addShaderFromSourceCode(OglShader::Vertex, vert_shader);
+  //m_programs[0]->addShaderFromSourceFile(OglShader::Fragment, ":/Shaders/SimpleColor");
+  m_programs[0]->addShaderFromSourceCode(OglShader::Fragment, frag_shader);
   m_programs[0]->bindAttributeLocation("inPosition", 0);
   m_programs[0]->bindAttributeLocation("inNormal", 1);
   m_programs[0]->bindAttributeLocation("inTexCoord", 2);
@@ -66,9 +106,9 @@ void RenderSystem::init()
   m_vaos[0]->create();
 
   float triangle[] = {
-      -0.5f, -0.5f, 0.0f,
-       0.5f, -0.5f, 0.0f,
-       0.0f, 0.5f,  0.0f,
+      -5.f, -5.f, 5.0f,
+       5.f, -5.f, 5.0f,
+       0.f,  5.f, 5.0f,
   };
   UInt32 indices[] = {
       0, 1, 2
@@ -102,9 +142,6 @@ void RenderSystem::renderScene(Scene* scene)
 
   m_vaos[0]->bind();
   m_programs[0]->bind();
-  m_fns->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  m_fns->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)nullptr);
 
   if (scene) {
     auto* camera = scene->mainCamera()->getComponent<PerspectiveCamera>();
@@ -136,8 +173,12 @@ void RenderSystem::renderScene(Scene* scene)
       }
     }
 
-    m_programs[0]->setUniformValue("projMatrix", camera->projectionMatrix());
+    m_programs[0]->setUniformValue("projectionMatrix", camera->projectionMatrix());
     m_programs[0]->setUniformValue("viewMatrix", camera->viewMatrix());
+
+    m_fns->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    m_fns->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)nullptr);
 
     for (auto i = m_render_graph.begin(); i != m_render_graph.end(); ++i) {
       render_(i.key(), i.value(), m_programs[0]);
@@ -155,10 +196,7 @@ void RenderSystem::renderScene(Scene* scene)
 void RenderSystem::render_(const GameObject* gameObject, const RenderInfo& info, OglProgram* program)
 {
   auto* transform = gameObject->transform();
-  // TODO : M = TRS
-  Mat4 m = Math::Mat4Identity;
-  m.translate(transform->position());
-  program->setUniformValue("modelMatrix", m);
+  program->setUniformValue("modelMatrix", transform->worldMatrix());
 
   for (auto i : info.texIds) {
     m_textures[i]->bind();

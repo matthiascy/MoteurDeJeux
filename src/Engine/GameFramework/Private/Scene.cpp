@@ -6,13 +6,14 @@
 #include <GameFramework/Component.hpp>
 #include <GameFramework/Systems/PhysicsSystem.hpp>
 
-Scene::Scene(const String& name, Object* parent)
+Scene::Scene(const String& name, Engine* engine, Object* parent)
   : Object(name, parent), m_game_objects{}, m_root{}
 {
   m_game_objects.insert("Untagged", new GameObjectsArray());
   m_game_objects.insert("Camera", new GameObjectsArray());
   //m_root = createGameObject("Root", "Untagged")->transform();
   m_is_active = false;
+  m_engine = engine;
 }
 
 Scene::~Scene()
@@ -37,6 +38,8 @@ void Scene::setRoot(Transform* root)
 GameObject* Scene::createGameObject(const String& name, const String& tag)
 {
   auto obj = new GameObject(name, this, tag, nullptr);
+
+  m_engine->componentManager()->addComponent<Transform>(name + "-transform", obj, nullptr, Math::Zero, Math::QuatIdentity, Math::mkVec3(1));
 
   if (!m_game_objects.contains(tag)) {
     m_game_objects.insert(tag, new GameObjectsArray());

@@ -19,15 +19,29 @@ Mat4 Math::lookAtMatrix(const Vec3& eye, const Vec3& center, const Vec3& up)
 {
   Mat4 out;
   out.lookAt(eye, center, up);
+  qDebug() << "Look at matrix : " << out;
   return out;
 }
 
 Quat Math::lookAtQuaternion(const Vec3& eye, const Vec3& center, const Vec3& up)
 {
-  return Quat::fromRotationMatrix(lookAtMatrix(eye, center, up).normalMatrix());
+  Mat4 mat = lookAtMatrix(eye, center, up);
+  float data[] = {mat.row(0)[0], mat.row(0)[1], mat.row(0)[2],
+                  mat.row(0)[0], mat.row(0)[1], mat.row(0)[2],
+                  mat.row(0)[0], mat.row(0)[1], mat.row(0)[2]};
+  return Quat::fromRotationMatrix(Mat3(data));
 }
 
 const Mat4 Math::Mat4Identity = Mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
 
 const Quat Math::QuatIdentity = Quat(1.0f, 0.0f, 0.0f, 0.0f);
+
+Mat4 Math::mat4FromTRS(const Vec3& translation, const Quat& rotation, const Vec3& scale)
+{
+  Mat4 out;
+  out.scale(scale);
+  out.rotate(rotation);
+  out.translate(translation);
+  return out;
+}
 

@@ -40,8 +40,10 @@ public:
   void setTag(const String& tag);
 
   void setTransform(Transform* trans);
-  [[nodiscard]] const Transform* transform() const;
   Transform* transform();
+
+  [[nodiscard]]
+  const Transform* transform() const;
 
   [[nodiscard]] bool isVisible() const;
   void setVisible(bool isVisible);
@@ -82,8 +84,8 @@ T* GameObject::getComponent() const
   static_assert(std::is_base_of<AbstractComponent, T>(), "T is not a Component");
 
   for (auto* c : m_components) {
-    if (c->typeID() == T::componentTypeID) {
-      return c;
+    if (c->typeID() == T::componentTypeID()) {
+      return dynamic_cast<T*>(c);
     }
   }
 
@@ -94,7 +96,7 @@ template <typename T>
 bool GameObject::hasComponent() const
 {
   for (auto* c : m_components) {
-    if (c->typeID() == T::componentTypeID) {
+    if (c->typeID() == T::componentTypeID()) {
       return true;
     }
   }

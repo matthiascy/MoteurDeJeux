@@ -18,11 +18,10 @@ SceneManager::~SceneManager()
 
 SceneHandle SceneManager::createScene(const String& name)
 {
-  auto* scene = new Scene(name);
+  auto* scene = new Scene(name, m_engine);
   auto* rootGameObject = scene->createGameObject("Root", "Untagged");
-  m_engine->componentManager()->addComponent<Transform>(rootGameObject, nullptr);
   scene->setRoot(rootGameObject->transform());
-  m_scenes.push_back(new Scene(name));
+  m_scenes.push_back(scene);
   return {static_cast<UInt32>(m_scenes.size() - 1) };
 }
 

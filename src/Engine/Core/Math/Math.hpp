@@ -55,6 +55,8 @@ struct Math {
 
   static Mat4 lookAtMatrix(const Vec3& eye, const Vec3& center, const Vec3& up);
 
+  static Mat4 mat4FromTRS(const Vec3& translation, const Quat& rotation, const Vec3& scale);
+
   static Quat lookAtQuaternion(const Vec3& eye, const Vec3& center, const Vec3& up);
 };
 

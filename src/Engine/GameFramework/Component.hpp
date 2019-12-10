@@ -21,6 +21,7 @@ enum class EComponentType {
  */
 template <typename T>
 class Component : public AbstractComponent {
+
 protected:
   static const UInt64 m_type_id;
 
