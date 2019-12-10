@@ -3,7 +3,7 @@
 
 #include "Camera.hpp"
 
-class PerspectiveCamera : Camera<PerspectiveCamera> {
+class PerspectiveCamera : public Camera<PerspectiveCamera> {
 private:
   Real m_fov {};
 

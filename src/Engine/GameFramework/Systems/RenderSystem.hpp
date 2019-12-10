@@ -21,7 +21,13 @@ class RenderSystem : public System {
 private:
   struct RenderInfo {
     Int32 vboIdx {};
-    Int32 iboIdx {};
+
+    struct ibo_ {
+      Int32  idx {};
+      Int32 size {};
+    } ibo {};
+
+    Array<Int32> texIds;
   };
 
   UniquePtr<OglOffscreenSurface>   m_surface;
@@ -33,15 +39,11 @@ private:
   Array<OglBuffer*>  m_vbos;
   Array<OglBuffer*>  m_ibos;
   Array<OglProgram*> m_programs;
+  Array<OglTexture*> m_textures;
 
   Mat4 m_view_matrix;
   Mat4 m_model_matrix;
   Mat4 m_projection_matrix;
-
-  OglProgram* program;
-  OglVAO* vao;
-  OglBuffer* vbo;
-  OglBuffer* ebo;
 
   OglFns* m_fns;
 
@@ -59,16 +61,44 @@ public:
 
   void postUpdate(Real dt) override { };
 
+  /***
+   * Render the game scene.
+   * @param scene [in] Scene to be rendered.
+   */
   void renderScene(Scene* scene);
 
+  /**
+   * Grab the rendered frame buffer from offscreen surface.
+   * @return Frame buffer as an image.
+   */
   [[nodiscard]]
   QImage grabFramebuffer() const;
 
 private:
-  void render(GameObject* gameObject);
+  /**
+   * Render the game object with the corresponding render info and shader program.
+   * @param gameObject [in] GameObject to be rendered.
+   * @param info       [in] gameObject's RenderInfo.
+   * @param program    [in] shader program used to render gameObject.
+   */
+  void render_(const GameObject* gameObject, const RenderInfo& info, OglProgram* program);
+
+  /* Used only for destroy render system arrays. */
+  template <typename T>
+  void destroy_array_(Array<T*>& array);
 
 public slots:
   void resize(const QSize& size);
 };
+
+template<typename T>
+void RenderSystem::destroy_array_(Array<T*>& array)
+{
+  for (auto* ptr : array) {
+    ptr->release();
+    delete ptr;
+    ptr = nullptr;
+  }
+}
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SUBSYSTEMS_RENDERER_SYSTEM_HPP */
