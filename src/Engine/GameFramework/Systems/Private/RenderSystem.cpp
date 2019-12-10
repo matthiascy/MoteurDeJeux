@@ -104,30 +104,7 @@ void RenderSystem::init()
 
   m_vaos.insert(0,new OglVAO);
   m_vaos[0]->create();
-
-  float triangle[] = {
-      -5.f, -5.f, 5.0f,
-       5.f, -5.f, 5.0f,
-       0.f,  5.f, 5.0f,
-  };
-  UInt32 indices[] = {
-      0, 1, 2
-  };
-
   m_vaos[0]->bind();
-  m_vbos.insert(0, new OglBuffer(OglBuffer::VertexBuffer));
-  m_vbos[0]->create();
-  m_vbos[0]->bind();
-  m_vbos[0]->setUsagePattern(OglBuffer::StaticDraw);
-  m_vbos[0]->allocate(triangle, 24 * sizeof(float));;
-  m_fns->glEnableVertexAttribArray(0);
-  m_fns->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-
-  m_ibos.insert(0,new OglBuffer(OglBuffer::IndexBuffer));
-  m_ibos[0]->create();
-  m_ibos[0]->bind();
-  m_ibos[0]->setUsagePattern(OglBuffer::StaticDraw);
-  m_ibos[0]->allocate(indices, 3 * sizeof(UInt32));
 
   m_fns->glEnable(GL_DEPTH_TEST);
   m_fns->glDepthFunc(GL_LESS);
@@ -178,15 +155,13 @@ void RenderSystem::renderScene(Scene* scene)
 
     m_fns->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    m_fns->glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)nullptr);
-
     for (auto i = m_render_graph.begin(); i != m_render_graph.end(); ++i) {
       render_(i.key(), i.value(), m_programs[0]);
     }
-
-    m_programs[0]->release();
-    m_vaos[0]->release();
   }
+
+  m_programs[0]->release();
+  m_vaos[0]->release();
 
   m_surface->doneCurrent();
   m_surface->render();

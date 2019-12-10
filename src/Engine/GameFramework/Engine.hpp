@@ -20,7 +20,7 @@ private:
   UniquePtr<SceneManager>     m_scene_manager;
 
   UniquePtr<RenderSystem>     m_render_sys;
-  //UniquePtr<PhysicsSystem>    m_physics_sys;
+  UniquePtr<PhysicsSystem>    m_physics_sys;
   UniquePtr<InputSystem>      m_input_sys;
   GameApp*                    m_app;
 

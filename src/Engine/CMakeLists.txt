@@ -136,9 +136,10 @@ set_target_properties(Engine PROPERTIES
 # Qt5::UiTools
 target_link_libraries(Engine PUBLIC
     Qt5::Widgets Qt5::Core Qt5::Gui
-    assimp Bullet3Common BulletSoftBody Bullet3Dynamics
-    Bullet3Collision LinearMath Bullet3Geometry
-    BulletDynamics BulletCollision)
+    assimp
+    BulletDynamics BulletCollision BulletSoftBody
+    LinearMath Bullet3Common Bullet3Dynamics
+    Bullet3Collision Bullet3Geometry)
 
 target_include_directories(Engine PUBLIC
     ${EngineSrcDir}
