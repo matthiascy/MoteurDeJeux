@@ -63,6 +63,7 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
 
     qInfo() << "Creation : running without editor";
     m_window = makeUnique<EngineWindow>(this);
+    m_window->installEventFilter(this);
 
   }
 
@@ -173,5 +174,15 @@ void GameApp::setMinimumSize(QSize&& size)
 {
   m_win_min_size = size;
   m_window->setMinimumSize(m_win_min_size);
+}
+
+bool GameApp::eventFilter(QObject* object, QEvent* event)
+{
+  if (object == m_window.get()) {
+    if (event->type() == QEvent::KeyPress) {
+      qDebug() << "Pressed";
+    }
+  }
+  return false;
 }
 

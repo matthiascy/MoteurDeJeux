@@ -52,6 +52,9 @@ public:
 
   void quit();
 
+public:
+  bool eventFilter(QObject* object, QEvent* event) override;
+
 signals:
   void fpsChanged(double fps);
 };

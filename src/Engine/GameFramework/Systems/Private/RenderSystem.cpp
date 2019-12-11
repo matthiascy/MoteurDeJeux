@@ -79,9 +79,13 @@ void RenderSystem::init()
                             "\n"
                             "out vec4 pixelColor;\n"
                             "\n"
+                            "vec3 L = normalize(lightPos - aPosition);\n"
+                            "float NL = max(dot(normalize(aNormal), L), 0.0);\n"
+                            "vec3 color = vec3(0.39, 1.0f, 0.0);\n"
+                            "vec3 col   = clamp(color* 0.2 + color * 0.8 * NL, 0.0, 1.0f);"
                             "void main()\n"
                             "{\n"
-                            "    pixelColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+                            "    pixelColor = vec4(col, 1.0);\n"
                             "}";
 
   m_programs.insert(0,new OglProgram);
@@ -172,6 +176,7 @@ void RenderSystem::render_(const GameObject* gameObject, const RenderInfo& info,
 {
   auto* transform = gameObject->transform();
   program->setUniformValue("modelMatrix", transform->worldMatrix());
+  program->setUniformValue("normalMatrix", transform->worldMatrix().normalMatrix());
 
   for (auto i : info.texIds) {
     m_textures[i]->bind();
