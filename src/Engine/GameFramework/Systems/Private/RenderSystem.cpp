@@ -68,7 +68,6 @@ void RenderSystem::init()
                             "    aNormal = normalMatrix * inNormal;\n"
                             "    aTexCoord = inTexCoord;\n"
                             "    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(aPosition, 1.0);\n"
-                            "    //gl_Position = viewMatrix * modelMatrix * vec4(aPosition, 1.0);\n"
                             "}";
 
   const char* frag_shader = "#version 330 core\n"
@@ -78,10 +77,14 @@ void RenderSystem::init()
                             "in vec2 aTexCoord;\n"
                             "\n"
                             "out vec4 pixelColor;\n"
-                            "\n"
+                            "uniform vec3 lightPos;\n"
+                            "uniform sampler2D texture0;\n"
+                            "uniform sampler2D texture1;\n"
+                            "uniform sampler2D texture2;\n"
+                            "uniform sampler2D texture3;\n"
                             "vec3 L = normalize(lightPos - aPosition);\n"
                             "float NL = max(dot(normalize(aNormal), L), 0.0);\n"
-                            "vec3 color = vec3(0.39, 1.0f, 0.0);\n"
+                            "vec3 color = vec3(0.31, 0.77, 0.97);\n"
                             "vec3 col   = clamp(color* 0.2 + color * 0.8 * NL, 0.0, 1.0f);"
                             "void main()\n"
                             "{\n"
@@ -112,8 +115,11 @@ void RenderSystem::init()
 
   m_fns->glEnable(GL_DEPTH_TEST);
   m_fns->glDepthFunc(GL_LESS);
+  m_fns->glEnable(GL_CULL_FACE);
+  m_fns->glCullFace(GL_BACK);
+  m_fns->glFrontFace(GL_CCW);
   m_fns->glViewport(0, 0, m_surface->size().width(), m_surface->size().height());
-  m_fns->glClearColor(0.5, 0.4, 0.8, 1.0);
+  m_fns->glClearColor(0.2, 0.2, 0.2, 1.0);
   m_surface->doneCurrent();
 }
 
@@ -179,7 +185,7 @@ void RenderSystem::render_(const GameObject* gameObject, const RenderInfo& info,
   program->setUniformValue("normalMatrix", transform->worldMatrix().normalMatrix());
 
   for (auto i : info.texIds) {
-    m_textures[i]->bind();
+      m_textures[i]->bind();
   }
 
   m_vbos[info.vboIdx]->bind();

@@ -19,7 +19,6 @@ Mat4 Math::lookAtMatrix(const Vec3& eye, const Vec3& center, const Vec3& up)
 {
   Mat4 out;
   out.lookAt(eye, center, up);
-  qDebug() << "Look at matrix : " << out;
   return out;
 }
 

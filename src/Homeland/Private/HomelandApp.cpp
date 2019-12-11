@@ -24,6 +24,8 @@ bool HomelandApp::init_main_scene_()
   m_engine->componentManager()->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 0.01, 1000);
 
   auto sphereMeshHandle = m_engine->assetManager()->loadMesh("./assets/models/sphere.obj");
+  m_engine->assetManager()->getMesh(sphereMeshHandle)->calculateSphericalUV();
+
   auto* sphere = m_main_scene->createGameObject("Sphere", "default");
   sphere->transform()->translateWorld(-4, 0, 0);
   auto* meshRender = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer", sphere, sphereMeshHandle);

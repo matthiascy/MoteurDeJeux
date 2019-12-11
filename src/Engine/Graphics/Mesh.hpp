@@ -12,18 +12,34 @@ public:
   Mesh();
   Mesh(UInt32 vertexCount, const Array<float>& data, const Array<UInt32>& indices);
 
+  [[nodiscard]]
   UInt32 count() const { return m_count; }
+
+  [[nodiscard]]
   UInt32 vertexCount() const { return m_vertex_count; }
 
+  [[nodiscard]]
   const Array<UInt32>& indices() const;
+
   Array<UInt32>& indices() { return m_indices; }
 
-  Array<Vec3>   vertices() const;
-  Array<Vec3>   normals() const;
-  Array<Vec2>   texCoords() const;
+  void calculateSphericalUV();
 
+  [[nodiscard]]
+  Array<Vec3> vertices() const;
+
+  [[nodiscard]]
+  Array<Vec3> normals() const;
+
+  [[nodiscard]]
+  Array<Vec2> texCoords() const;
+
+  [[nodiscard]]
   const Array<float>& constDataArray() const { return m_data; }
+
   Array<float>& dataArray() { return m_data; }
+
+  [[nodiscard]]
   const float* constData() const { return m_data.constData(); }
 
   void addVertex(const Vec3& v, const Vec3& n, const Vec2& t);

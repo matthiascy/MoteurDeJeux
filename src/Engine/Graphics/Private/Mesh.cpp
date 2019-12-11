@@ -73,3 +73,27 @@ void Mesh::addQuad(const Vec3& p1, const Vec3& p2, const Vec3& p3, const Vec3& p
   addVertex(p4, n, uv4);//, Vec2(u4, v4));
 }
 
+void Mesh::calculateSphericalUV()
+{
+  Real umax = FLT_MIN;
+  Real umin = FLT_MAX;
+  Real vmax = FLT_MIN;
+  Real vmin = FLT_MAX;
+  for (UInt32 i = 0; i < vertexCount(); ++i) {
+    Vec3 n = Vec3(m_data[i*8], m_data[i*8+1], m_data[i*8+2]).normalized();
+    Real u = qAtan2(n.x(), n.z()) / (2 * M_PI) + 0.5;
+    Real v = n.y() * 0.5 + 0.5;
+    m_data[i*8+6] = u;
+    m_data[i*8+7] = v;
+    if (umax < u) umax = u;
+    if (umin > u) umin = u;
+    if (vmax < v) vmax = v;
+    if (vmin > v) vmin = v;
+  }
+
+  for (UInt32 i = 0; i < vertexCount(); ++i) {
+    m_data[i*8+6] = (m_data[i*8+6] - umin) / (umax - umin);
+    m_data[i*8+7] = (m_data[i*8+7] - vmin) / (vmax - vmin);
+  }
+}
+
