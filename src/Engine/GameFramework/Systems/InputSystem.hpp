@@ -5,6 +5,16 @@
 #include <GameFramework/System.hpp>
 
 class InputSystem : public System {
+
+  friend class EngineWindow;
+
+private:
+  HashMap<Qt::Key, InputState> m_key_map;
+  HashMap<Qt::MouseButton, InputState> m_mouse_button_map;
+  QPoint m_mouse_delta;
+  QPoint m_mouse_prev_position;
+  QPoint m_mouse_curr_position;
+
 public:
   InputSystem(const String& name, Engine* engine, Object* parent = nullptr);
   ~InputSystem() override;
@@ -18,29 +28,37 @@ public:
   void update(Real dt) override { };
 
   void postUpdate(Real dt) override { };
-  /*
+
 public:
-  static InputState keyState(Qt::Key key);
-  static bool isKeyTriggered(Qt::Key key);
-  static bool isKeyPressed(Qt::Key key);
-  static bool isKeyReleased(Qt::Key key);
-  static InputState mouseButtonState(Qt::MouseButton button);
-  static bool isMouseButtonTriggered(Qt::MouseButton button);
-  static bool isMouseButtonPressed(Qt::MouseButton button);
-  static bool isMouseButtonReleased(Qt::MouseButton button);
-  static QPoint mousePosition();
-  static QPoint mouseDelta();
+  InputState keyState(Qt::Key key);
+
+  bool isKeyTriggered(Qt::Key key);
+
+  bool isKeyPressed(Qt::Key key);
+
+  bool isKeyReleased(Qt::Key key);
+
+  InputState mouseButtonState(Qt::MouseButton button);
+
+  bool isMouseButtonTriggered(Qt::MouseButton button);
+
+  bool isMouseButtonPressed(Qt::MouseButton button);
+
+  bool isMouseButtonReleased(Qt::MouseButton button);
+
+  [[nodiscard]]
+  QPoint mousePosition() const;
+
+  [[nodiscard]]
+  QPoint mouseDelta() const;
 
 private:
-  static void update();
-  static void register_key_press(Qt::Key key);
-  static void register_key_release(Qt::Key key);
-  static void register_mouse_button_press(Qt::MouseButton button);
-  static void register_mouse_button_release(Qt::MouseButton button);
-  static void reset();
-
-  friend class Window;
-   */
+  void _register_key_press(Qt::Key key);
+  void _register_key_release(Qt::Key key);
+  void _register_mouse_button_press(Qt::MouseButton button);
+  void _register_mouse_button_release(Qt::MouseButton release);
+  void _reset();
+  void _update();
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SYSTEMS_INPUT_SYSTEM_HPP */

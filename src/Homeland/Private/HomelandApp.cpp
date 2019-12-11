@@ -10,10 +10,19 @@ HomelandApp::HomelandApp(int argc, char** argv)
 
 void HomelandApp::init()
 {
-  init_main_scene_();
+  _load_game_asset();
+  _init_main_scene();
 }
 
-bool HomelandApp::init_main_scene_()
+void HomelandApp::_load_game_asset()
+{
+  m_assets.insert("Sphere", m_engine->assetManager()->loadMesh("./assets/models/sphere.obj"));
+  m_assets.insert("Klingon", m_engine->assetManager()->loadMesh("./assets/models/klingon.off"));
+  m_assets.insert("TreeType001", m_engine->assetManager()->loadMesh("./assets/models/TreeType001.dae"));
+  m_engine->assetManager()->getMesh(m_assets["Sphere"])->calculateSphericalUV();
+}
+
+bool HomelandApp::_init_main_scene()
 {
   m_main_scene = m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->createScene("MainScene"));
 
@@ -23,14 +32,13 @@ bool HomelandApp::init_main_scene_()
   cameraTransform->lookAt({0, 0, 0}, cameraTransform->up());
   m_engine->componentManager()->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 0.01, 1000);
 
-  auto sphereMeshHandle = m_engine->assetManager()->loadMesh("./assets/models/sphere.obj");
-  m_engine->assetManager()->getMesh(sphereMeshHandle)->calculateSphericalUV();
-
   auto* sphere = m_main_scene->createGameObject("Sphere", "default");
   sphere->transform()->translateWorld(-4, 0, 0);
-  auto* meshRender = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer", sphere, sphereMeshHandle);
+  auto* meshRenderer00 = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", sphere, m_assets["Sphere"]);
+  //sphere->setVisible(false);
 
   auto* sphere2 = m_main_scene->createGameObject("Sphere2", "default");
   sphere2->transform()->translateWorld(4, 0, 0);
-  auto* meshRender2 = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer2", sphere2, sphereMeshHandle);
+  auto* meshRenderer01 = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer01", sphere2, m_assets["Sphere"]);
+  //sphere2->setVisible(false);
 }

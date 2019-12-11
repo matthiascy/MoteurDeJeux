@@ -11,7 +11,6 @@ InputSystem::~InputSystem()
 {
   qDebug() << "Shutting down...";
   qDebug() << "Shutting down...[Finished]";
-  // TODO
 }
 
 void InputSystem::init()
@@ -20,38 +19,34 @@ void InputSystem::init()
   // TODO
 }
 
-/*
-template <typename T>
-struct InputInstance : std::pair<T, InputState> {
-  typedef std::pair<T, InputState> base_class;
-  inline explicit InputInstance(T value) : base_class(value, InputState::Invalid) { }
-  inline InputInstance(T value, InputState state) : base_class(value, state) { }
-  inline bool operator==(const InputInstance& rhs) const {
-    return this->first == rhs.first;
-  }
-};
-
-typedef InputInstance<Qt::Key> KeyInstance;
-typedef InputInstance<Qt::MouseButton> MouseButtonInstance;
-
-typedef std::vector<KeyInstance> KeyContainer;
-typedef std::vector<MouseButtonInstance> MouseButtonContainer;
-
-// Globals
-static KeyContainer gKeyInstances;
-static MouseButtonContainer gMouseButtonInstances;
-static QPoint gMouseCurrPosition;
-static QPoint gMousePrevPosition;
-static QPoint gMouseDelta;
-
-static inline KeyContainer::iterator _find_key(Qt::Key value)
+inline bool InputSystem::isKeyPressed(Qt::Key key)
 {
-  return std::find(gKeyInstances.begin(), gKeyInstances.end(), value);
+  return keyState(key) == InputState::Pressed;
 }
 
-static inline MouseButtonContainer::iterator _find_button(Qt::MouseButton value)
+inline bool InputSystem::isKeyReleased(Qt::Key key)
 {
-  return std::find(gMouseButtonInstances.begin(), gMouseButtonInstances.end(), value);
+  return keyState(key) == InputState::Released;
+}
+
+inline bool InputSystem::isKeyTriggered(Qt::Key key)
+{
+  return keyState(key) == InputState::Triggered;
+}
+
+bool InputSystem::isMouseButtonTriggered(Qt::MouseButton button)
+{
+  return mouseButtonState(button) == InputState::Triggered;
+}
+
+bool InputSystem::isMouseButtonPressed(Qt::MouseButton button)
+{
+  return mouseButtonState(button) == InputState::Pressed;
+}
+
+bool InputSystem::isMouseButtonReleased(Qt::MouseButton button)
+{
+  return mouseButtonState(button) == InputState::Released;
 }
 
 template <typename TPair>
@@ -95,79 +90,71 @@ static inline void _update(Container& container)
 
 InputState InputSystem::keyState(Qt::Key key)
 {
-  auto it = _find_key(key);
-  return (it != gKeyInstances.end()) ? it->second : InputState::Invalid;
-}
-
-inline bool InputSystem::isKeyTriggered(Qt::Key key)
-{
-  return keyState(key) == InputState::Triggered;
-}
-
-inline bool InputSystem::isKeyPressed(Qt::Key key)
-{
-  return keyState(key) == InputState::Pressed;
+  auto it = m_key_map.find(key);
+  if (it != m_key_map.end())
+    return it.value();
+  else
+    return InputState::Invalid;
 }
 
 InputState InputSystem::mouseButtonState(Qt::MouseButton button)
 {
-  auto it = _find_button(button);
-  return (it != gMouseButtonInstances.end()) ? it->second : InputState::Invalid;
+  auto it = m_mouse_button_map.find(button);
+  if (it != m_mouse_button_map.end())
+    return it.value();
+  else
+    return InputState::Invalid;
 }
 
-inline bool InputSystem::isMouseButtonTriggered(Qt::MouseButton button)
-{
-  return mouseButtonState(button) == InputState::Triggered;
-}
-
-inline bool InputSystem::isMouseButtonPressed(Qt::MouseButton button)
-{
-  return mouseButtonState(button) == InputState::Pressed;
-}
-
-inline bool InputSystem::isMouseButtonReleased(Qt::MouseButton button)
-{
-  return mouseButtonState(button) == InputState::Released;
-}
-
-QPoint InputSystem::mousePosition()
+QPoint InputSystem::mousePosition() const
 {
   return QCursor::pos();
 }
 
-QPoint InputSystem::mouseDelta()
+QPoint InputSystem::mouseDelta() const
 {
-  return gMouseDelta;
+  return m_mouse_delta;
 }
 
-void InputSystem::update()
+void InputSystem::_update()
 {
-  gMousePrevPosition = gMouseCurrPosition;
-  gMouseCurrPosition = QCursor::pos();
-  gMouseDelta = gMouseCurrPosition - gMousePrevPosition;
-  _update(gMouseButtonInstances);
-  _update(gKeyInstances);
+  m_mouse_prev_position = m_mouse_curr_position;
+  m_mouse_curr_position = QCursor::pos();
+  m_mouse_delta = m_mouse_curr_position - m_mouse_prev_position;
+
+
 }
 
-void InputSystem::register_key_press(Qt::Key key)
+void InputSystem::_register_key_press(Qt::Key key)
 {
-  auto it = _find_key(key);
-  if (it == gKeyInstances.end())
-    gKeyInstances.push_back(KeyInstance(key, InputState::Registered));
+  auto it = m_key_map.find(key);
+  if (it == m_key_map.end())
+    m_key_map.insert(key, InputState::Registered);
 }
 
-void InputSystem::register_key_release(Qt::Key key)
+void InputSystem::_register_key_release(Qt::Key key)
 {
-  auto it = _find_key(key);
-  if (it != gKeyInstances.end())
-    it->second = InputState::Unregistered;
+  auto it = m_key_map.find(key);
+  if (it != m_key_map.end())
+    m_key_map[key] = InputState::Unregistered;
 }
 
-void InputSystem::register_mouse_button_press(Qt::MouseButton button)
+void InputSystem::_register_mouse_button_press(Qt::MouseButton button)
 {
-  auto it = _find_button(button);
-  if (it == gMouseButtonInstances.end())
-    gMouseButtonInstances.push_back(MouseButtonInstance(button, InputState::Registered));
+  auto it = m_mouse_button_map.find(button);
+  if (it == m_mouse_button_map.end())
+    m_mouse_button_map.insert(button, InputState::Registered);
 }
 
-*/
+void InputSystem::_register_mouse_button_release(Qt::MouseButton button)
+{
+  auto it = m_mouse_button_map.find(button);
+  if (it != m_mouse_button_map.end())
+    m_mouse_button_map[button] = InputState::Unregistered;
+}
+
+void InputSystem::_reset()
+{
+  m_key_map.clear();
+  m_mouse_button_map.clear();
+}

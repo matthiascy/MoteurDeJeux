@@ -179,10 +179,24 @@ void GameApp::setMinimumSize(QSize&& size)
 bool GameApp::eventFilter(QObject* object, QEvent* event)
 {
   if (object == m_window.get()) {
-    if (event->type() == QEvent::KeyPress) {
-      qDebug() << "Pressed";
+    switch (event->type()) {
+      case QEvent::KeyPress: {
+        qDebug() << "Pressed";
+      } break;
+
+      case QEvent::MouseButtonPress: {
+        qDebug() << "Pressed";
+      } break;
+
+      case QEvent::MouseButtonRelease: {
+        qDebug() << "Release";
+      } break;
+
+      default:
+        break;
     }
   }
+
   return false;
 }
 

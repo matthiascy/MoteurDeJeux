@@ -2,12 +2,14 @@
 #define HOMELAND_HOMELAND_APP_HPP
 
 #include <GameFramework/GameApp.hpp>
+#include <GameFramework/Assets/AssetManager.hpp>
 
 class Scene;
 
 class HomelandApp : public GameApp {
 private:
-  Scene* m_main_scene {};
+  Scene* m_main_scene { };
+  HashMap<String, AssetHandle> m_assets { };
 
 public:
   HomelandApp(int argc, char** argv);
@@ -15,7 +17,8 @@ public:
   void init();
 
 private:
-  bool init_main_scene_();
+  bool _init_main_scene();
+  void _load_game_asset();
 };
 
 
