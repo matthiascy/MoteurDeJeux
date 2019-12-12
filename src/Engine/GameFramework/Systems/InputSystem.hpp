@@ -10,7 +10,7 @@ class InputSystem : public System {
 
 private:
   HashMap<Qt::Key, InputState> m_key_map;
-  HashMap<Qt::MouseButton, InputState> m_mouse_button_map;
+  HashMap<Qt::MouseButton, InputState> m_btn_map;
   QPoint m_mouse_delta;
   QPoint m_mouse_prev_position;
   QPoint m_mouse_curr_position;
@@ -25,7 +25,9 @@ public:
 
   void preUpdate(Real dt) override { };
 
-  void update(Real dt) override { };
+  void update(Real dt) override {
+    _update();
+  };
 
   void postUpdate(Real dt) override { };
 

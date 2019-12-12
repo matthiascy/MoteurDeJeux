@@ -1,6 +1,41 @@
 #include <GameFramework/Systems/InputSystem.hpp>
 #include <QCursor>
 
+template <typename T>
+static void _update_states(HashMap<T, InputState>& map)
+{
+  for (auto iter = map.begin(); iter != map.end(); ++iter) {
+    switch (iter.value()) {
+      case InputState::Registered: {
+        iter.value() = InputState::Triggered;
+      } break;
+
+      case InputState::Triggered: {
+        iter.value() = InputState::Pressed;
+      } break;
+
+      case InputState::Unregistered: {
+        iter.value() = InputState::Released;
+      } break;
+
+      default:
+        break;
+    }
+  }
+}
+
+template <typename T>
+static void _remove_if_released(HashMap<T, InputState>& map)
+{
+  auto iter = map.begin();
+  while (iter != map.end()) {
+    if (iter.value() == InputState::Released)
+      iter = map.erase(iter);
+    else
+      ++iter;
+  }
+}
+
 InputSystem::InputSystem(const String& name, Engine* engine, Object* parent)
   : System(name, engine, parent)
 {
@@ -49,45 +84,6 @@ bool InputSystem::isMouseButtonReleased(Qt::MouseButton button)
   return mouseButtonState(button) == InputState::Released;
 }
 
-template <typename TPair>
-static inline void _update_states(TPair& instance)
-{
-  switch (instance.second) {
-    case InputState::Registered: {
-      instance.second = InputState::Triggered;
-    } break;
-
-    case InputState::Triggered: {
-      instance.second = InputState::Pressed;
-    } break;
-
-    case InputState::Unregistered: {
-      instance.second = InputState::Released;
-    } break;
-
-    default:
-      break;
-  }
-}
-
-template <typename TPair>
-static inline bool _check_released(const TPair& instance)
-{
-  return instance.second == InputState::Released;
-}
-
-template <typename Container>
-static inline void _update(Container& container)
-{
-  typedef typename Container::iterator Iter;
-  typedef typename Container::value_type TPair;
-  // remove old data
-  Iter remove = std::remove_if(container.begin(), container.end(), &_check_released<TPair>);
-  container.erase(remove, container.end());
-  // update existing data
-  std::for_each(container.begin(), container.end(), &_update_states<TPair>);
-}
-
 InputState InputSystem::keyState(Qt::Key key)
 {
   auto it = m_key_map.find(key);
@@ -99,8 +95,8 @@ InputState InputSystem::keyState(Qt::Key key)
 
 InputState InputSystem::mouseButtonState(Qt::MouseButton button)
 {
-  auto it = m_mouse_button_map.find(button);
-  if (it != m_mouse_button_map.end())
+  auto it = m_btn_map.find(button);
+  if (it != m_btn_map.end())
     return it.value();
   else
     return InputState::Invalid;
@@ -122,6 +118,10 @@ void InputSystem::_update()
   m_mouse_curr_position = QCursor::pos();
   m_mouse_delta = m_mouse_curr_position - m_mouse_prev_position;
 
+  _remove_if_released(m_key_map);
+  _remove_if_released(m_btn_map);
+  _update_states(m_key_map);
+  _update_states(m_btn_map);
 
 }
 
@@ -141,20 +141,20 @@ void InputSystem::_register_key_release(Qt::Key key)
 
 void InputSystem::_register_mouse_button_press(Qt::MouseButton button)
 {
-  auto it = m_mouse_button_map.find(button);
-  if (it == m_mouse_button_map.end())
-    m_mouse_button_map.insert(button, InputState::Registered);
+  auto it = m_btn_map.find(button);
+  if (it == m_btn_map.end())
+    m_btn_map.insert(button, InputState::Registered);
 }
 
 void InputSystem::_register_mouse_button_release(Qt::MouseButton button)
 {
-  auto it = m_mouse_button_map.find(button);
-  if (it != m_mouse_button_map.end())
-    m_mouse_button_map[button] = InputState::Unregistered;
+  auto it = m_btn_map.find(button);
+  if (it != m_btn_map.end())
+    m_btn_map[button] = InputState::Unregistered;
 }
 
 void InputSystem::_reset()
 {
   m_key_map.clear();
-  m_mouse_button_map.clear();
+  m_btn_map.clear();
 }
