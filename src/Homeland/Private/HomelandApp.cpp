@@ -28,43 +28,84 @@ bool HomelandApp::_init_main_scene()
 
   auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
   auto* cameraTransform = camera->transform();
-  cameraTransform->setPosition(0, 0, 10, Transform::ESpace::World);
+  cameraTransform->setPosition(0, 0, 50, Transform::ESpace::World);
   cameraTransform->lookAt({0, 0, 0}, cameraTransform->up());
-  m_engine->componentManager()->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 0.01, 1000);
+  m_engine->componentManager()->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 1, 1000);
 
   auto* sphere = m_main_scene->createGameObject("Sphere", "default");
   sphere->transform()->translateWorld(-4, 0, 0);
   auto* meshRenderer00 = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", sphere, m_assets["Sphere"]);
-  //sphere->setVisible(false);
   qDebug() << sphere->transform()->worldPosition();
 
   auto* sphere2 = m_main_scene->createGameObject("Sphere2", "default");
+  sphere2->transform()->setParent(sphere->transform());
   sphere2->transform()->translateWorld(4, 0, 0);
   auto* meshRenderer01 = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer01", sphere2, m_assets["Sphere"]);
-  //sphere2->setVisible(false);
+}
+
+void HomelandApp::_camera_control()
+{
+  auto camera = m_main_scene->mainCamera();
+
+  if (engine()->inputSystem()->isKeyPressed(Qt::Key_Up)) {
+    qDebug() << "Up";
+    camera->transform()->translateWorld(0, 0, -m_dt);
+  }
+
+  if (engine()->inputSystem()->isKeyPressed(Qt::Key_Down)) {
+    camera->transform()->translateWorld(0, 0, m_dt);
+    qDebug() << "Down";
+  }
+
+  if (engine()->inputSystem()->isKeyPressed(Qt::Key_Left)) {
+    camera->transform()->translateWorld(-m_dt, 0, 0);
+  }
+
+  if (engine()->inputSystem()->isKeyPressed(Qt::Key_Right)) {
+    camera->transform()->translateWorld(m_dt, 0, 0);
+  }
+
+  camera->transform()->lookAt({0, 0, 0}, Math::Up);
+
+  qDebug() << "Camera pos : " << camera->transform()->worldPosition();
 }
 
 void HomelandApp::onUpdate()
 {
-  if (engine()->inputSystem()->isKeyPressed(Qt::Key_I)) {
-    qDebug() << "I pressed.";
-    m_engine->renderSystem()->grabFramebuffer().save("grabbed_image.png");
-    auto sphere = m_main_scene->find("Sphere");
-    if (sphere != nullptr) {
-      sphere->transform()->translateWorld(-1, -1, -1);
+  _camera_control();
+
+  auto sphere = m_main_scene->find("Sphere");
+  if (engine()->inputSystem()->isKeyPressed(Qt::Key_W)) {
+    if (sphere) {
+      sphere->transform()->translateWorld(0, 0, -m_dt);
       qDebug() << sphere->transform()->worldPosition();
     }
   }
 
-  if (engine()->inputSystem()->isKeyPressed(Qt::Key_P)) {
-    m_engine->renderSystem()->offscreenSurface()->framebufferObject()->toImage().save("P.png");
+  if (engine()->inputSystem()->isKeyPressed(Qt::Key_S)) {
+    if (sphere) {
+      sphere->transform()->translateWorld(0, 0, m_dt);
+      qDebug() << sphere->transform()->worldPosition();
+    }
   }
 
-  if (engine()->inputSystem()->isKeyPressed(Qt::Key_Left)) {
-    m_main_scene->mainCamera()->transform()->translateWorld(-1, 0, 0);
+  if (engine()->inputSystem()->isKeyPressed(Qt::Key_A)) {
+    if (sphere) {
+      sphere->transform()->translateWorld(-m_dt, 0, 0);
+      qDebug() << sphere->transform()->worldPosition();
+    }
   }
 
-  if (engine()->inputSystem()->isKeyPressed(Qt::Key_Right)) {
-    m_main_scene->mainCamera()->transform()->translateWorld(1, 0, 0);
+  if (engine()->inputSystem()->isKeyPressed(Qt::Key_D)) {
+    if (sphere) {
+      sphere->transform()->translateWorld(m_dt, 0, 0);
+      qDebug() << sphere->transform()->worldPosition();
+    }
+  }
+
+  if (engine()->inputSystem()->isKeyPressed(Qt::Key_R)) {
+    if (sphere) {
+      sphere->transform()->rotateWorld(0, 0, 30*m_dt);
+    }
   }
 }

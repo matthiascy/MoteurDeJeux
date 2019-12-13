@@ -451,6 +451,10 @@ void Transform::_update()
 
   }
 
+  m_world_position = Math::extractTranslation(m_world_matrix);
+  m_world_rotation = Math::extractRotation(m_world_matrix);
+  m_world_scale = Math::extractScale(m_world_matrix);
+
   if (!m_children.isEmpty()) {
     for (auto* child : m_children) {
       child->_update();

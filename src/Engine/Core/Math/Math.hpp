@@ -58,6 +58,18 @@ struct Math {
   static Mat4 mat4FromTRS(const Vec3& translation, const Quat& rotation, const Vec3& scale);
 
   static Quat lookAtQuaternion(const Vec3& eye, const Vec3& center, const Vec3& up);
+
+  static Vec3 extractTranslation(const Mat4& mat);
+
+  static Vec3 extractScale(const Mat4& mat);
+
+  static Quat extractRotation(const Mat4& mat);
+
+  static Vec3 axisX(const Mat4& mat);
+
+  static Vec3 axisY(const Mat4& mat);
+
+  static Vec3 axisZ(const Mat4& mat);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_MATH_MATH_HPP */

@@ -64,7 +64,8 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
     qInfo() << "Creation : running without editor";
     m_window = makeUnique<EngineWindow>(this);
     m_window->installEventFilter(this);
-
+    for (auto i : m_window->children())
+      i->installEventFilter(this);
   }
 
   //auto screenGeometry = QApplication::screens()[0]->availableGeometry();
@@ -73,6 +74,7 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
   m_window->setMinimumSize(m_win_min_size);
   //m_window->showFullScreen();
   m_window->showNormal();
+  m_window->setFocus();
 
   /*
   m_window->hide();
@@ -127,7 +129,6 @@ void GameApp::run()
   m_elapsed_timer.start();
   m_start_time = m_elapsed_timer.elapsed();
 
-  double dt = 1 / 60.0;
   double lastTime = (double)m_elapsed_timer.elapsed() / 1000.0;
 
   while (!m_is_quit) {
@@ -143,21 +144,28 @@ void GameApp::run()
     double frameTime = currentTime - lastTime;
     lastTime = currentTime;
 
+    /** Systems' pre update */
     m_engine->inputSystem()->preUpdate(frameTime);
     m_engine->renderSystem()->preUpdate(frameTime);
+
     m_engine->inputSystem()->update(frameTime);
 
-    onUpdate();
-
-    // Fixed update
+    /** Systems' fixed update */
     while (frameTime > 0.0) {
-      float deltaTime = std::min(frameTime, dt);
+      float deltaTime = std::min(frameTime, m_dt);
       m_engine->inputSystem()->fixedUpdate(deltaTime);
       //m_engine->physicsSystem()->fixedUpdate(deltaTime);
       frameTime -= deltaTime;
     }
 
+    /** Game logic */
+    onUpdate();
+
     m_engine->renderSystem()->update(frameTime);
+
+    /** Systems' post update */
+    m_engine->renderSystem()->postUpdate(frameTime);
+    m_engine->inputSystem()->postUpdate(frameTime);
 
     m_frames++;
     m_window->repaint();
@@ -183,21 +191,23 @@ bool GameApp::eventFilter(QObject* object, QEvent* event)
   if (object == m_window.get()) {
     switch (event->type()) {
       case QEvent::KeyPress: {
-        qDebug() << "Pressed";
         auto* e = dynamic_cast<QKeyEvent*>(event);
         if (e->isAutoRepeat())
           event->ignore();
-        else
+        else {
           m_engine->inputSystem()->_register_key_press(static_cast<Qt::Key>(e->key()));
+          event->accept();
+        }
       } break;
 
       case QEvent::KeyRelease: {
-        qDebug() << "Released";
         auto* e = dynamic_cast<QKeyEvent*>(event);
         if (e->isAutoRepeat())
           event->ignore();
-        else
+        else {
           m_engine->inputSystem()->_register_key_release(static_cast<Qt::Key>(e->key()));
+          event->accept();
+        }
       } break;
 
       case QEvent::MouseButtonPress: {
@@ -213,8 +223,13 @@ bool GameApp::eventFilter(QObject* object, QEvent* event)
       default:
         break;
     }
-  }
 
-  return false;
+    return false;
+
+  } else {
+
+    return QObject::eventFilter(object, event);
+
+  }
 }
 

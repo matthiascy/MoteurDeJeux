@@ -21,12 +21,13 @@ public:
 
   void init() override;
 
-  void fixedUpdate(Real dt) override { };
+  void fixedUpdate(Real dt) override {
+    _update();
+  };
 
   void preUpdate(Real dt) override { };
 
   void update(Real dt) override {
-    _update();
   };
 
   void postUpdate(Real dt) override { };

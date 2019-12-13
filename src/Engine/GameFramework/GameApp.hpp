@@ -26,6 +26,7 @@ protected:
   UInt64 m_start_time;
   QElapsedTimer m_elapsed_timer;
   QSize  m_win_min_size;
+  double m_dt = 1/60.0;
 
 public:
   GameApp(const String& name, const String& description, QSize&& minSize, int argc, char** argv);
