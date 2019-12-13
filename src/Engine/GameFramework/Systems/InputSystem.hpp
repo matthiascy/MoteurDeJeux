@@ -6,7 +6,7 @@
 
 class InputSystem : public System {
 
-  friend class EngineWindow;
+  friend class GameApp;
 
 private:
   HashMap<Qt::Key, InputState> m_key_map;

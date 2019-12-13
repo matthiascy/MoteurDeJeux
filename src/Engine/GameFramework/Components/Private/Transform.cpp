@@ -439,8 +439,6 @@ UInt32 Transform::childCount() const
 
 void Transform::_update()
 {
-  qDebug() << "Update " << m_game_object->objectName() << " Transform.";
-
   m_local_matrix = Math::mat4FromTRS(m_local_position, m_local_rotation, m_local_scale);
 
   if (m_parent) {

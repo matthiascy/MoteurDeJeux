@@ -54,17 +54,17 @@ void InputSystem::init()
   // TODO
 }
 
-inline bool InputSystem::isKeyPressed(Qt::Key key)
+bool InputSystem::isKeyPressed(Qt::Key key)
 {
   return keyState(key) == InputState::Pressed;
 }
 
-inline bool InputSystem::isKeyReleased(Qt::Key key)
+bool InputSystem::isKeyReleased(Qt::Key key)
 {
   return keyState(key) == InputState::Released;
 }
 
-inline bool InputSystem::isKeyTriggered(Qt::Key key)
+bool InputSystem::isKeyTriggered(Qt::Key key)
 {
   return keyState(key) == InputState::Triggered;
 }

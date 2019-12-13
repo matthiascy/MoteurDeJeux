@@ -49,6 +49,8 @@ public:
   bool isActive() const;
 
   void setActive(bool status);
+
+  GameObject* find(const String& name);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SCENE_HPP */

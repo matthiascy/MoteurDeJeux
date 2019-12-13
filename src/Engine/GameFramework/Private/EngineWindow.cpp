@@ -12,14 +12,6 @@ EngineWindow::EngineWindow(GameApp* app, QWidget* parent)
   : QWidget(parent), m_app{app}, m_image{},
     ui_exit_btn{new QPushButton("EXIT", this)}//, m_ui{nullptr}
 {
-  /*
-  QUiLoader loader;
-  QFile file(":/UI/MainMenu");
-  file.open(QFile::ReadOnly);
-  m_ui = loader.load(&file, this);
-  m_ui->setStyleSheet("background-color: rgba(0,0,0,0)");
-  file.close();
-   */
   // TODO:: set render system size
   //setWindowFlags(Qt::FramelessWindowHint);
 
@@ -45,9 +37,7 @@ EngineWindow::EngineWindow(GameApp* app, QWidget* parent)
 void EngineWindow::paintEvent(QPaintEvent*)
 {
   // TODO::Better way to deal with update mismatch while resizing
-  while (m_image.isNull()) {
-    m_image = m_app->engine()->renderSystem()->grabFramebuffer();
-  }
+  m_image = m_app->engine()->renderSystem()->grabFramebuffer();
 
   {
     QPainter painter;

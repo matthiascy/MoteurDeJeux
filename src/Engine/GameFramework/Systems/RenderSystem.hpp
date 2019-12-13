@@ -57,15 +57,9 @@ public:
 
   void preUpdate(Real dt) override { };
 
-  void update(Real dt) override { };
+  void update(Real dt) override;
 
   void postUpdate(Real dt) override { };
-
-  /***
-   * Render the game scene.
-   * @param scene [in] Scene to be rendered.
-   */
-  void renderScene(Scene* scene);
 
   /**
    * Grab the rendered frame buffer from offscreen surface.
@@ -74,6 +68,10 @@ public:
   [[nodiscard]]
   QImage grabFramebuffer() const;
 
+  OglOffscreenSurface* offscreenSurface() {
+    return m_surface.get();
+  }
+
 private:
   /**
    * Render the game object with the corresponding render info and shader program.
@@ -81,18 +79,24 @@ private:
    * @param info       [in] gameObject's RenderInfo.
    * @param program    [in] shader program used to render gameObject.
    */
-  void render_(const GameObject* gameObject, const RenderInfo& info, OglProgram* program);
+  void _render(const GameObject* gameObject, const RenderInfo& info, OglProgram* program);
+
+  /***
+   * Render the game scene.
+   * @param scene [in] Scene to be rendered.
+   */
+  void _render_scene(Scene* scene);
 
   /* Used only for destroy render system arrays. */
   template <typename T>
-  void destroy_array_(Array<T*>& array);
+  void _destroy_array(Array<T*>& array);
 
 public slots:
   void resize(const QSize& size);
 };
 
 template<typename T>
-void RenderSystem::destroy_array_(Array<T*>& array)
+void RenderSystem::_destroy_array(Array<T*>& array)
 {
   for (auto* ptr : array) {
     ptr->release();

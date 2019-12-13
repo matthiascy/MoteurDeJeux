@@ -31,7 +31,7 @@ class EditorMainWindow : public QMainWindow {
   Q_OBJECT
 
 public:
-  explicit EditorMainWindow(EngineWindow* viewport, QWidget* parent = nullptr);
+  explicit EditorMainWindow(EngineWindow* viewport, GameApp* gameApp, QWidget* parent = nullptr);
   ~EditorMainWindow() override;
 
   [[nodiscard]]
@@ -70,6 +70,7 @@ private:
 
 private:
   //OglContext* _context;
+  GameApp* m_game_app;
 
   UniquePtr<EngineWindow> m_engine_window;
   //Viewport* viewport;

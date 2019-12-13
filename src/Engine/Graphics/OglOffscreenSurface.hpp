@@ -12,12 +12,13 @@
 
 #include <Graphics/GraphicsTypes.hpp>
 
+class RenderSystem;
+
 /**
  * Constructor => .setFormat => .create => .init
  */
 
 #include <atomic>
-#include <mutex>
 
 class OglOffscreenSurface : public QOffscreenSurface {
 
@@ -43,27 +44,7 @@ public:
   [[nodiscard]]
   OglFns* fns() const;
 
-  /// @brief Return the OpenGL off-screen frame buffer object identifier.
-  /// @return The OpenGL off-screen frame buffer object identifier or 0 if no FBO has been created
-  /// yet.
-  /// @note This changes on every resize!
-  [[nodiscard]]
-  UInt32 framebufferObjectHandle() const;
-
-  /// @brief Return the OpenGL off-screen frame buffer object.
-  /// @return The OpenGL off-screen frame buffer object or nullptr if no FBO has been created yet.
-  /// @note This changes on every resize!
-  [[nodiscard]]
-  const OglFBO* getFramebufferObject() const;
-
-  /// @brief Return the QPaintDevice for paint into it.
-  [[nodiscard]]
-  QPaintDevice* getPaintDevice() const;
-
-  /// @brief Return the OpenGL off-screen frame buffer object identifier.
-  /// @return The OpenGL off-screen frame buffer object identifier or 0 if no FBO has been created
-  /// yet.
-  void bindFramebufferObject();
+  OglFBO* framebufferObject();
 
   /// @brief Return the current contents of the FBO.
   /// @return FBO content as 32bit QImage. You might need to swap RGBA to BGRA or vice-versa.
@@ -94,15 +75,9 @@ public slots:
   /// @brief Lazy update routine like QWidget::update().
   void update();
 
-  /// @brief Immediately render the widget contents to framebuffer.
-  void render();
-
 signals:
   /// @brief Emitted when swapBuffers() was called and buffer swapping is done.
   void frameSwapped();
-
-protected:
-  bool event(QEvent* e) override;
 
 private:
   Q_DISABLE_COPY(OglOffscreenSurface)
@@ -124,8 +99,6 @@ private:
   bool m_initializedGL;
   /// @brief True when currently a window update is pending.
   std::atomic_bool m_updatePending;
-  /// @brief Mutex making sure not grabbing while drawing etc.
-  std::mutex m_mutex;
 
   /// @brief OpenGL render context.
   OglContext* m_context;
@@ -133,13 +106,12 @@ private:
   OglFns* m_fns;
   /// @brief The OpenGL 3.0 function object that can be used the issue OpenGL commands.
   OglFnsCore4_0* m_fns4_0;
-  /// @brief OpenGL paint device for painting with a QPainter.
-  OglPaintDevice* m_paintDevice;
+
   /// @brief Background FBO for off-screen rendering when the window is not exposed.
   OglFBO* m_fbo;
   /// @brief Background FBO resolving a multi sampling frame buffer in m_fbo to a frame buffer
   /// that can be grabbed to a QImage.
-  OglFBO* m_resolvedFbo;
+//  OglFBO* m_resolvedFbo;
 
   QSize m_size;
 };

@@ -75,3 +75,14 @@ void Scene::setActive(bool status)
 {
   m_is_active = status;
 }
+
+GameObject* Scene::find(const String& name)
+{
+  for (auto i = m_game_objects.begin(); i != m_game_objects.end(); ++i) {
+    for (auto j : *i.value()) {
+      if (name == j->objectName())
+        return j;
+    }
+  }
+  return nullptr;
+}

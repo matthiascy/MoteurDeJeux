@@ -23,10 +23,10 @@ RenderSystem::~RenderSystem()
 {
   qDebug() << "Shutting down...";
   m_surface.reset(nullptr);
-  destroy_array_(m_vaos);
-  destroy_array_(m_vbos);
-  destroy_array_(m_ibos);
-  destroy_array_(m_programs);
+  _destroy_array(m_vaos);
+  _destroy_array(m_vbos);
+  _destroy_array(m_ibos);
+  _destroy_array(m_programs);
   qDebug() << "Shutting down...[Finished]";
 }
 
@@ -123,14 +123,14 @@ void RenderSystem::init()
   m_surface->doneCurrent();
 }
 
-void RenderSystem::renderScene(Scene* scene)
+void RenderSystem::_render_scene(Scene* scene)
 {
   m_surface->makeCurrent();
 
-  m_vaos[0]->bind();
-  m_programs[0]->bind();
-
   if (scene) {
+    m_vaos[0]->bind();
+    m_programs[0]->bind();
+
     auto* camera = scene->mainCamera()->getComponent<PerspectiveCamera>();
 
     for (GameObject* gameObject : scene->gameObjects()) {
@@ -166,19 +166,19 @@ void RenderSystem::renderScene(Scene* scene)
     m_fns->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (auto i = m_render_graph.begin(); i != m_render_graph.end(); ++i) {
-      render_(i.key(), i.value(), m_programs[0]);
+      _render(i.key(), i.value(), m_programs[0]);
     }
+
+    m_programs[0]->release();
+    m_vaos[0]->release();
   }
 
-  m_programs[0]->release();
-  m_vaos[0]->release();
+  m_surface->swapBuffers();
 
   m_surface->doneCurrent();
-  m_surface->render();
-  m_surface->swapBuffers();
 }
 
-void RenderSystem::render_(const GameObject* gameObject, const RenderInfo& info, OglProgram* program)
+void RenderSystem::_render(const GameObject* gameObject, const RenderInfo& info, OglProgram* program)
 {
   auto* transform = gameObject->transform();
   program->setUniformValue("modelMatrix", transform->worldMatrix());
@@ -188,6 +188,7 @@ void RenderSystem::render_(const GameObject* gameObject, const RenderInfo& info,
       m_textures[i]->bind();
   }
 
+  m_surface->framebufferObject()->bind();
   m_vbos[info.vboIdx]->bind();
   m_fns->glEnableVertexAttribArray(0);
   m_fns->glEnableVertexAttribArray(1);
@@ -197,6 +198,9 @@ void RenderSystem::render_(const GameObject* gameObject, const RenderInfo& info,
   m_fns->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void*>(6*sizeof(float)));
   m_ibos[info.ibo.idx]->bind();
   m_fns->glDrawElements(GL_TRIANGLES, info.ibo.size, GL_UNSIGNED_INT, (void*)nullptr);
+  m_vbos[info.vboIdx]->release();
+  m_ibos[info.vboIdx]->release();
+  m_surface->framebufferObject()->release();
 }
 
 QImage RenderSystem::grabFramebuffer() const
@@ -207,4 +211,9 @@ QImage RenderSystem::grabFramebuffer() const
 void RenderSystem::resize(const QSize& size)
 {
   m_surface->resize(size);
+}
+
+void RenderSystem::update(Real dt)
+{
+  _render_scene(m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->activatedScene()));
 }

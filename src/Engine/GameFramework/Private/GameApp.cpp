@@ -57,7 +57,7 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
   if (m_is_with_editor) {
 
     qInfo() << "Creation : running with editor";
-    m_window = makeUnique<EditorMainWindow>(new EngineWindow(this));
+    m_window = makeUnique<EditorMainWindow>(new EngineWindow(this), this);
 
   } else {
 
@@ -147,18 +147,20 @@ void GameApp::run()
     m_engine->renderSystem()->preUpdate(frameTime);
     m_engine->inputSystem()->update(frameTime);
 
+    onUpdate();
+
     // Fixed update
     while (frameTime > 0.0) {
       float deltaTime = std::min(frameTime, dt);
       m_engine->inputSystem()->fixedUpdate(deltaTime);
-      //physicsSystem()->fixedUpdate()
+      //m_engine->physicsSystem()->fixedUpdate(deltaTime);
       frameTime -= deltaTime;
     }
 
-    m_engine->renderSystem()->renderScene(scene);
+    m_engine->renderSystem()->update(frameTime);
 
     m_frames++;
-
+    m_window->repaint();
     QCoreApplication::processEvents();
   }
 
@@ -182,14 +184,30 @@ bool GameApp::eventFilter(QObject* object, QEvent* event)
     switch (event->type()) {
       case QEvent::KeyPress: {
         qDebug() << "Pressed";
+        auto* e = dynamic_cast<QKeyEvent*>(event);
+        if (e->isAutoRepeat())
+          event->ignore();
+        else
+          m_engine->inputSystem()->_register_key_press(static_cast<Qt::Key>(e->key()));
+      } break;
+
+      case QEvent::KeyRelease: {
+        qDebug() << "Released";
+        auto* e = dynamic_cast<QKeyEvent*>(event);
+        if (e->isAutoRepeat())
+          event->ignore();
+        else
+          m_engine->inputSystem()->_register_key_release(static_cast<Qt::Key>(e->key()));
       } break;
 
       case QEvent::MouseButtonPress: {
-        qDebug() << "Pressed";
+        qDebug() << "Mouse Pressed";
+        m_engine->inputSystem()->_register_mouse_button_press(dynamic_cast<QMouseEvent*>(event)->button());
       } break;
 
       case QEvent::MouseButtonRelease: {
-        qDebug() << "Release";
+        qDebug() << "Mouse Release";
+        m_engine->inputSystem()->_register_mouse_button_release(dynamic_cast<QMouseEvent*>(event)->button());
       } break;
 
       default:

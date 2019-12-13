@@ -3,8 +3,9 @@
 #include <QHBoxLayout>
 #include "EditorMainWindow.hpp"
 #include "Viewport.hpp"
+#include <GameFramework/GameApp.hpp>
 
-EditorMainWindow::EditorMainWindow(EngineWindow* viewport, QWidget *parent)
+EditorMainWindow::EditorMainWindow(EngineWindow* viewport, GameApp* gameApp, QWidget *parent)
   : QMainWindow(parent),
     m_engine_window{viewport},
     _toolBar(nullptr),
@@ -45,6 +46,7 @@ EditorMainWindow::EditorMainWindow(EngineWindow* viewport, QWidget *parent)
   this->setCorner(Qt::TopRightCorner, Qt::RightDockWidgetArea);
   applyStyles();
   viewport->setFocus();
+  connect(this, &QMainWindow::destroyed, m_game_app, &GameApp::quit);
 }
 
 EditorMainWindow::~EditorMainWindow()
