@@ -6,12 +6,6 @@
 #include <Core/Core.hpp>
 #include <GameFramework/Component.hpp>
 
-class TransformPrivateSignal : public QObject {
-  Q_OBJECT
-signals:
-  void needToUpdate();
-};
-
 class Transform : public Component<Transform>{
 public:
   /**
@@ -19,7 +13,7 @@ public:
    */
   enum class ESpace {
     World, /**< Transformation happens in world space. */
-    Local, /**< Transformation happens in local space. */
+    Local, /**< Transformation happens in local space (relative to parent). */
   };
 
 private:
@@ -49,8 +43,6 @@ private:
 
   Transform*        m_parent   { };
   Array<Transform*> m_children { };
-
-  TransformPrivateSignal m_private_signal { };
 
   UInt32 m_depth { };
 
@@ -339,43 +331,7 @@ public:
    */
   void setPosition(Real x, Real y, Real z, ESpace relativeTo = ESpace::Local);
 
-  /**
-   * Scales a GameObject by s based on current scale.
-   *
-   * If the scale is relative to local space, the scale respects the local orientation.
-   *
-   * If the scale is relative to world space, the scale will be applied directly.
-   *
-   * @param s          [in] scale in Vector3
-   * @param relativeTo [in] determines whether to scale the GameObject either locally to the GameObject or relative to
-   *                        the Scene in world space.
-   */
-  void scale(const Vec3& s, ESpace relativeTo);
-
-  /**
-   * Scales a GameObject by s based on current scale.
-   * @param xScale
-   * @param yScale
-   * @param zScale
-   * @param relativeTo
-   */
-  void scale(Real xScale, Real yScale, Real zScale, ESpace relativeTo = ESpace::Local);
-
-  /**
-   * Modifies directly Transform's scale.
-   * @param s Vec3 [in] new scale in Vec3.
-   * @param relativeTo
-   */
-  void setScale(const Vec3& s, ESpace relativeTo = ESpace::Local);
-
-  /**
-   *
-   * @param xScale     [in]
-   * @param yScale
-   * @param zScale
-   * @param relativeTo
-   */
-  void setScale(Real xScale, Real yScale, Real zScale, ESpace relativeTo = ESpace::Local);
+  void setLocalScale(const Vec3& s);
 
   /**
    * Rotates the transform so the forward vector points at target's current position.

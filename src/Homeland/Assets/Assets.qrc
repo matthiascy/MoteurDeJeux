@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/Assets">
-        <file alias="cursor64">./cursor64.png</file>
-        <file alias="cursor48">./cursor48.png</file>
+        <file alias="cursor">./cursor.png</file>
     </qresource>
 </RCC>

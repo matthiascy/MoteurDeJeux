@@ -9,7 +9,7 @@ HomelandApp::HomelandApp(int argc, char** argv)
   : GameApp("家·Homeland", "Strategy island defense game.", {1024, 768}, argc, argv),
     m_main_scene{nullptr}
 {
-  QCursor cursor(QPixmap(":/Assets/cursor48"), 0, 0);
+  QCursor cursor(QPixmap(":/Assets/cursor"), 0, 0);
   QApplication::setOverrideCursor(cursor);
 }
 
@@ -33,23 +33,31 @@ bool HomelandApp::_init_main_scene()
 
   auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
   auto* cameraTransform = camera->transform();
-  cameraTransform->setPosition(0, 0, 50, Transform::ESpace::World);
+  qDebug() << cameraTransform->worldPosition();
+  cameraTransform->setPosition({0, 20, 50}, Transform::ESpace::World);
   cameraTransform->lookAt({0, 0, 0}, cameraTransform->up());
-  m_engine->componentManager()->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 1, 1000);
+  m_engine->componentManager()->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 1, 10000);
   auto* behaviorCamera = m_engine->componentManager()->addComponent<Behavior>("behavior", camera);
   behaviorCamera->setUpdateFn(HomelandBehaviors::cameraBehavior);
 
 
-  auto* sphere = m_main_scene->createGameObject("Sphere", "default");
-  sphere->transform()->translateWorld(-4, 0, 0);
-  auto* meshRenderer00 = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", sphere, m_assets["Sphere"]);
-  auto* behaviorSphere = m_engine->componentManager()->addComponent<Behavior>("behavior", sphere);
-  behaviorSphere->setUpdateFn(HomelandBehaviors::exampleBehavior);
+  auto* sun = m_main_scene->createGameObject("Sun", "default");
+  auto* meshRendererSun = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", sun, m_assets["Sphere"]);
+  auto* behaviorSun = m_engine->componentManager()->addComponent<Behavior>("behavior", sun);
+  behaviorSun->setUpdateFn(HomelandBehaviors::exampleBehavior);
+  sun->transform()->setWorldPosition({0, 0, 0});
 
+  auto* earth = m_main_scene->createGameObject("Earth", "default");
+  earth->transform()->setParent(sun->transform());
+  earth->transform()->translateWorld({2, 2, 2});
+  auto* meshRendererEarth = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer", earth, m_assets["Sphere"]);
+  auto* behaviorEarth = m_engine->componentManager()->addComponent<Behavior>("behavior", earth);
+  behaviorEarth->setUpdateFn([](GameObject* self, Engine* engine, Real dt){
+    self->transform()->rotateLocal(0, 90 * dt, 0);
+  });
 
-  qDebug() << sphere->transform()->worldPosition();
-  auto* sphere2 = m_main_scene->createGameObject("Sphere2", "default");
-  sphere2->transform()->setParent(sphere->transform());
-  sphere2->transform()->translateWorld(4, 0, 0);
-  auto* meshRenderer01 = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer01", sphere2, m_assets["Sphere"]);
+  auto* moon = m_main_scene->createGameObject("Moon", "default");
+  moon->transform()->setParent(earth->transform());
+  moon->transform()->translateWorld({5, 5, 5});
+  auto* meshRendererMoon = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer01", moon, m_assets["Sphere"]);
 }

@@ -16,7 +16,6 @@ class Scene;
 // TODO: final
 
 class GameObject : public Object {
-  Q_OBJECT
 
   using ComponentHandle = Handle;
 
@@ -119,6 +118,5 @@ T* GameObject::getComponentInChildren() const
       return c->gameObject()->getComponent<T>();
   }
 }
-
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP */

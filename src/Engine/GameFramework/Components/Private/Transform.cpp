@@ -8,9 +8,6 @@ Transform::Transform(const String& name, GameObject* gameObject, Transform* pare
     m_local_to_world_matrix{}, m_world_to_local_matrix{},
     m_parent{parent}, m_children{}
 {
-  QObject::connect(&m_private_signal, &TransformPrivateSignal::needToUpdate, [this](){
-    _update();
-  });
   _update();
 }
 
@@ -102,7 +99,7 @@ void Transform::setParent(Transform* parent)
     }
   }
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 Transform* Transform::root()
@@ -142,7 +139,7 @@ void Transform::setLocalEulerAngles(Real xAngle, Real yAngle, Real zAngle)
 {
   m_local_rotation = Quat::fromEulerAngles(xAngle, yAngle, zAngle);
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::setWorldEulerAngles(const Vec3 &angles)
@@ -159,7 +156,7 @@ void Transform::setWorldEulerAngles(Real xAngle, Real yAngle, Real zAngle)
     m_local_rotation = inv_parent * m_local_rotation;
   }
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::rotate(const Quat& q, ESpace relativeTo)
@@ -174,7 +171,7 @@ void Transform::rotate(const Quat& q, ESpace relativeTo)
     } break;
   }
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::rotate(Real xAngle, Real yAngle, Real zAngle, ESpace relativeTo)
@@ -199,7 +196,7 @@ void Transform::rotateWorld(const Quat& q)
     m_local_rotation = q * m_local_rotation;
   }
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::rotateLocal(Real xAngle, Real yAngle, Real zAngle)
@@ -211,7 +208,7 @@ void Transform::rotateLocal(const Quat& q)
 {
   m_local_rotation = m_local_rotation * q;
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::setRotation(const Quat& q, ESpace relativeTo)
@@ -231,14 +228,14 @@ void Transform::setLocalRotation(const Quat& q)
 {
   m_local_rotation = q;
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::setWorldRotation(const Quat& q)
 {
   if (!m_parent) {
 
-    m_world_rotation = q;
+    m_local_rotation = q;
 
   } else {
 
@@ -247,7 +244,7 @@ void Transform::setWorldRotation(const Quat& q)
 
   }
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::setRotation(Real xAngle, Real yAngle, Real zAngle, ESpace relativeTo)
@@ -255,44 +252,11 @@ void Transform::setRotation(Real xAngle, Real yAngle, Real zAngle, ESpace relati
   setRotation(Quat::fromEulerAngles(xAngle, yAngle, zAngle), relativeTo);
 }
 
-void Transform::scale(const Vec3& s, ESpace relativeTo)
+void Transform::setLocalScale(const Vec3& s)
 {
-  switch (relativeTo) {
-    case ESpace::Local: {
-      m_local_scale *= m_world_rotation * s;
-    } break;
+  m_local_scale = s;
 
-    case ESpace::World: {
-      m_local_scale *= s;
-    } break;
-  }
-
-  emit m_private_signal.needToUpdate();
-}
-
-void Transform::scale(Real xScale, Real yScale, Real zScale, ESpace relativeTo)
-{
-  return scale({xScale, yScale, zScale}, relativeTo);
-}
-
-void Transform::setScale(const Vec3& s, ESpace relativeTo)
-{
-  switch (relativeTo) {
-    case ESpace::Local: {
-      m_local_scale = m_world_rotation * s;
-    } break;
-
-    case ESpace::World: {
-      m_local_scale = s;
-    } break;
-  }
-
-  emit m_private_signal.needToUpdate();
-}
-
-void Transform::setScale(Real xScale, Real yScale, Real zScale, ESpace relativeTo)
-{
-  return setScale({xScale, yScale, zScale}, relativeTo);
+  _update();
 }
 
 void Transform::translate(const Vec3& t, ESpace relativeTo)
@@ -307,7 +271,7 @@ void Transform::translate(const Vec3& t, ESpace relativeTo)
     } break;
   }
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::translate(Real xTranslate, Real yTranslate, Real zTranslate, ESpace relativeTo)
@@ -329,7 +293,7 @@ void Transform::translateLocal(const Vec3& t)
 {
   m_local_position += m_local_rotation.rotatedVector(t);
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::translateLocal(Real x, Real y, Real z)
@@ -341,13 +305,11 @@ void Transform::setLocalPosition(const Vec3& p)
 {
   m_local_position = p;
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::setWorldPosition(const Vec3& p)
 {
-  m_world_position = p;
-
   if (!m_parent) {
     m_local_position = p;
   } else {
@@ -355,7 +317,7 @@ void Transform::setWorldPosition(const Vec3& p)
     m_local_position = inv_parent * p;
   }
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::setPosition(const Vec3& p, ESpace relativeTo)
@@ -370,7 +332,7 @@ void Transform::setPosition(const Vec3& p, ESpace relativeTo)
     } break;
   }
 
-  emit m_private_signal.needToUpdate();
+  _update();
 }
 
 void Transform::setPosition(Real x, Real y, Real z, ESpace relativeTo)

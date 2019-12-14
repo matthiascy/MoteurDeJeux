@@ -123,7 +123,7 @@ set(EngineSrc
     GameFramework/Components/Private/PerspectiveCamera.cpp
     GameFramework/Components/PerspectiveCamera.hpp
     Graphics/OglTypes.hpp
-    GameFramework/Components.hpp GameFramework/Managers/Private/SceneManager.cpp GameFramework/Managers/SceneManager.hpp GameFramework/Managers/Private/ComponentManager.cpp GameFramework/Managers/ComponentManager.hpp GameFramework/Types.hpp GameFramework/TypeID.hpp GameFramework/TypeID.hpp GameFramework/Private/AbstractComponent.cpp GameFramework/AbstractComponent.hpp GameFramework/Systems/Private/BehaviorSystem.cpp GameFramework/Systems/BehaviorSystem.hpp)
+    GameFramework/Components.hpp GameFramework/Managers/Private/SceneManager.cpp GameFramework/Managers/SceneManager.hpp GameFramework/Managers/Private/ComponentManager.cpp GameFramework/Managers/ComponentManager.hpp GameFramework/Types.hpp GameFramework/TypeID.hpp GameFramework/TypeID.hpp GameFramework/Private/AbstractComponent.cpp GameFramework/AbstractComponent.hpp GameFramework/Systems/Private/BehaviorSystem.cpp GameFramework/Systems/BehaviorSystem.hpp Graphics/Private/MaterialData.cpp Graphics/MaterialData.hpp GameFramework/Components/Private/Material.cpp GameFramework/Components/Material.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 
