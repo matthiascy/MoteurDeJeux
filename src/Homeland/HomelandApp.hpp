@@ -5,6 +5,7 @@
 #include <GameFramework/Assets/AssetManager.hpp>
 
 class Scene;
+class GameObject;
 
 class HomelandApp : public GameApp {
 private:
@@ -13,17 +14,15 @@ private:
 
 public:
   HomelandApp(int argc, char** argv);
-  ~HomelandApp() override = default;
-  void init();
 
-  void onUpdate() override;
+  ~HomelandApp() override = default;
+
+  void init();
 
 private:
   bool _init_main_scene();
 
   void _load_game_asset();
-
-  void _camera_control();
 };
 
 

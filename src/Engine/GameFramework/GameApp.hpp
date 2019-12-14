@@ -53,8 +53,6 @@ public:
 
   void quit();
 
-  virtual void onUpdate() { };
-
 public:
   bool eventFilter(QObject* object, QEvent* event) override;
 

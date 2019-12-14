@@ -12,7 +12,7 @@ protected:
 
 public:
   Object() = delete;
-  explicit Object(const String& name, Object* parent = nullptr);
+  explicit Object(const String& name, Object* parent);
   ~Object() override = default;
 
   [[nodiscard]]

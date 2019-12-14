@@ -7,8 +7,7 @@
 #include <GameFramework/Component.hpp>
 
 class TransformPrivateSignal : public QObject {
-Q_OBJECT
-
+  Q_OBJECT
 signals:
   void needToUpdate();
 };

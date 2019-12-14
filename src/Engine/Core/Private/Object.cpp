@@ -8,7 +8,7 @@ Object::Object(const String& name, Object* parent)
   setObjectName(name);
 }
 
-inline StringView Object::name() const
+StringView Object::name() const
 {
   return objectName();
 }

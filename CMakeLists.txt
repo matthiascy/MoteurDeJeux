@@ -29,7 +29,7 @@ qt5_add_resources(Assets src/Homeland/Assets/Assets.qrc)
 set(HomelandSrc
     src/Homeland/Main.cpp
     src/Homeland/Private/HomelandApp.cpp
-    src/Homeland/HomelandApp.hpp)
+    src/Homeland/HomelandApp.hpp src/Homeland/HomelandBehaviors.cpp src/Homeland/HomelandBehaviors.hpp)
 
 add_executable(Homeland ${HomelandSrc} ${Assets})
 

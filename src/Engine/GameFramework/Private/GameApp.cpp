@@ -147,19 +147,20 @@ void GameApp::run()
     /** Systems' pre update */
     m_engine->inputSystem()->preUpdate(frameTime);
     m_engine->renderSystem()->preUpdate(frameTime);
+    m_engine->behaviorSystem()->preUpdate(frameTime);
+
 
     m_engine->inputSystem()->update(frameTime);
+    m_engine->behaviorSystem()->update(frameTime);
 
     /** Systems' fixed update */
     while (frameTime > 0.0) {
       float deltaTime = std::min(frameTime, m_dt);
       m_engine->inputSystem()->fixedUpdate(deltaTime);
+      m_engine->behaviorSystem()->fixedUpdate(deltaTime);
       //m_engine->physicsSystem()->fixedUpdate(deltaTime);
       frameTime -= deltaTime;
     }
-
-    /** Game logic */
-    onUpdate();
 
     m_engine->renderSystem()->update(frameTime);
 

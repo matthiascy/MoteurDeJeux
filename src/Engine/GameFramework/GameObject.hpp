@@ -7,8 +7,8 @@
 #include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <GameFramework/Assets/AssetsTypes.hpp>
-#include "AbstractComponent.hpp"
 #include <GameFramework/Components/Transform.hpp>
+#include "AbstractComponent.hpp"
 
 class Scene;
 
