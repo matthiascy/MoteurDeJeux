@@ -67,11 +67,11 @@ struct Math {
 
   static Quat extractRotation(const Mat4& mat);
 
-  static Vec3 axisX(const Mat4& mat);
+  static Vec3 extractAxisX(const Mat4& mat);
 
-  static Vec3 axisY(const Mat4& mat);
+  static Vec3 extractAxisY(const Mat4& mat);
 
-  static Vec3 axisZ(const Mat4& mat);
+  static Vec3 extractAxisZ(const Mat4& mat);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_MATH_MATH_HPP */

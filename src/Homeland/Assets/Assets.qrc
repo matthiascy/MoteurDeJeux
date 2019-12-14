@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/Assets">
         <file alias="cursor">./cursor.png</file>
+        <file alias="checker000">./checker000.jpg</file>
+    </qresource>
+    <qresource prefix="/Models">
+        <file alias="cube">./models/cube.obj</file>
     </qresource>
 </RCC>

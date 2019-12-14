@@ -3,7 +3,6 @@
 
 Transform::Transform(const String& name, GameObject* gameObject, Transform* parent, const Vec3& localPosition, const Quat& localRotation, const Vec3& localScale)
   : Component<Transform>(name, gameObject),
-    m_world_position{}, m_world_rotation{}, m_world_scale{},
     m_local_position{localPosition}, m_local_rotation{localRotation}, m_local_scale{localScale},
     m_local_to_world_matrix{}, m_world_to_local_matrix{},
     m_parent{parent}, m_children{}
@@ -13,7 +12,7 @@ Transform::Transform(const String& name, GameObject* gameObject, Transform* pare
 
 Vec3 Transform::worldPosition() const
 {
-  return m_world_position;
+  return Math::extractTranslation(m_world_matrix);
 }
 
 Vec3 Transform::localPosition() const
@@ -23,7 +22,7 @@ Vec3 Transform::localPosition() const
 
 Quat Transform::worldRotation() const
 {
-  return m_world_rotation;
+  return Math::extractRotation(m_world_matrix);
 }
 
 Quat Transform::localRotation() const
@@ -33,7 +32,7 @@ Quat Transform::localRotation() const
 
 Vec3 Transform::worldScale() const
 {
-  return m_world_scale;
+  return Math::extractScale(m_world_matrix);
 }
 
 Vec3 Transform::localScale() const
@@ -53,19 +52,22 @@ Mat4 Transform::localMatrix() const
 
 Vec3 Transform::right() const
 {
-  return Vec3{worldMatrix().column(0)}.normalized();
+  return Math::extractAxisX(m_world_matrix).normalized();
+  //return Vec3{worldMatrix().column(0)}.normalized();
   //return (m_world_rotation * Math::Right).normalized();
 }
 
 Vec3 Transform::up() const
 {
-  return Vec3{worldMatrix().column(1)}.normalized();
+  return Math::extractAxisY(m_world_matrix).normalized();
+  //return Vec3{worldMatrix().column(1)}.normalized();
   //return (m_world_rotation * Math::Up).normalized();
 }
 
 Vec3 Transform::forward() const
 {
-  return Vec3{worldMatrix().column(2)}.normalized();
+  return Math::extractAxisZ(m_world_matrix).normalized();
+  //return Vec3{worldMatrix().column(2)}.normalized();
   //return (m_world_rotation * Math::Forward).normalized();
 }
 
@@ -119,7 +121,7 @@ UInt32 Transform::depth() const
 Vec3 Transform::worldEulerAngles() const
 {
   Vec3 out;
-  m_world_rotation.getEulerAngles(&out[0], &out[1], &out[2]);
+  worldRotation().getEulerAngles(&out[0], &out[1], &out[2]);
   return out;
 }
 
@@ -324,7 +326,7 @@ void Transform::setPosition(const Vec3& p, ESpace relativeTo)
 {
   switch (relativeTo) {
     case ESpace::Local: {
-      m_local_position = m_world_rotation * p;
+      m_local_position = worldRotation() * p;
     } break;
 
     case ESpace::World: {
@@ -412,10 +414,6 @@ void Transform::_update()
     m_world_matrix = m_local_matrix;
 
   }
-
-  m_world_position = Math::extractTranslation(m_world_matrix);
-  m_world_rotation = Math::extractRotation(m_world_matrix);
-  m_world_scale = Math::extractScale(m_world_matrix);
 
   if (!m_children.isEmpty()) {
     for (auto* child : m_children) {

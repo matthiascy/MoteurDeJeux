@@ -60,7 +60,7 @@ Vec3 Math::extractTranslation(const Mat4& mat)
 
 Vec3 Math::extractScale(const Mat4& mat)
 {
-  return {axisX(mat).length(), axisY(mat).length(), axisZ(mat).length()};
+  return {extractAxisX(mat).length(), extractAxisY(mat).length(), extractAxisZ(mat).length()};
 }
 
 Quat Math::extractRotation(const Mat4& mat)
@@ -71,19 +71,19 @@ Quat Math::extractRotation(const Mat4& mat)
   return Quat::fromRotationMatrix(Mat3(data));
 }
 
-Vec3 Math::axisX(const Mat4& mat)
+Vec3 Math::extractAxisX(const Mat4& mat)
 {
   Vec4 v = mat.column(0);
   return {v.x(), v.y(), v.z()};
 }
 
-Vec3 Math::axisY(const Mat4& mat)
+Vec3 Math::extractAxisY(const Mat4& mat)
 {
   Vec4 v = mat.column(1);
   return {v.x(), v.y(), v.z()};
 }
 
-Vec3 Math::axisZ(const Mat4& mat)
+Vec3 Math::extractAxisZ(const Mat4& mat)
 {
   Vec4 v = mat.column(2);
   return {v.x(), v.y(), v.z()};

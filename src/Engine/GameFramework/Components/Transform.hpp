@@ -18,21 +18,14 @@ public:
 
 private:
 
-  ///@{
   /** World-space properties. */
-  Vec3 m_world_position     { };
-  Quat m_world_rotation     { };
-  Vec3 m_world_scale        {1, 1, 1};
   Vec3 m_world_euler_angles { };
-  ///@}
 
-  ///@{
   /** Local-space properties of transform. */
   Vec3 m_local_position     { };
   Quat m_local_rotation     { };
   Vec3 m_local_scale        {1, 1, 1};
   Vec3 m_local_euler_angles { };
-  ///@}
 
   Mat4 m_local_matrix  { };
   Mat4 m_world_matrix  { };

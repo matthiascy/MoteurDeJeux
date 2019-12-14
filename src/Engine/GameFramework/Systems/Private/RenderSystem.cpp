@@ -41,10 +41,11 @@ void RenderSystem::init()
 
   m_fns = m_surface->fns();
 
-  m_textures.insert(0, new OglTexture(Image(":/Textures/sun").mirrored()));
-  m_textures.insert(1, new OglTexture(Image(":/Textures/mercury").mirrored()));
-  m_textures.insert(2, new OglTexture(Image(":/Textures/venus").mirrored()));
-  m_textures.insert(3, new OglTexture(Image(":/Textures/earth").mirrored()));
+  m_textures.insert(0, new OglTexture(Image(":/Assets/checker000").mirrored()));
+  m_textures.insert(1, new OglTexture(Image(":/Textures/sun").mirrored()));
+  m_textures.insert(2, new OglTexture(Image(":/Textures/mercury").mirrored()));
+  m_textures.insert(3, new OglTexture(Image(":/Textures/venus").mirrored()));
+  m_textures.insert(4, new OglTexture(Image(":/Textures/earth").mirrored()));
 
   const char* vert_shader = "#version 330 core\n"
                             "\n"
@@ -88,7 +89,7 @@ void RenderSystem::init()
                             "vec3 col   = clamp(color* 0.2 + color * 0.8 * NL, 0.0, 1.0f);"
                             "void main()\n"
                             "{\n"
-                            "    pixelColor = vec4(col, 1.0);\n"
+                            "    pixelColor = vec4(col, 1.0); //texture2D(texture0, aTexCoord);\n"
                             "}";
 
   m_programs.insert(0,new OglProgram);

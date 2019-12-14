@@ -24,6 +24,8 @@ void HomelandApp::_load_game_asset()
   m_assets.insert("Sphere", m_engine->assetManager()->loadMesh("./assets/models/sphere.obj"));
   m_assets.insert("Klingon", m_engine->assetManager()->loadMesh("./assets/models/klingon.off"));
   m_assets.insert("TreeType001", m_engine->assetManager()->loadMesh("./assets/models/TreeType001.dae"));
+  //m_assets.insert("TreeType001", m_engine->assetManager()->loadMesh("./assets/models/TreeType001.dae"));
+  m_assets.insert("Cube", m_engine->assetManager()->loadMesh("./Models/cube"));
   m_engine->assetManager()->getMesh(m_assets["Sphere"])->calculateSphericalUV();
 }
 
@@ -34,13 +36,20 @@ bool HomelandApp::_init_main_scene()
   auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
   auto* cameraTransform = camera->transform();
   qDebug() << cameraTransform->worldPosition();
-  cameraTransform->setPosition({0, 20, 50}, Transform::ESpace::World);
+  cameraTransform->setPosition({0, 0, 30}, Transform::ESpace::World);
   cameraTransform->lookAt({0, 0, 0}, cameraTransform->up());
   m_engine->componentManager()->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 1, 10000);
-  auto* behaviorCamera = m_engine->componentManager()->addComponent<Behavior>("behavior", camera);
-  behaviorCamera->setUpdateFn(HomelandBehaviors::cameraBehavior);
+  //auto* behaviorCamera = m_engine->componentManager()->addComponent<Behavior>("behavior", camera);
+  //behaviorCamera->setUpdateFn(HomelandBehaviors::cameraBehavior);
+
+  auto* cube = m_main_scene->createGameObject("Cube", "default");
+  auto* meshRendererCube = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", cube, m_assets["Sphere"]);
+  auto* behaviorCube = m_engine->componentManager()->addComponent<Behavior>("behavior", cube);
+  behaviorCube->setUpdateFn(HomelandBehaviors::exampleBehavior);
+  cube->transform()->setWorldPosition({4, 0, 4});
 
 
+  /*
   auto* sun = m_main_scene->createGameObject("Sun", "default");
   auto* meshRendererSun = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", sun, m_assets["Sphere"]);
   auto* behaviorSun = m_engine->componentManager()->addComponent<Behavior>("behavior", sun);
@@ -60,4 +69,5 @@ bool HomelandApp::_init_main_scene()
   moon->transform()->setParent(earth->transform());
   moon->transform()->translateWorld({5, 5, 5});
   auto* meshRendererMoon = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer01", moon, m_assets["Sphere"]);
+   */
 }
