@@ -6,26 +6,15 @@
 #include <Core/Core.hpp>
 #include <GameFramework/Component.hpp>
 
+// TODO: lookAt fix, not always correct.
+
 class Transform : public Component<Transform>{
-public:
-  /**
-   * Transformation space.
-   */
-  enum class ESpace {
-    World, /**< Transformation happens in world space. */
-    Local, /**< Transformation happens in local space (relative to parent). */
-  };
-
 private:
-
   /** World-space properties. */
-  Vec3 m_world_euler_angles { };
-
-  /** Local-space properties of transform. */
+  /** Local-space properties of transform. (relative to parent). */
   Vec3 m_local_position     { };
   Quat m_local_rotation     { };
   Vec3 m_local_scale        {1, 1, 1};
-  Vec3 m_local_euler_angles { };
 
   Mat4 m_local_matrix  { };
   Mat4 m_world_matrix  { };
@@ -184,100 +173,63 @@ public:
   UInt32 depth() const;
 
   /**
-   * Get the world space rotation in Euler angle form. The order of the returned Euler angle is XYZ.
-   * @return the world space rotation of the Transform in Euler angle form.
-   */
-  [[nodiscard]]
-  Vec3 worldEulerAngles() const;
-
-  /**
-   * Get the local space rotation in Euler angle form. The order of the returned Euler angle is XYZ.
-   * @return the local space rotation of the Transform in Euler angle form.
-   */
-  [[nodiscard]]
-  Vec3 localEulerAngles() const;
-
-  /**
-   * Sets the local space rotation of Transform using euler angles in degrees.
-   *
-   * Eulers are interpreted in XYZ order.
-   *
-   * @param xAngle [in] rotation around x-axis of local space in degrees.
-   * @param yAngle [in] rotation around y-axis of local space in degrees.
-   * @param zAngle [in] rotation around z-axis of local space in degrees.
-   */
-  void setLocalEulerAngles(Real xAngle, Real yAngle, Real zAngle);
-
-  /**
-   * Sets the local space rotation of Transform using euler angles in degrees.
-   *
-   * @param angles [in] rotation containing the rotation of 3 axis in degrees.
-   */
-  void setLocalEulerAngles(const Vec3& angles);
-
-  /**
-   * Sets the world space rotation of Transform using euler angles in degrees.
-   *
-   * Eulers are interpreted in XYZ order.
-   *
-   * @param xAngle [in] rotation around x-axis of world space in degrees.
-   * @param yAngle [in] rotation around y-axis of world space in degrees.
-   * @param zAngle [in] rotation around z-axis of world space in degrees.
-   */
-  void setWorldEulerAngles(Real xAngle, Real yAngle, Real zAngle);
-
-  /**
-   * Sets the world space rotation of Transform using euler angles in degrees.
-   *
-   * @param angles [in] rotation containing the rotation of 3 axis in degrees.
-   */
-  void setWorldEulerAngles(const Vec3& angles);
-
-  /**
    * Rotate a GameObject by a quaternion.
    * @param q          [in] the rotation represented by a quaternion.
    * @param relativeTo [in] determines whether to rotate the GameObject either locally to the GameObject or relative
-   *                        to the Scene in world space.
+   *                        to the Scene in world space.  When rotating in world space, GameObject's
+   *                         x, y, and z axes are aligned with the x, y and z world axes.
    */
-  void rotate(const Quat& q, ESpace relativeTo = ESpace::Local);
+  void rotate(const Quat& q, ESpace relativeTo);
 
   /**
-   * Rotate a GameObject by angles of 3 axis.
-   * @param xAngle     [in]
-   * @param yAngle     [in]
-   * @param zAngle     [in]
-   * @param relativeTo [in] determines whether to rotate the GameObject either locally to the GameObject or relative to
-   *                        the Scene in world space.
+   * Rotate a GameObject by EulerAngles(XYZ).
+   * @param eulerAngles [in] rotation angles in different axes.
+   * @param relativeTo  [in] determines whether to rotate the GameObject either locally to the GameObject
+   *                         or relative to the Scene in world space. When rotating in world space, GameObject's
+   *                         x, y, and z axes are aligned with the x, y and z world axes.
    */
-  void rotate(Real xAngle, Real yAngle, Real zAngle, ESpace relativeTo = ESpace::Local);
-
-  void rotateWorld(Real xAngle, Real yAngle, Real zAngle);
-
-  void rotateWorld(const Quat& q);
-
-  void rotateLocal(Real xAngle, Real yAngle, Real zAngle);
-
-  void rotateLocal(const Quat& q);
-
-  void setLocalRotation(const Quat& q);
-
-  void setWorldRotation(const Quat& q);
+  void rotate(const EulerAngles& eulerAngles, ESpace relativeTo);
 
   /**
-   *
-   * @param q
-   * @param relativeTo
+   * Rotate a GameObject by an axis and an angle.
+   * @param axis       [in] rotation axis.
+   * @param angle      [in] rotation angle.
+   * @param relativeTo [in] determines whether to rotate the GameObject either locally to the GameObject
+   *                        or relative to the Scene in world space. When rotating in world space, GameObject's
+   *                        x, y, and z axes are aligned with the x, y and z world axes.
    */
-  void setRotation(const Quat& q, ESpace relativeTo = ESpace::Local);
+  void rotate(const Vec3& axis, Real angle, ESpace relativeTo);
 
   /**
-   *
+   * Rotates the transform about axis passing through point in world coordinates by angle degrees.
+   * This modifies both the position and the rotation of the transform.
+   * @param target [in]
+   * @param axis   [in]
+   * @param angle  [in]
+   */
+  void rotateAround(const Vec3& target, const Vec3& axis, float angle);
+
+  void rotateAround(const Vec3& target, const Quat& q);
+
+  void rotateAround(const Vec3& target, EulerAngles& eulerAngles);
+
+  /**
+   * Set directly Transform's rotation.
+   * @param q          [in] rotation in Quaternion representation.
+   * @param relativeTo [in] determines whether to rotate the GameObject either locally to the GameObject
+   *                        or relative to the Scene in world space. When rotating in world space, GameObject's
+   *                        x, y, and z axes are aligned with the x, y and z world axes.
+   */
+  void setRotation(const Quat& q, ESpace relativeTo);
+
+  /**
+   * Set directly Transform's rotation.
    * @param xAngle
    * @param yAngle
    * @param zAngle
    * @param relativeTo
    */
-  void setRotation(Real xAngle, Real yAngle, Real zAngle, ESpace relativeTo = ESpace::Local);
+  void setRotation(const EulerAngles& eulerAngles, ESpace relativeTo);
 
   /**
    * Translate a GameObject by t.
@@ -290,39 +242,9 @@ public:
    * @param relativeTo [in] determines whether to translate the GameObject either locally to the GameObject or relative
    *                        to the Scene in world space.
    */
-  void translate(const Vec3& t, ESpace relativeTo = ESpace::Local);
-
-  /**
-   *
-   * @param x          [in]
-   * @param y          [in]
-   * @param z          [in]
-   * @param relativeTo [in]
-   */
-  void translate(Real xTranslate, Real yTranslate, Real zTranslate, ESpace relativeTo = ESpace::Local);
-
-  void translateWorld(const Vec3& t);
-
-  void translateWorld(Real x, Real y, Real z);
-
-  void translateLocal(const Vec3& t);
-
-  void translateLocal(Real x, Real y, Real z);
-
-  void setLocalPosition(const Vec3& p);
-
-  void setWorldPosition(const Vec3& p);
+  void translate(const Vec3& t, ESpace relativeTo);
 
   void setPosition(const Vec3& p, ESpace relativeTo);
-
-  /**
-   *
-   * @param x          [in]
-   * @param y          [in]
-   * @param z          [in]
-   * @param relativeTo [in]
-   */
-  void setPosition(Real x, Real y, Real z, ESpace relativeTo = ESpace::Local);
 
   void setLocalScale(const Vec3& s);
 
@@ -357,7 +279,7 @@ public:
   Vec3 transformWorldPositionToLocal(const Vec3& pos) const;
 
   /**
-   * Unparents all children.
+   * Un-parents all children.
    */
   void detachChildren();
 

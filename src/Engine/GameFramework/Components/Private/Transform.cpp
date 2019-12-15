@@ -118,140 +118,78 @@ UInt32 Transform::depth() const
   return m_depth;
 }
 
-Vec3 Transform::worldEulerAngles() const
-{
-  Vec3 out;
-  worldRotation().getEulerAngles(&out[0], &out[1], &out[2]);
-  return out;
-}
-
-Vec3 Transform::localEulerAngles() const
-{
-  Vec3 out;
-  m_local_rotation.getEulerAngles(&out[0], &out[1], &out[2]);
-  return out;
-}
-
-void Transform::setLocalEulerAngles(const Vec3 &angles)
-{
-  setLocalEulerAngles(angles.x(), angles.y(), angles.z());
-}
-
-void Transform::setLocalEulerAngles(Real xAngle, Real yAngle, Real zAngle)
-{
-  m_local_rotation = Quat::fromEulerAngles(xAngle, yAngle, zAngle);
-
-  _update();
-}
-
-void Transform::setWorldEulerAngles(const Vec3 &angles)
-{
-  setWorldEulerAngles(angles.x(), angles.y(), angles.z());
-}
-
-void Transform::setWorldEulerAngles(Real xAngle, Real yAngle, Real zAngle)
-{
-  m_local_rotation = Quat::fromEulerAngles(xAngle, yAngle, zAngle);
-
-  if (m_parent) {
-    Quat inv_parent = m_parent->worldRotation().inverted();
-    m_local_rotation = inv_parent * m_local_rotation;
-  }
-
-  _update();
-}
-
 void Transform::rotate(const Quat& q, ESpace relativeTo)
 {
   switch (relativeTo) {
     case ESpace::Local: {
-      rotateLocal(q);
+      m_local_rotation = m_local_rotation * q;
     } break;
 
     case ESpace::World: {
-      rotateWorld(q);
+      //if (m_parent) {
+      //Quat inv_parent = parent()->worldRotation().inverted();
+      //m_local_rotation = (inv_parent * q) * worldRotation();
+      //} else {
+      m_local_rotation = q * m_local_rotation;
+      //}
     } break;
   }
 
   _update();
 }
 
-void Transform::rotate(Real xAngle, Real yAngle, Real zAngle, ESpace relativeTo)
+void Transform::rotate(const EulerAngles& eulerAngles, ESpace relativeTo)
 {
-  rotate(Quat::fromEulerAngles(xAngle, yAngle, zAngle), relativeTo);
+  rotate(Quat::fromEulerAngles(eulerAngles), relativeTo);
 }
 
-void Transform::rotateWorld(Real xAngle, Real yAngle, Real zAngle)
+void Transform::rotate(const Vec3& axis, Real angle, ESpace relativeTo)
 {
-  rotateWorld(Quat::fromEulerAngles(xAngle, yAngle, zAngle));
+  rotate(Quat::fromAxisAndAngle(axis, angle), relativeTo);
 }
 
-void Transform::rotateWorld(const Quat& q)
+void Transform::rotateAround(const Vec3& target, const Vec3& axis, float angle)
 {
-  if (m_parent) {
-
-    Quat inv_parent = parent()->worldRotation().inverted();
-    m_local_rotation = (inv_parent * q) * worldRotation();
-
-  } else {
-
-    m_local_rotation = q * m_local_rotation;
-  }
-
-  _update();
+  rotateAround(target, Quat::fromAxisAndAngle(axis, angle));
 }
 
-void Transform::rotateLocal(Real xAngle, Real yAngle, Real zAngle)
+void Transform::rotateAround(const Vec3& target, const Quat& q)
 {
-  rotateLocal(Quat::fromEulerAngles(xAngle, yAngle, zAngle));
+  qFatal("Not implemented");
 }
 
-void Transform::rotateLocal(const Quat& q)
+void Transform::rotateAround(const Vec3& target, EulerAngles& eulerAngles)
 {
-  m_local_rotation = m_local_rotation * q;
-
-  _update();
+  rotateAround(target, Quat::fromEulerAngles(eulerAngles));
 }
 
 void Transform::setRotation(const Quat& q, ESpace relativeTo)
 {
   switch (relativeTo) {
     case ESpace::Local: {
-      setLocalRotation(q);
+      m_local_rotation = q;
     } break;
 
     case ESpace::World: {
-      setWorldRotation(q);
+      if (!m_parent) {
+
+        m_local_rotation = q;
+
+      } else {
+
+        Quat inv_parent = parent()->worldRotation().inverted();
+        m_local_rotation = inv_parent * q;
+
+      }
     } break;
   }
-}
-
-void Transform::setLocalRotation(const Quat& q)
-{
-  m_local_rotation = q;
 
   _update();
 }
 
-void Transform::setWorldRotation(const Quat& q)
+void Transform::setRotation(const EulerAngles& eulerAngles, ESpace relativeTo)
 {
-  if (!m_parent) {
-
-    m_local_rotation = q;
-
-  } else {
-
-    Quat inv_parent = parent()->worldRotation().inverted();
-    m_local_rotation = inv_parent * q;
-
-  }
-
-  _update();
-}
-
-void Transform::setRotation(Real xAngle, Real yAngle, Real zAngle, ESpace relativeTo)
-{
-  setRotation(Quat::fromEulerAngles(xAngle, yAngle, zAngle), relativeTo);
+  setRotation(Quat::fromEulerAngles(eulerAngles), relativeTo);
 }
 
 void Transform::setLocalScale(const Vec3& s)
@@ -265,58 +203,12 @@ void Transform::translate(const Vec3& t, ESpace relativeTo)
 {
   switch (relativeTo) {
     case ESpace::Local: {
-      translateLocal(t);
+      m_local_position += m_local_rotation.rotatedVector(t);
     } break;
 
     case ESpace::World: {
-      translateWorld(t);
+      setPosition(t + worldPosition(), ESpace::World);
     } break;
-  }
-
-  _update();
-}
-
-void Transform::translate(Real xTranslate, Real yTranslate, Real zTranslate, ESpace relativeTo)
-{
-  return translate({xTranslate, yTranslate, zTranslate}, relativeTo);
-}
-
-void Transform::translateWorld(const Vec3& t)
-{
-  setWorldPosition(t + worldPosition());
-}
-
-void Transform::translateWorld(Real x, Real y, Real z)
-{
-  translateWorld({x, y, z});
-}
-
-void Transform::translateLocal(const Vec3& t)
-{
-  m_local_position += m_local_rotation.rotatedVector(t);
-
-  _update();
-}
-
-void Transform::translateLocal(Real x, Real y, Real z)
-{
-  translateLocal({x, y, z});
-}
-
-void Transform::setLocalPosition(const Vec3& p)
-{
-  m_local_position = p;
-
-  _update();
-}
-
-void Transform::setWorldPosition(const Vec3& p)
-{
-  if (!m_parent) {
-    m_local_position = p;
-  } else {
-    Mat4 inv_parent = parent()->worldMatrix().inverted();
-    m_local_position = inv_parent * p;
   }
 
   _update();
@@ -330,16 +222,16 @@ void Transform::setPosition(const Vec3& p, ESpace relativeTo)
     } break;
 
     case ESpace::World: {
-      m_local_position = p;
+      if (!m_parent) {
+        m_local_position = p;
+      } else {
+        Mat4 inv_parent = parent()->worldMatrix().inverted();
+        m_local_position = inv_parent * p;
+      }
     } break;
   }
 
   _update();
-}
-
-void Transform::setPosition(Real x, Real y, Real z, ESpace relativeTo)
-{
-  setPosition({x, y, z}, relativeTo);
 }
 
 void Transform::lookAt(Transform* target, const Vec3 &worldUp)
@@ -349,7 +241,13 @@ void Transform::lookAt(Transform* target, const Vec3 &worldUp)
 
 void Transform::lookAt(const Vec3& worldPos, const Vec3& worldUp)
 {
-  setWorldRotation(Math::lookAtQuaternion(worldPosition(), worldPos, worldUp));
+  Mat4 mat = Math::lookAtMatrix(worldPosition(), worldPos, worldUp);
+  m_local_rotation = Math::extractRotation(mat);
+  if (m_parent) {
+    Quat q = Math::extractRotation(mat);
+    m_local_rotation = q.inverted() * m_local_rotation;
+  }
+  //setRotation(Math::lookAtQuaternion(worldPosition(), worldPos, worldUp), ESpace::World);
 }
 
 Vec3 Transform::transformLocalPositionToWorld(const Vec3& pos) const
@@ -403,7 +301,8 @@ UInt32 Transform::childCount() const
 
 void Transform::_update()
 {
-  m_local_matrix = Math::mat4FromTRS(m_local_position, m_local_rotation, m_local_scale);
+  //m_local_matrix = Math::mat4FromRTS(m_local_position, m_local_rotation, m_local_scale);
+  m_local_matrix = Math::mat4FromSRT(m_local_position, m_local_rotation, m_local_scale);
 
   if (m_parent) {
 

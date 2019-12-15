@@ -44,6 +44,16 @@ Mat4 Math::mat4FromTRS(const Vec3& translation, const Quat& rotation, const Vec3
   return out;
 }
 
+Mat4 Math::mat4FromSRT(const Vec3& translation, const Quat& rotation, const Vec3& scale)
+{
+  Mat4 out;
+  out.translate(translation);
+  out.rotate(rotation);
+  out.scale(scale);
+
+  return out;
+}
+
 Mat4 Math::mat4FromRTS(const Vec3& translation, const Quat& rotation, const Vec3& scale)
 {
   Mat4 out;

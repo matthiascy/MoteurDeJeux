@@ -29,4 +29,14 @@ struct BBox {
   Vec3 size;
 };
 
+/**
+ * Transformation space.
+ */
+enum class ESpace {
+  World, /**< Transformation happens in world space. */
+  Local, /**< Transformation happens in local space. (relative to parent). */
+};
+
+using EulerAngles = Vec3;
+
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_MATH_MATH_TYPES_HPP */
