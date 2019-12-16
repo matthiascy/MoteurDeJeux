@@ -29,19 +29,19 @@ struct Math {
     return Vec3(a, a, a);
   }
 
-  inline static btVector3 toBTVec3(const Vec3& v) {
+  inline static btVector3 toBtVec3(const Vec3& v) {
     return {v.x(), v.y(), v.z()};
   }
 
-  inline static Vec3 fromBTVec3(const btVector3 &v) {
+  inline static Vec3 fromBtVec3(const btVector3 &v) {
     return {v.x(), v.y(), v.z()};
   }
 
-  inline static btQuaternion toBTQuat(const Quat& q) {
+  inline static btQuaternion toBtQuat(const Quat& q) {
     return {q.x(), q.y(), q.z(), q.scalar()};
   }
 
-  inline static Quat fromBTQuat(const btQuaternion& q) {
+  inline static Quat fromBtQuat(const btQuaternion& q) {
     return {q.w(), q.x(), q.y(), q.z()};
   }
 

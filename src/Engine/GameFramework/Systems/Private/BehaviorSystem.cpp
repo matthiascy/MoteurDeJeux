@@ -1,6 +1,8 @@
 #include <GameFramework/Systems/BehaviorSystem.hpp>
 #include <GameFramework/Components/Behavior.hpp>
 #include <GameFramework/Engine.hpp>
+#include <GameFramework/Managers/SceneManager.hpp>
+#include <GameFramework/GameObject.hpp>
 
 BehaviorSystem::BehaviorSystem(const String& name, Engine* engine, Object* parent)
   : System(name, engine, parent)

@@ -2,7 +2,7 @@
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_COMPONENTS_HPP
 
 #include "Components/Behavior.hpp"
-#include "Components/BoxCollider.hpp"
+#include "Engine/GameFramework/Components/Colliders/BoxCollider.hpp"
 #include "Components/Camera.hpp"
 #include "Components/Collider.hpp"
 #include "Components/DirectionalLight.hpp"

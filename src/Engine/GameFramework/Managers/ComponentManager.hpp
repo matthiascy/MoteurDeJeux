@@ -3,8 +3,9 @@
 
 #include <Core/Core.hpp>
 #include <GameFramework/Component.hpp>
-#include <GameFramework/Types.hpp>
 #include <GameFramework/GameObject.hpp>
+#include <GameFramework/Types.hpp>
+#include <GameFramework/Components/Collider.hpp>
 
 // TODO::using handle to retrieve components
 
@@ -67,6 +68,11 @@ T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Ar
     m_game_object_components.insert(gameObject, new ComponentTable);
     m_game_object_components[gameObject]->insert(type, new ComponentContainer);
     (*m_game_object_components[gameObject])[type]->push_back(component);
+  }
+
+  if (is_base_of_template<Collider, T>::value) {
+    gameObject->setRigidBody(component->rigidBody());
+    gameObject->setHasCollider(true);
   }
 
   return component;

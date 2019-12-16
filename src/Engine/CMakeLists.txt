@@ -42,7 +42,6 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Assets/MeshLoader.hpp
 
     ${EngineSrcDir}/GameFramework/Components/Private/Behavior.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/BoxCollider.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Collider.inl
     ${EngineSrcDir}/GameFramework/Components/Private/DirectionalLight.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Light.cpp
@@ -51,8 +50,21 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Components/Private/Transform.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Camera.inl
     ${EngineSrcDir}/GameFramework/Components/Behavior.hpp
-    ${EngineSrcDir}/GameFramework/Components/BoxCollider.hpp
     ${EngineSrcDir}/GameFramework/Components/Collider.hpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/BoxCollider.cpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/BoxCollider.hpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/CapsuleCollider.cpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/CapsuleCollider.hpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/StaticMeshCollider.cpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/StaticMeshCollider.hpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/CylinderCollider.cpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/CylinderCollider.hpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/SphereCollider.cpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/SphereCollider.hpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/ConeCollider.cpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/ConeCollider.hpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/StaticPlaneCollider.cpp
+    ${EngineSrcDir}/GameFramework/Components/Colliders/StaticPlaneCollider.hpp
     ${EngineSrcDir}/GameFramework/Components/DirectionalLight.hpp
     ${EngineSrcDir}/GameFramework/Components/Light.hpp
     ${EngineSrcDir}/GameFramework/Components/MeshRenderer.hpp
@@ -123,7 +135,7 @@ set(EngineSrc
     GameFramework/Components/Private/PerspectiveCamera.cpp
     GameFramework/Components/PerspectiveCamera.hpp
     Graphics/OglTypes.hpp
-    GameFramework/Components.hpp GameFramework/Managers/Private/SceneManager.cpp GameFramework/Managers/SceneManager.hpp GameFramework/Managers/Private/ComponentManager.cpp GameFramework/Managers/ComponentManager.hpp GameFramework/Types.hpp GameFramework/TypeID.hpp GameFramework/TypeID.hpp GameFramework/Private/AbstractComponent.cpp GameFramework/AbstractComponent.hpp GameFramework/Systems/Private/BehaviorSystem.cpp GameFramework/Systems/BehaviorSystem.hpp Graphics/Private/MaterialData.cpp Graphics/MaterialData.hpp GameFramework/Components/Private/Material.cpp GameFramework/Components/Material.hpp)
+    GameFramework/Components.hpp GameFramework/Managers/Private/SceneManager.cpp GameFramework/Managers/SceneManager.hpp GameFramework/Managers/Private/ComponentManager.cpp GameFramework/Managers/ComponentManager.hpp GameFramework/Types.hpp GameFramework/TypeID.hpp GameFramework/TypeID.hpp GameFramework/Private/AbstractComponent.cpp GameFramework/AbstractComponent.hpp GameFramework/Systems/Private/BehaviorSystem.cpp GameFramework/Systems/BehaviorSystem.hpp Graphics/Private/MaterialData.cpp Graphics/MaterialData.hpp GameFramework/Components/Private/Material.cpp     GameFramework/Components/Material.hpp GameFramework/Components/Colliders.hpp GameFramework/Managers.hpp GameFramework/Systems.hpp Physics/RigidBody.cpp Physics/RigidBody.hpp Core/Utils.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 

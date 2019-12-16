@@ -10,10 +10,13 @@
 class Engine;
 
 class PhysicsSystem : public System {
+private:
+  Vec3 m_gravity {Math::Down};
+
 protected:
   btDefaultCollisionConfiguration*     m_config;
   btCollisionDispatcher*               m_dispatcher;
-  btBroadphaseInterface*               m_cache;
+  btBroadphaseInterface*               m_broad_phase;
   btSequentialImpulseConstraintSolver* m_solver;
   btDiscreteDynamicsWorld*             m_world;
 

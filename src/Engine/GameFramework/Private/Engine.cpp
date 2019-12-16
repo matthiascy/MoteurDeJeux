@@ -3,6 +3,8 @@
 #include <GameFramework/GameApp.hpp>
 #include <Editor/EditorMainWindow.hpp>
 #include <GameFramework/Managers/ComponentManager.hpp>
+#include <GameFramework/Managers/SceneManager.hpp>
+#include <GameFramework/Systems/BehaviorSystem.hpp>
 
 Engine::Engine(GameApp* app)
   : m_app{app}
@@ -43,7 +45,7 @@ SceneManager* Engine::sceneManager() const
 bool Engine::init()
 {
   m_render_sys->init();
-  //m_physics_sys->init();
+  m_physics_sys->init();
   m_behavior_sys->init();
   m_input_sys->init();
   return true;
@@ -56,7 +58,7 @@ RenderSystem* Engine::renderSystem() const
 
 PhysicsSystem* Engine::physicsSystem() const
 {
-  return nullptr;//m_physics_sys.get();
+  return m_physics_sys.get();
 }
 
 InputSystem* Engine::inputSystem() const

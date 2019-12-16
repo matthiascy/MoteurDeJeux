@@ -8,10 +8,10 @@
 #include <Graphics/AbstractWindow.hpp>
 
 #include <QtWidgets/QSplashScreen>
-#include <GameFramework/Managers/ComponentManager.hpp>
-#include <GameFramework/Managers/SceneManager.hpp>
-#include <GameFramework/Systems/BehaviorSystem.hpp>
 
+class SceneManager;
+class BehaviorSystem;
+class ComponentManager;
 class GameApp;
 
 class Engine {

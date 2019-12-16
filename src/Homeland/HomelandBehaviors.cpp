@@ -41,8 +41,8 @@ void HomelandBehaviors::cameraBehavior(GameObject* self, Engine* engine, Real dt
 void HomelandBehaviors::exampleBehavior(GameObject* self, Engine* engine, Real dt)
 {
   if (engine->inputSystem()->isKeyPressed(Qt::Key_W)) {
-    qDebug() << "Pos local : " << self->transform()->localPosition();
-    qDebug() << "Pos world : " << self->transform()->worldPosition();
+    //qDebug() << "Pos local : " << self->transform()->localPosition();
+    //qDebug() << "Pos world : " << self->transform()->worldPosition();
     self->transform()->translate({0, 10 * dt, 0}, ESpace::World);
   }
 

@@ -1,9 +1,10 @@
 #include <Engine/GameFramework/Engine.hpp>
-#include <Engine/GameFramework/Scene.hpp>
 #include <Engine/GameFramework/Components.hpp>
 #include <Homeland/HomelandApp.hpp>
 #include <Homeland/HomelandBehaviors.hpp>
 #include <QApplication>
+#include <Engine/GameFramework/Components/Colliders/SphereCollider.hpp>
+#include <Engine/GameFramework/Managers.hpp>
 
 HomelandApp::HomelandApp(int argc, char** argv)
   : GameApp("家·Homeland", "Strategy island defense game.", {1024, 768}, argc, argv),
@@ -45,9 +46,9 @@ bool HomelandApp::_init_main_scene()
   auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
   auto* cameraTransform = camera->transform();
   cameraTransform->setParent(cameraOrbit->transform());
-  qDebug() << cameraTransform->worldPosition();
-  cameraTransform->setPosition({0, 10, 10}, ESpace::World);
-  cameraTransform->lookAt({-2, -2, -2}, cameraTransform->up());
+  //qDebug() << cameraTransform->worldPosition();
+  cameraTransform->setPosition({0, 0, 10}, ESpace::World);
+  cameraTransform->lookAt(Math::Zero, cameraTransform->up());
   m_engine->componentManager()->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 1, 10000);
   auto* behaviorCamera = m_engine->componentManager()->addComponent<Behavior>("behavior", camera);
   behaviorCamera->setUpdateFn(HomelandBehaviors::cameraBehavior);
@@ -55,10 +56,8 @@ bool HomelandApp::_init_main_scene()
   auto* cubeOrbit = m_main_scene->createGameObject("CubeOrbit", "default");
   auto* meshRendererCubeOrbit = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", cubeOrbit, m_assets["Cube"]);
   auto* behaviorCubeOrbit = m_engine->componentManager()->addComponent<Behavior>("behavior", cubeOrbit);
-  //cubeOrbit->transform()->setLocalScale({0.5, 1, 1});
   behaviorCubeOrbit->setUpdateFn([](GameObject* self, Engine* engine, Real dt){
     self->transform()->rotate({0, 0, 10*dt}, ESpace::Local);
-    //self->transform()->translate({0, 0, -dt * 0.1f}, ESpace::Local);
   });
 
   auto* cube = m_main_scene->createGameObject("Cube", "default");
@@ -67,10 +66,10 @@ bool HomelandApp::_init_main_scene()
   cube->transform()->rotate({90, 0, 0}, ESpace::Local);
   auto* behaviorCube = m_engine->componentManager()->addComponent<Behavior>("behavior", cube);
   //behaviorCube->setUpdateFn(HomelandBehaviors::exampleBehavior);
-  qDebug() << "Local scale" << cube->transform()->localScale();
-  qDebug() << "World scale" << cube->transform()->worldScale();
-  qDebug() << "Local pos" << cube->transform()->localPosition();
-  qDebug() << "World pos" << cube->transform()->worldPosition();
+  //qDebug() << "Local scale" << cube->transform()->localScale();
+  //qDebug() << "World scale" << cube->transform()->worldScale();
+  //qDebug() << "Local pos" << cube->transform()->localPosition();
+  //qDebug() << "World pos" << cube->transform()->worldPosition();
   behaviorCube->setUpdateFn([](GameObject* self, Engine* engine, Real dt){
     if (engine->inputSystem()->isKeyPressed(Qt::Key_E)) {
       self->transform()->rotate({0, 0, 90 * dt}, ESpace::Local);
@@ -84,51 +83,54 @@ bool HomelandApp::_init_main_scene()
     }
 
     if (engine->inputSystem()->isKeyPressed(Qt::Key_O)) {
-      qDebug() << "Set Rotate local";
+      //qDebug() << "Set Rotate local";
       self->transform()->setRotation({0, 0, 40}, ESpace::Local);
-      qDebug() << self->transform()->localRotation();
-      qDebug() << self->transform()->worldRotation();
+      //qDebug() << self->transform()->localRotation();
+      //qDebug() << self->transform()->worldRotation();
       //self->transform()->rotate({0, 0, 60 * dt}, ESpace::Local);
     }
 
     if (engine->inputSystem()->isKeyPressed(Qt::Key_P)) {
-      qDebug() << "Set Rotate world";
+      //qDebug() << "Set Rotate world";
       //self->transform()->rotate({0, 0, 60 * dt}, ESpace::World);
       self->transform()->setRotation({0, 0, 60}, ESpace::World);
-      qDebug() << self->transform()->localRotation();
-      qDebug() << self->transform()->worldRotation();
+      //qDebug() << self->transform()->localRotation();
+      //qDebug() << self->transform()->worldRotation();
     }
 
     if (engine->inputSystem()->isKeyPressed(Qt::Key_K)) {
-      qDebug() << "Translate local";
+      //qDebug() << "Translate local";
       self->transform()->translate({0, 0, 0.5f * dt}, ESpace::Local);
     }
 
     if (engine->inputSystem()->isKeyPressed(Qt::Key_L)) {
-      qDebug() << "Translate world";
+      //qDebug() << "Translate world";
       self->transform()->translate({0, 0, -0.5f * dt}, ESpace::World);
     }
 
     if (engine->inputSystem()->isKeyTriggered(Qt::Key_U)) {
-      qDebug() << "Scale";
+      //qDebug() << "Scale";
       self->transform()->setLocalScale({1.2f, 1.2f, 1.2f});
     }
 
     if (engine->inputSystem()->isKeyTriggered(Qt::Key_I)) {
-      qDebug() << "Reset scale";
+      //qDebug() << "Reset scale";
       self->transform()->setLocalScale({1, 1, 1});
     }
   });
   cube->transform()->setParent(cubeOrbit->transform());
 
 
-  /*
   auto* sun = m_main_scene->createGameObject("Sun", "default");
   auto* meshRendererSun = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", sun, m_assets["Sphere"]);
   auto* behaviorSun = m_engine->componentManager()->addComponent<Behavior>("behavior", sun);
   behaviorSun->setUpdateFn(HomelandBehaviors::exampleBehavior);
-  sun->transform()->setWorldPosition({0, 0, 0});
+  sun->transform()->setPosition({3, 3, 3}, ESpace::World);
+  auto* colliderSun = m_engine->componentManager()->addComponent<SphereCollider>("sphere-collider", sun, 1, 1);
+  qDebug() << sun->isSimulated();
+  qDebug() << sun->hasCollider();
 
+  /*
   auto* earth = m_main_scene->createGameObject("Earth", "default");
   earth->transform()->setParent(sun->transform());
   earth->transform()->translateWorld({2, 2, 2});

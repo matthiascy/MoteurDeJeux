@@ -74,4 +74,6 @@ Q_DECLARE_METATYPE(Quat)
 
 #include "Object.hpp"
 
+#include "Utils.hpp"
+
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_CORE_HPP */

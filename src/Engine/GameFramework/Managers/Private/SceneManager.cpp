@@ -1,6 +1,7 @@
 #include <GameFramework/Managers/SceneManager.hpp>
 #include <GameFramework/Scene.hpp>
 #include <GameFramework/Engine.hpp>
+#include <GameFramework/GameObject.hpp>
 
 SceneManager::SceneManager(const String& name, Engine* engine, Object* parent)
   : Object(name, parent), m_scenes{}, m_engine{engine}

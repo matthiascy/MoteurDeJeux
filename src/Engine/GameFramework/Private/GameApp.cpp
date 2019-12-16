@@ -12,6 +12,8 @@
 #include <GameFramework/EngineWindow.hpp>
 #include <QDesktopWidget>
 #include <QScreen>
+#include <GameFramework/Managers/SceneManager.hpp>
+#include <GameFramework/Systems.hpp>
 
 GameApp::GameApp(const String& name, const String& description, QSize&& minSize, int argc, char** argv)
   : QObject(nullptr), m_is_initialized{false}, m_is_quit{false},
@@ -148,17 +150,19 @@ void GameApp::run()
     m_engine->inputSystem()->preUpdate(frameTime);
     m_engine->renderSystem()->preUpdate(frameTime);
     m_engine->behaviorSystem()->preUpdate(frameTime);
+    m_engine->physicsSystem()->preUpdate(frameTime);
 
 
     m_engine->inputSystem()->update(frameTime);
     m_engine->behaviorSystem()->update(frameTime);
+    m_engine->physicsSystem()->update(frameTime);
 
     /** Systems' fixed update */
     while (frameTime > 0.0) {
       float deltaTime = std::min(frameTime, m_dt);
       m_engine->inputSystem()->fixedUpdate(deltaTime);
       m_engine->behaviorSystem()->fixedUpdate(deltaTime);
-      //m_engine->physicsSystem()->fixedUpdate(deltaTime);
+      m_engine->physicsSystem()->fixedUpdate(deltaTime);
       frameTime -= deltaTime;
     }
 

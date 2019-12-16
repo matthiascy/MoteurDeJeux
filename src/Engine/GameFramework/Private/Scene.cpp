@@ -5,6 +5,7 @@
 #include <GameFramework/Systems/RenderSystem.hpp>
 #include <GameFramework/Component.hpp>
 #include <GameFramework/Systems/PhysicsSystem.hpp>
+#include <GameFramework/Managers.hpp>
 
 Scene::Scene(const String& name, Engine* engine, Object* parent)
   : Object(name, parent), m_game_objects{}, m_root{}

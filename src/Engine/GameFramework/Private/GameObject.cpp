@@ -5,14 +5,16 @@
 
 GameObject::GameObject(const String& name, Scene* scene, Object* parent)
   : Object(name, parent), m_tag{"None"}, m_transform{nullptr},
-    m_is_static{false}, m_is_visible{true},
-    m_scene{scene}, m_components{}, m_mesh{}
+    m_is_static{false}, m_is_visible{true}, m_is_simulated{false},
+    m_has_collider{false}, m_scene{scene}, m_rigid_body{nullptr},
+    m_components{}, m_mesh{}
 { }
 
 GameObject::GameObject(const String& name, Scene* scene, const String& tag, Object* parent)
     : Object(name, parent), m_tag{tag}, m_transform{nullptr},
-      m_is_static{false}, m_is_visible{true},
-      m_scene{scene}, m_components{}, m_mesh{}
+      m_is_static{false}, m_is_visible{true}, m_is_simulated{false},
+      m_has_collider{false}, m_scene{scene}, m_rigid_body{nullptr},
+      m_components{}, m_mesh{}
 { }
 
 StringView GameObject::tag() const
@@ -89,4 +91,35 @@ const Array<AbstractComponent*>& GameObject::getComponents() const
 Array<AbstractComponent*>& GameObject::getComponents()
 {
   return m_components;
+}
+
+bool GameObject::hasCollider() const
+{
+  return m_has_collider;
+}
+
+void GameObject::setHasCollider(bool hasCollider)
+{
+  m_has_collider = hasCollider;
+}
+
+bool GameObject::isSimulated() const
+{
+  return m_is_simulated;
+}
+
+void GameObject::setIsSimulated(bool isSimulated)
+{
+  m_is_simulated = isSimulated;
+}
+
+void GameObject::setRigidBody(btRigidBody* rigidBody)
+{
+  m_rigid_body = rigidBody;
+}
+
+[[nodiscard]]
+btRigidBody* GameObject::rigidBody() const
+{
+  return m_rigid_body;
 }
