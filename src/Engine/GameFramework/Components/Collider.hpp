@@ -8,7 +8,9 @@
 
 class Collider : public Component {
 private:
-  UniquePtr<ColliderPrivate> m_private;
+  UniquePtr<btCollisionShape> m_shape;
+  UniquePtr<btRigidBody>      m_rigid_body;
+  UniquePtr<btMotionState>    m_motion_state;
 
 public:
   Collider(const String& name, GameObject* gameObject, btCollisionShape* shape, Real mass);

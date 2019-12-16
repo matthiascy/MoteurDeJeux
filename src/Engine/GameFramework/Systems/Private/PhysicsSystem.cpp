@@ -26,16 +26,8 @@ void PhysicsSystem::init()
 
 PhysicsSystem::~PhysicsSystem()
 {
-  for (int i = m_collision_objects.size() - 1; i >= 0; --i)
-  {
-    btCollisionObject* obj = m_collision_objects[i];
-    btRigidBody* body = btRigidBody::upcast(obj);
-    if (body && body->getMotionState())
-    {
-      delete body->getMotionState();
-    }
-    m_world->removeCollisionObject(obj);
-    delete obj;
+  for (int i = 0; i < m_world->getCollisionObjectArray().size(); ++i) {
+    m_world->removeCollisionObject(m_world->getCollisionObjectArray()[i]);
   }
 
   delete m_world;

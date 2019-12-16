@@ -24,11 +24,14 @@ Engine::Engine(GameApp* app)
 Engine::~Engine()
 {
   qDebug() << "Shutting down...";
+  m_component_manager.reset(nullptr);
   m_asset_manager.reset(nullptr);
   m_scene_manager.reset(nullptr);
+
   m_render_sys.reset(nullptr);
   m_physics_sys.reset(nullptr);
   m_input_sys.reset(nullptr);
+  m_behavior_sys.reset(nullptr);
   qDebug() << "Shutting down...[Finished]";
 }
 
