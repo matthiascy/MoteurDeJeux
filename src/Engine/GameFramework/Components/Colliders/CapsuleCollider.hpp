@@ -3,7 +3,7 @@
 
 #include <GameFramework/Components/Collider.hpp>
 
-class CapsuleCollider : public Collider<CapsuleCollider> {
+class CapsuleCollider : public Collider {
 public:
   CapsuleCollider(const String& name, GameObject* gameObject, Real radius, Real height, Real mass);
   ~CapsuleCollider() override = default;

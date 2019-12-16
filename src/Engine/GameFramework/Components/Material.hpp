@@ -4,7 +4,7 @@
 #include <GameFramework/Component.hpp>
 #include <Graphics/MaterialData.hpp>
 
-class Material : Component<Material> {
+class Material : Component {
 private:
   MaterialData m_data;
 

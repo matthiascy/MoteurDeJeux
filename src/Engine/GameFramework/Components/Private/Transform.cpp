@@ -2,7 +2,7 @@
 #include <GameFramework/GameObject.hpp>
 
 Transform::Transform(const String& name, GameObject* gameObject, Transform* parent, const Vec3& localPosition, const Quat& localRotation, const Vec3& localScale)
-  : Component<Transform>(name, gameObject),
+  : Component(name, gameObject),
     m_local_position{localPosition}, m_local_rotation{localRotation}, m_local_scale{localScale},
     m_local_to_world_matrix{}, m_world_to_local_matrix{},
     m_parent{parent}, m_children{}

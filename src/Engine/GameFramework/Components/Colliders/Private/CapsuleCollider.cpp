@@ -1,5 +1,6 @@
-#include "GameFramework/Components/Colliders/CapsuleCollider.hpp"
+#include <GameFramework/Components/Colliders/CapsuleCollider.hpp>
+#include <BulletCollision/CollisionShapes/btCapsuleShape.h>
 
 CapsuleCollider::CapsuleCollider(const String &name, GameObject *gameObject, Real radius, Real height, Real mass)
-  : Collider<CapsuleCollider>(name, gameObject, new btCapsuleShape(radius, height), mass)
+  : Collider(name, gameObject, new btCapsuleShape(radius, height), mass)
 { }

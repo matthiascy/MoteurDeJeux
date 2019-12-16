@@ -6,13 +6,18 @@
 
 class Engine;
 
-class Behavior : public Component<Behavior> {
+class Behavior : public Component {
 public:
 
   using BehaviorFunction = std::function<void(GameObject*, Engine*, Real)>;
 
   Behavior(const String& name, GameObject* gameObject);
   ~Behavior() override = default;
+
+  [[nodiscard]]
+  UInt64 typeID() const override {
+    return family::type<Behavior>;
+  }
 
   template <typename T>
   void setUpdateFn(T* object, void(T::*fn)(GameObject*, Engine*, Real));

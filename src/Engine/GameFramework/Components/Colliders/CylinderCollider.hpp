@@ -3,7 +3,7 @@
 
 #include <GameFramework/Components/Collider.hpp>
 
-class CylinderCollider : public Collider<CylinderCollider> {
+class CylinderCollider : public Collider {
 public:
   CylinderCollider(const String& name, GameObject* gameObject, Real radius, Real height, Real mass);
   ~CylinderCollider() override = default;

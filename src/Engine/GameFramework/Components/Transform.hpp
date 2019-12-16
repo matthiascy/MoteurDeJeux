@@ -1,14 +1,14 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_TRANSFORM_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_TRANSFORM_HPP
 
-#include <GameFramework/Forward.hpp>
 #include <Core/Math/Math.hpp>
 #include <Core/Core.hpp>
 #include <GameFramework/Component.hpp>
+#include <GameFramework/Types.hpp>
 
 // TODO: lookAt fix, not always correct.
 
-class Transform : public Component<Transform>{
+class Transform : public Component {
 private:
   /** World-space properties. */
   /** Local-space properties of transform. (relative to parent). */
@@ -44,6 +44,11 @@ public:
             const Quat& localRotation = Math::QuatIdentity, const Vec3& localScale = Math::mkVec3(1));
 
   ~Transform() override = default;
+
+  [[nodiscard]]
+  UInt64 typeID() const override {
+    return family::type<Transform>;
+  }
 
   /**
    * The position of the transform in world space.

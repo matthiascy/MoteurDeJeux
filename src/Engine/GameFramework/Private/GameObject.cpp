@@ -6,14 +6,14 @@
 GameObject::GameObject(const String& name, Scene* scene, Object* parent)
   : Object(name, parent), m_tag{"None"}, m_transform{nullptr},
     m_is_static{false}, m_is_visible{true}, m_is_simulated{false},
-    m_has_collider{false}, m_scene{scene}, m_rigid_body{nullptr},
+    m_has_collider{false}, m_scene{scene},
     m_components{}, m_mesh{}
 { }
 
 GameObject::GameObject(const String& name, Scene* scene, const String& tag, Object* parent)
     : Object(name, parent), m_tag{tag}, m_transform{nullptr},
       m_is_static{false}, m_is_visible{true}, m_is_simulated{false},
-      m_has_collider{false}, m_scene{scene}, m_rigid_body{nullptr},
+      m_has_collider{false}, m_scene{scene},
       m_components{}, m_mesh{}
 { }
 
@@ -72,23 +72,24 @@ Scene* GameObject::scene() const
   return m_scene;
 }
 
-void GameObject::addComponent(AbstractComponent* component)
+void GameObject::addComponent(Component* component)
 {
   if (!m_components.contains(component)) {
     m_components.push_back(component);
 
-    if (component->typeID() == Transform::componentTypeID()) {
+    if (component->typeID() == Component::family::type<Transform>) {
+      qDebug() << "Add transform component";
       m_transform = dynamic_cast<Transform*>(component);
     }
   }
 }
 
-const Array<AbstractComponent*>& GameObject::getComponents() const
+const Array<Component*>& GameObject::getComponents() const
 {
   return m_components;
 }
 
-Array<AbstractComponent*>& GameObject::getComponents()
+Array<Component*>& GameObject::getComponents()
 {
   return m_components;
 }
@@ -111,15 +112,4 @@ bool GameObject::isSimulated() const
 void GameObject::setIsSimulated(bool isSimulated)
 {
   m_is_simulated = isSimulated;
-}
-
-void GameObject::setRigidBody(btRigidBody* rigidBody)
-{
-  m_rigid_body = rigidBody;
-}
-
-[[nodiscard]]
-btRigidBody* GameObject::rigidBody() const
-{
-  return m_rigid_body;
 }

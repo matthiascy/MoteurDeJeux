@@ -14,7 +14,7 @@ class ComponentManager : public Object {
   Q_OBJECT
 
   /* Component Manager owns components. */
-  using ComponentContainer = Array<AbstractComponent*>;
+  using ComponentContainer = Array<Component*>;
   using ComponentTable     = HashMap<ComponentTypeID, ComponentContainer*>;
   using GameObjectComponentTable = HashMap<GameObject*, ComponentTable*>;
 
@@ -45,9 +45,10 @@ T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Ar
 {
   // TODO::specify names(name generator)
   T* component = new T(name, gameObject, std::forward<Args>(params)...);
+
   gameObject->addComponent(component);
 
-  ComponentTypeID type = T::componentTypeID();
+  ComponentTypeID type = Component::family::type<T>;
 
   if (m_components.contains(type)) {
     m_components[type]->push_back(component);
@@ -70,8 +71,7 @@ T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Ar
     (*m_game_object_components[gameObject])[type]->push_back(component);
   }
 
-  if (is_base_of_template<Collider, T>::value) {
-    gameObject->setRigidBody(component->rigidBody());
+  if (std::is_base_of_v<Collider, T>) {
     gameObject->setHasCollider(true);
   }
 

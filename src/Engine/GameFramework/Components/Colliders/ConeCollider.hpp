@@ -3,7 +3,7 @@
 
 #include <GameFramework/Components/Collider.hpp>
 
-class ConeCollider : public Collider<ConeCollider> {
+class ConeCollider : public Collider {
 public:
   ConeCollider(const String& name, GameObject* gameObject, Real radius, Real height, Real mass);
   ~ConeCollider() override = default;

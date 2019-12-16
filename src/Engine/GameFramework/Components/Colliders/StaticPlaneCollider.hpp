@@ -3,7 +3,7 @@
 
 #include <GameFramework/Components/Collider.hpp>
 
-class StaticPlaneCollider : public Collider<StaticPlaneCollider> {
+class StaticPlaneCollider : public Collider {
 public:
   StaticPlaneCollider(const String& name, GameObject* gameObject, const Vec3& normal, Real distance);
   ~StaticPlaneCollider() override = default;

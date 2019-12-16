@@ -6,8 +6,7 @@
 
 class GameObject;
 
-template <typename T>
-class Camera : public Component<T> {
+class Camera : public Component {
 protected:
   Real m_aspect {};
   Real m_z_near {};
@@ -35,7 +34,5 @@ public:
   virtual Real zFar() const;
   virtual void setZFar(Real z);
 };
-
-#include "Private/Camera.inl"
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_CAMERA_HPP */

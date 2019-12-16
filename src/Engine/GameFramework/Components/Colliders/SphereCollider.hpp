@@ -3,10 +3,15 @@
 
 #include <GameFramework/Components/Collider.hpp>
 
-class SphereCollider : public Collider<SphereCollider> {
+class SphereCollider : public Collider {
 public:
   SphereCollider(const String& name, GameObject* gameObject, Real radius, Real mass);
   ~SphereCollider() override = default;
+
+  [[nodiscard]]
+  UInt64 typeID() const override {
+    return family::type<SphereCollider>;
+  }
 };
 
 

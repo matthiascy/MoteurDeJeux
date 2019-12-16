@@ -20,7 +20,7 @@ void ComponentManager::removeAllComponents(GameObject* gameObject)
 
   ComponentTable::Iterator i = m_components.begin();
   for (; i != m_components.end(); ++i) {
-    for (AbstractComponent* c : *i.value()) {
+    for (Component* c : *i.value()) {
       delete c;
       c = nullptr;
     }
@@ -32,7 +32,7 @@ ComponentManager::~ComponentManager()
 {
   qDebug() << "Shutting down...";
   for (ComponentContainer* cs : m_components) {
-    for (AbstractComponent* c : *cs) {
+    for (Component* c : *cs) {
       delete c; c = nullptr;
     }
   }

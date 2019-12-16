@@ -5,21 +5,6 @@
 #include <GameFramework/Managers/SceneManager.hpp>
 #include <GameFramework/Components/Collider.hpp>
 
-/**
- * Add one rigid body to the bullet dynamics world to do the simulation.
- * @tparam T Collider
- * @tparam U BoxCollider, CapsuleCollider, ConeCollider, CylinderCollider ...
- */
-template <template <typename> class T, typename U,
-    typename = std::enable_if_t<std::is_base_of_v<Collider<U>, T<U>>>>
-void _add_rigid_body_to_world(btDiscreteDynamicsWorld* world, T<U>* collider)
-{
-  auto* rigid_body = collider->rigidBody();
-  if (world->getCollisionObjectArray().findLinearSearch(rigid_body) == world->getCollisionObjectArray().size()) {
-    qDebug() << "Add one collider";
-    world->addRigidBody(rigid_body);
-  }
-}
 
 PhysicsSystem::PhysicsSystem(const String& name, Engine* engine, Object* parent, const Vec3& gravity)
   : System(name, engine, parent),
@@ -93,15 +78,6 @@ void PhysicsSystem::update(Real dt)
     printf("world pos object %d = %f,%f,%f\n", i, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
   }
   // TODO: obtein game object directly from rigid body
-  auto* scene = m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->activatedScene());
-  if (scene) {
-    for (GameObject* object : scene->gameObjects()) {
-      auto* rigid_body = object->rigidBody();
-      if (rigid_body) {
-        object->transform()->setPosition(Math::fromBtVec3(rigid_body->get))
-      }
-    }
-  }
 }
 
 void PhysicsSystem::preUpdate(Real dt)
@@ -112,23 +88,18 @@ void PhysicsSystem::preUpdate(Real dt)
   if (scene) {
     for (GameObject* object : scene->gameObjects()) {
       if (object->isSimulated() && !object->isStatic()) {
-        if (object->hasComponent<BoxCollider>()) {
-          _add_rigid_body_to_world(m_world, object->getComponent<Collider<BoxCollider>>());
-        }
-        if (object->hasComponent<CapsuleCollider>()) {
-          _add_rigid_body_to_world(m_world, object->getComponent<Collider<CapsuleCollider>>());
-        }
-        if (object->hasComponent<ConeCollider>()) {
-          _add_rigid_body_to_world(m_world, object->getComponent<Collider<ConeCollider>>());
-        }
-        if (object->hasComponent<CylinderCollider>()) {
-          _add_rigid_body_to_world(m_world, object->getComponent<Collider<CylinderCollider>>());
-        }
-        if (object->hasComponent<SphereCollider>()) {
-          _add_rigid_body_to_world(m_world, object->getComponent<Collider<SphereCollider>>());
-        }
-        if (object->hasComponent<StaticPlaneCollider>()) {
-          _add_rigid_body_to_world(m_world, object->getComponent<Collider<StaticPlaneCollider>>());
+        qDebug() << "has collider " << object->hasComponent<Collider>();
+        if (object->hasCollider()) {
+          auto colliders = object->getComponentsOfType<Collider>();
+          qDebug() << colliders.size();
+          for (auto* collider : colliders) {
+            auto* rigid_body = collider->rigidBody();
+            if (m_world->getCollisionObjectArray().findLinearSearch(rigid_body) ==
+                m_world->getCollisionObjectArray().size()) {
+              qDebug() << "Add one collider";
+              m_world->addRigidBody(rigid_body);
+            }
+          }
         }
       }
     }

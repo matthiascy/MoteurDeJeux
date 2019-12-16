@@ -126,6 +126,7 @@ bool HomelandApp::_init_main_scene()
   auto* behaviorSun = m_engine->componentManager()->addComponent<Behavior>("behavior", sun);
   behaviorSun->setUpdateFn(HomelandBehaviors::exampleBehavior);
   sun->transform()->setPosition({3, 3, 3}, ESpace::World);
+  sun->setIsSimulated(true);
   auto* colliderSun = m_engine->componentManager()->addComponent<SphereCollider>("sphere-collider", sun, 1, 1);
   qDebug() << sun->isSimulated();
   qDebug() << sun->hasCollider();

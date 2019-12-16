@@ -8,7 +8,6 @@
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <GameFramework/Assets/AssetsTypes.hpp>
 #include <GameFramework/Components/Transform.hpp>
-#include "AbstractComponent.hpp"
 
 class Scene;
 
@@ -28,8 +27,7 @@ private:
   bool m_has_collider;
   Scene* m_scene;
   AssetHandle m_mesh;
-  btRigidBody* m_rigid_body;
-  Array<AbstractComponent*> m_components;
+  Array<Component*> m_components;
   // TODO::using handle to retrieve components
 
 public:
@@ -46,11 +44,6 @@ public:
 
   [[nodiscard]]
   const Transform* transform() const;
-
-  void setRigidBody(btRigidBody* rigidBody);
-
-  [[nodiscard]]
-  btRigidBody* rigidBody() const;
 
   [[nodiscard]]
   bool isVisible() const;
@@ -74,12 +67,12 @@ public:
   [[nodiscard]] Scene* scene() const;
 
   template <typename T,
-      typename = std::enable_if_t<std::is_base_of_v<AbstractComponent, T>>>
+      typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
   T* getComponent() const;
 
-  template <template<typename> class T, typename U,
-      typename = std::enable_if_t<std::is_base_of_v<AbstractComponent, T>>>
-  T<U>* getComponent() const;
+  template <typename T,
+      typename = std::enable_if_t<std::is_base_of_v<Component, T>>>
+  Array<T*> getComponentsOfType();
 
   template <typename T>
   [[nodiscard]]
@@ -90,46 +83,45 @@ public:
   T* getComponentInChildren() const;
 
   [[nodiscard]]
-  Array<AbstractComponent*>& getComponents();
+  Array<Component*>& getComponents();
 
   [[nodiscard]]
-  const Array<AbstractComponent*>& getComponents() const;
+  const Array<Component*>& getComponents() const;
 
   template <typename T>
   [[nodiscard]] bool hasComponent() const;
 
-  void addComponent(AbstractComponent* comp);
+  void addComponent(Component* comp);
 };
 
 template <typename T, typename>
 T* GameObject::getComponent() const
 {
   for (auto* c : m_components) {
-    if (c->typeID() == T::componentTypeID()) {
+    if (c->typeID() == Component::family::type<T> || isInstanceOf<T>(c)) {
       return dynamic_cast<T*>(c);
     }
   }
-
   return nullptr;
 }
 
-template <template<typename> class T, typename U, typename>
-T<U>* GameObject::getComponent() const
+template <typename T, typename>
+Array<T*> GameObject::getComponentsOfType()
 {
+  Array<T*> out;
   for (auto* c : m_components) {
-    if (c->typeID() == T<U>::componentTypeID()) {
-      return dynamic_cast<T<U>*>(c);
+    if (c->typeID() == Component::family::type<T> || isInstanceOf<T>(c)) {
+      out.push_back(dynamic_cast<T*>(c));
     }
   }
-
-  return nullptr;
+  return out;
 }
 
 template <typename T>
 bool GameObject::hasComponent() const
 {
   for (auto* c : m_components) {
-    if (c->typeID() == T::componentTypeID()) {
+    if (c->typeID() == Component::family::type<T> || isInstanceOf<T>(c)) {
       return true;
     }
   }

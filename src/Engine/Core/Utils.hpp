@@ -25,5 +25,10 @@ using is_base_of_template = typename _detail::is_base_of_template_impl<base,deri
 template < template <typename...> class base,typename derived>
 using is_base_of_template_v = typename _detail::is_base_of_template_impl<base,derived>::type::value;
 
+template<typename Base, typename T>
+inline bool isInstanceOf(const T* ptr) {
+  return dynamic_cast<const Base*>(ptr) != nullptr;
+}
+
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_UTILS_HPP */
