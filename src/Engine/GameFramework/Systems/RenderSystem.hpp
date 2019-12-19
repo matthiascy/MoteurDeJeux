@@ -9,7 +9,7 @@
 #include <QtGui/QOpenGLShaderProgram>
 #include <QtGui/QOpenGLFramebufferObject>
 #include <QtGui/QOpenGLVertexArrayObject>
-#include <Graphics/OglOffscreenSurface.hpp>
+#include <Engine/Graphics/OpenGL/OglOffscreenSurface.hpp>
 
 // TODO forward
 class GameObject;

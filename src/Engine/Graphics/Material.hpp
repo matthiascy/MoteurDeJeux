@@ -4,9 +4,9 @@
 #include <GameFramework/Component.hpp>
 #include <Graphics/MaterialData.hpp>
 
-class Material : Component<Material> {
+class Material {
 private:
-  MaterialData m_data;
+
 
 public:
   Material(const String& name, GameObject* gameObject);

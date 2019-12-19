@@ -11,6 +11,6 @@ public:
   ~Renderer() override = default;
 };
 
-#include "Private/Renderer.inl"
+#include "Engine/Graphics/Components/Private/Renderer.inl"
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_RENDERER_HPP */

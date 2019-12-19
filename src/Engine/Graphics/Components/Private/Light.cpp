@@ -1,4 +1,4 @@
-#include <GameFramework/Components/Light.hpp>
+#include <Graphics/Components/Light.hpp>
 
 Light::Light(String name, GameObject* gameObject, const Vec3& color, Real intensity)
   : Component(std::move(name), gameObject), m_color{color}, m_intensity{intensity}

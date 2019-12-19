@@ -1,4 +1,4 @@
-#include <GameFramework/Components/DirectionalLight.hpp>
+#include <Engine/Graphics/Components/DirectionalLight.hpp>
 
 DirectionalLight::DirectionalLight(String name, GameObject* gameObject,
                                    const Vec3& color, Real intensity)

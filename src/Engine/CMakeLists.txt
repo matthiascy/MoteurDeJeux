@@ -20,7 +20,32 @@ find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
 qt5_add_resources(QRcs ${EngineSrcDir}/resources.qrc)
 
-set(EngineSrc
+set(EngineGraphicsSrc
+    ${EngineSrcDir}/Graphics/Private/Mesh.cpp
+    ${EngineSrcDir}/Graphics/Private/Shader.cpp
+    ${EngineSrcDir}/Graphics/Private/MaterialData.cpp
+    ${EngineSrcDir}/Graphics/Private/SplashScreen.cpp
+    ${EngineSrcDir}/Graphics/Components/Private/Light.cpp
+    ${EngineSrcDir}/Graphics/Components/Private/Renderer.inl
+    ${EngineSrcDir}/Graphics/Components/Private/Material.cpp
+    ${EngineSrcDir}/Graphics/Components/Private/MeshRenderer.cpp
+    ${EngineSrcDir}/Graphics/OpenGL/Private/OglOffscreenSurface.cpp
+    ${EngineSrcDir}/Graphics/Components/Private/DirectionalLight.cpp
+    ${EngineSrcDir}/Graphics/Mesh.hpp
+    ${EngineSrcDir}/Graphics/Types.hpp
+    ${EngineSrcDir}/Graphics/Shader.hpp
+    ${EngineSrcDir}/Graphics/SplashScreen.hpp
+    ${EngineSrcDir}/Graphics/MaterialData.hpp
+    ${EngineSrcDir}/Graphics/OpenGL/OglTypes.hpp
+    ${EngineSrcDir}/Graphics/Components/Light.hpp
+    ${EngineSrcDir}/Graphics/Components/Material.hpp
+    ${EngineSrcDir}/Graphics/Components/Renderer.hpp
+    ${EngineSrcDir}/Graphics/Components/MeshRenderer.hpp
+    ${EngineSrcDir}/Graphics/OpenGL/OglOffscreenSurface.hpp
+    ${EngineSrcDir}/Graphics/Components/DirectionalLight.hpp)
+
+set(EngineCoreSrc
+    ${EngineSrcDir}/Core/Math/Private/Math.cpp
     ${EngineSrcDir}/Core/Math/Math.hpp
     ${EngineSrcDir}/Core/Math/MathTypes.hpp
     ${EngineSrcDir}/Core/Private/Object.cpp
@@ -29,8 +54,9 @@ set(EngineSrc
     ${EngineSrcDir}/Core/Core.hpp
     ${EngineSrcDir}/Core/Handle.hpp
     ${EngineSrcDir}/Core/Memory.hpp
-    ${EngineSrcDir}/Core/Object.hpp
+    ${EngineSrcDir}/Core/Object.hpp)
 
+set(EngineGameFrameworkSrc
     ${EngineSrcDir}/GameFramework/Assets/Private/Asset.cpp
     ${EngineSrcDir}/GameFramework/Assets/Private/AssetManager.cpp
     ${EngineSrcDir}/GameFramework/Assets/Private/AssetStorage.cpp
@@ -44,19 +70,11 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Components/Private/Behavior.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/BoxCollider.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Collider.inl
-    ${EngineSrcDir}/GameFramework/Components/Private/DirectionalLight.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/Light.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/MeshRenderer.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/Renderer.inl
     ${EngineSrcDir}/GameFramework/Components/Private/Transform.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Camera.inl
     ${EngineSrcDir}/GameFramework/Components/Behavior.hpp
     ${EngineSrcDir}/GameFramework/Components/BoxCollider.hpp
     ${EngineSrcDir}/GameFramework/Components/Collider.hpp
-    ${EngineSrcDir}/GameFramework/Components/DirectionalLight.hpp
-    ${EngineSrcDir}/GameFramework/Components/Light.hpp
-    ${EngineSrcDir}/GameFramework/Components/MeshRenderer.hpp
-    ${EngineSrcDir}/GameFramework/Components/Renderer.hpp
     ${EngineSrcDir}/GameFramework/Components/Transform.hpp
     ${EngineSrcDir}/GameFramework/Components/Camera.hpp
 
@@ -82,13 +100,15 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Scene.hpp
     ${EngineSrcDir}/GameFramework/System.hpp
 
-    ${EngineSrcDir}/Graphics/Private/Mesh.cpp
-    #${EngineSrcDir}/Core/Graphics/Private/OpenGLError.cpp
-    ${EngineSrcDir}/Graphics/Private/Shader.cpp
-    ${EngineSrcDir}/Graphics/GraphicsTypes.hpp
-    ${EngineSrcDir}/Graphics/Mesh.hpp
-    #${EngineSrcDir}/Core/Graphics/OpenGLError.hpp
-    ${EngineSrcDir}/Graphics/Shader.hpp
+    GameFramework/Components/Private/OrthogonalCamera.cpp
+    GameFramework/Components/OrthogonalCamera.hpp
+    GameFramework/Components/Private/PerspectiveCamera.cpp
+    GameFramework/Components/PerspectiveCamera.hpp)
+
+set(EngineSrc
+    ${EngineCoreSrc}
+    ${EngineGraphicsSrc}
+    ${EngineGameFrameworkSrc}
 
     ${EditorSrcDir}/EditorCamera.hpp
     ${EditorSrcDir}/EditorCamera.cpp
@@ -110,20 +130,20 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
     ${EditorSrcDir}/Vertex.cpp
-    ${EngineSrcDir}/Graphics/Private/OglOffscreenSurface.cpp
-    ${EngineSrcDir}/Graphics/OglOffscreenSurface.hpp
-    ${EngineSrcDir}/Graphics/AbstractWindow.hpp
     ${EngineSrcDir}/GameFramework/Private/EngineWindow.cpp
     ${EngineSrcDir}/GameFramework/EngineWindow.hpp
-    ${EngineSrcDir}/Graphics/Private/SplashScreen.cpp
-    ${EngineSrcDir}/Graphics/SplashScreen.hpp
-    Core/Math/Private/Math.cpp
-    GameFramework/Components/Private/OrthogonalCamera.cpp
-    GameFramework/Components/OrthogonalCamera.hpp
-    GameFramework/Components/Private/PerspectiveCamera.cpp
-    GameFramework/Components/PerspectiveCamera.hpp
-    Graphics/OglTypes.hpp
-    GameFramework/Components.hpp GameFramework/Managers/Private/SceneManager.cpp GameFramework/Managers/SceneManager.hpp GameFramework/Managers/Private/ComponentManager.cpp GameFramework/Managers/ComponentManager.hpp GameFramework/Types.hpp GameFramework/TypeID.hpp GameFramework/TypeID.hpp GameFramework/Private/AbstractComponent.cpp GameFramework/AbstractComponent.hpp GameFramework/Systems/Private/BehaviorSystem.cpp GameFramework/Systems/BehaviorSystem.hpp Graphics/Private/MaterialData.cpp Graphics/MaterialData.hpp GameFramework/Components/Private/Material.cpp GameFramework/Components/Material.hpp)
+    GameFramework/Components.hpp
+    GameFramework/Managers/Private/SceneManager.cpp
+    GameFramework/Managers/SceneManager.hpp
+    GameFramework/Managers/Private/ComponentManager.cpp
+    GameFramework/Managers/ComponentManager.hpp
+    GameFramework/Types.hpp
+    GameFramework/TypeID.hpp
+    GameFramework/TypeID.hpp
+    GameFramework/Private/AbstractComponent.cpp
+    GameFramework/AbstractComponent.hpp
+    GameFramework/Systems/Private/BehaviorSystem.cpp
+    GameFramework/Systems/BehaviorSystem.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 

@@ -1,4 +1,4 @@
-#include <Graphics/OglOffscreenSurface.hpp>
+#include <Graphics/OpenGL/OglOffscreenSurface.hpp>
 #include <GameFramework/Systems/RenderSystem.hpp>
 #include <QCoreApplication>
 #include <QtGui/QImage>

@@ -5,7 +5,7 @@
 #include <GameFramework/Scene.hpp>
 #include <GameFramework/Engine.hpp>
 #include <GameFramework/Components/PerspectiveCamera.hpp>
-#include <GameFramework/Components/MeshRenderer.hpp>
+#include <Graphics/Components/MeshRenderer.hpp>
 
 
 RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)

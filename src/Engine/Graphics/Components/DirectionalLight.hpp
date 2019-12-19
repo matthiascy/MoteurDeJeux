@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_DIRECTIONAL_LIGHT_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_DIRECTIONAL_LIGHT_HPP
 
-#include "Light.hpp"
+#include "Engine/Graphics/Components/Light.hpp"
 
 class DirectionalLight : Light {
 public:
