@@ -1,4 +1,4 @@
-#include <GameFramework/Components/Colliders/StaticPlaneCollider.hpp>
+#include <Physics/Colliders/StaticPlaneCollider.hpp>
 #include <BulletCollision/CollisionShapes/btStaticPlaneShape.h>
 
 StaticPlaneCollider::StaticPlaneCollider(const String &name, GameObject *gameObject, const Vec3 &normal, Real distance)

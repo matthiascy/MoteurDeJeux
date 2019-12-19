@@ -141,7 +141,7 @@ set(EngineSrc
     Graphics/MaterialData.hpp GameFramework/Components/Private/Material.cpp
     GameFramework/Components/Material.hpp GameFramework/Components/Colliders.hpp
     GameFramework/Managers.hpp GameFramework/Systems.hpp
-    Core/Utils.hpp Physics/Private/ColliderPrivate.cpp Physics/ColliderPrivate.hpp Physics/RigidBody.cpp Physics/RigidBody.hpp)
+    Core/Utils.hpp Physics/Private/RigidBody.cpp Physics/RigidBody.hpp Physics/Private/Constraint.cpp Physics/Constraint.hpp Physics/Types.hpp Physics/Forward.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 

@@ -1,4 +1,4 @@
-#include <GameFramework/Components/Colliders/SphereCollider.hpp>
+#include <Physics/Colliders/SphereCollider.hpp>
 #include <BulletCollision/CollisionShapes/btSphereShape.h>
 
 

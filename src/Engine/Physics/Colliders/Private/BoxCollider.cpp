@@ -1,4 +1,4 @@
-#include <GameFramework/Components/Colliders/BoxCollider.hpp>
+#include <Physics/Colliders/BoxCollider.hpp>
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
 #include <Core/Math/Math.hpp>
 

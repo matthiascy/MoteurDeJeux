@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_BOX_COLLIDER_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_BOX_COLLIDER_HPP
 
-#include "GameFramework/Components/Collider.hpp"
+#include "Physics/Collider.hpp"
 
 class BoxCollider : public Collider {
 public:

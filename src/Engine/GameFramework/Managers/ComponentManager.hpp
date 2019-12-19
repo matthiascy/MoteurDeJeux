@@ -5,7 +5,7 @@
 #include <GameFramework/Component.hpp>
 #include <GameFramework/GameObject.hpp>
 #include <GameFramework/Types.hpp>
-#include <GameFramework/Components/Collider.hpp>
+#include <Physics/Collider.hpp>
 
 // TODO::using handle to retrieve components
 

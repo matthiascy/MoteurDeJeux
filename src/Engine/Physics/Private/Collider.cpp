@@ -1,4 +1,4 @@
-#include <GameFramework/Components/Collider.hpp>
+#include <Physics/Collider.hpp>
 #include <GameFramework/GameObject.hpp>
 
 Collider::Collider(const String& name, GameObject* gameObject, btCollisionShape* shape, Real mass)
@@ -6,6 +6,9 @@ Collider::Collider(const String& name, GameObject* gameObject, btCollisionShape*
 {
   m_shape.reset(shape);
 
+  m_rigid_body = gameObject->getComponent<RigidBody>();
+
+  /*
   bool is_dynamic = (mass != 0);
 
   btVector3 local_inertial(0, 0, 0);
@@ -15,13 +18,12 @@ Collider::Collider(const String& name, GameObject* gameObject, btCollisionShape*
   m_motion_state = makeUnique<btDefaultMotionState>(btTransform(Math::toBtQuat(gameObject->transform()->worldRotation()),
                                                                 Math::toBtVec3(gameObject->transform()->worldPosition())));
   m_rigid_body = makeUnique<btRigidBody>(mass, m_motion_state.get(), m_shape.get(), local_inertial);
+   */
 }
 
 Collider::~Collider()
 {
-  m_motion_state.reset(nullptr);
-  m_rigid_body.reset(nullptr);
-  m_motion_state.reset(nullptr);
+  m_shape.reset(nullptr);
 }
 
 btCollisionShape* Collider::collisionShape()
@@ -29,13 +31,8 @@ btCollisionShape* Collider::collisionShape()
   return m_shape.get();
 }
 
-btRigidBody* Collider::rigidBody()
+RigidBody* Collider::rigidBody()
 {
-  return m_rigid_body.get();
-}
-
-btMotionState* Collider::motionState()
-{
-  return m_motion_state.get();
+  return m_rigid_body;
 }
 

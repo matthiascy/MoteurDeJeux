@@ -3,7 +3,7 @@
 #include <GameFramework/GameObject.hpp>
 #include <GameFramework/Engine.hpp>
 #include <GameFramework/Managers/SceneManager.hpp>
-#include <GameFramework/Components/Collider.hpp>
+#include <Physics/Collider.hpp>
 
 
 PhysicsSystem::PhysicsSystem(const String& name, Engine* engine, Object* parent, const Vec3& gravity)
@@ -69,7 +69,7 @@ void PhysicsSystem::update(Real dt)
     }
     printf("world pos object %d = %f,%f,%f\n", i, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
   }
-  // TODO: obtein game object directly from rigid body
+  // TODO: obtain game object directly from rigid body
 }
 
 void PhysicsSystem::preUpdate(Real dt)

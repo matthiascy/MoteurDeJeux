@@ -1,4 +1,4 @@
-#include <GameFramework/Components/Colliders/CylinderCollider.hpp>
+#include <Physics/Colliders/CylinderCollider.hpp>
 #include <BulletCollision/CollisionShapes/btCylinderShape.h>
 
 CylinderCollider::CylinderCollider(const String &name, GameObject *gameObject, Real radius, Real height, Real mass)
