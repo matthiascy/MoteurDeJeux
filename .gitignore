@@ -5,6 +5,7 @@
 *.o
 *.obj
 !assets/models/*.obj
+!src/Homeland/Assets/models/*.obj
 
 # Precompiled Headers
 *.gch
