@@ -123,19 +123,19 @@ void RenderSystem::init()
   m_fns->glFrontFace(GL_CCW);
   m_fns->glViewport(0, 0, m_surface->size().width(), m_surface->size().height());
   m_fns->glClearColor(0.2, 0.2, 0.2, 1.0);
+  m_vaos[0]->release();
+
+  m_physics_debug_draw_vbo_idx = genBufferObject(OglBuffer::VertexBuffer);
+  m_vbos[m_physics_debug_draw_vbo_idx]->bind();
+  m_vbos[m_physics_debug_draw_vbo_idx]->setUsagePattern(OglBuffer::DynamicDraw);
+  m_physics_debug_draw_vbo_idx = genVertexArrayObject();
+
   m_surface->doneCurrent();
 }
 
 void RenderSystem::_render_scene(Scene* scene)
 {
   m_surface->makeCurrent();
-
-  if (m_is_physics_debug_draw_enabled) {
-    if (m_physics_debug_draw_vbo_idx != -1)
-      m_physics_debug_draw_vbo_idx = genBufferObject(OglBuffer::VertexBuffer);
-    if (m_physics_debug_draw_vao_idx != -1)
-      m_physics_debug_draw_vbo_idx = genVertexArrayObject();
-  }
 
   if (scene) {
 
@@ -192,11 +192,12 @@ void RenderSystem::_render_scene(Scene* scene)
     m_vaos[0]->release();
 
     if (m_is_physics_debug_draw_enabled) {
-      m_vaos[1]->bind();
+      m_vaos[m_physics_debug_draw_vao_idx]->bind();
+
       m_programs[0]->bind();
       m_fns->glDrawArrays(GL_LINES, 0, );
       m_programs[0]->release();
-      m_vaos[1]->release();
+      m_vaos[m_physics_debug_draw_vbo_idx]->release();
     }
   }
 
@@ -283,4 +284,38 @@ Int32 RenderSystem::genVertexArrayObject()
   m_vaos.insert(idx, new OglVAO());
   m_vaos[idx]->create();
   return (m_vaos[idx]->isCreated()) ? idx : -1;
+}
+
+Int32 RenderSystem::physicsDebugDrawVAOIdx() const
+{
+  return m_physics_debug_draw_vao_idx;
+}
+
+Int32 RenderSystem::physicsDebugDrawVBOIdx() const
+{
+  return m_physics_debug_draw_vbo_idx;
+}
+
+OglBuffer* RenderSystem::vboAt(Int32 idx)
+{
+  if (idx < 0)
+    return nullptr;
+
+  return m_vbos[idx];
+}
+
+OglVAO* RenderSystem::vaoAt(Int32 idx)
+{
+  if (idx < 0)
+    return nullptr;
+
+  return m_vaos[idx];
+}
+
+OglBuffer* RenderSystem::iboAt(Int32 idx)
+{
+  if (idx < 0)
+    return nullptr;
+
+  return m_ibos[idx];
 }

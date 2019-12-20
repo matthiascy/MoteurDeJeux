@@ -16,6 +16,7 @@ class GameObject;
 class Engine;
 class QOpenGLPaintDevice;
 class Scene;
+class PhysicsDebugDrawSystem;
 
 class RenderSystem : public System {
 private:
@@ -47,8 +48,9 @@ private:
 
   OglFns* m_fns;
 
-  Int32 m_physics_debug_draw_vbo_idx { -1 };
-  Int32 m_physics_debug_draw_vao_idx { -1 };
+  Int32 m_physics_debug_draw_vbo_idx  { -1 };
+  Int32 m_physics_debug_draw_vao_idx  { -1 };
+  Int32 m_physics_debug_draw_vbo_size { 0 };
   bool m_is_physics_debug_draw_enabled;
 
 public:
@@ -74,10 +76,21 @@ public:
 
   OglOffscreenSurface* offscreenSurface() { return m_surface.get(); }
 
-
   Int32 genBufferObject(OglBuffer::Type type);
 
   Int32 genVertexArrayObject();
+
+  [[nodiscard]]
+  Int32 physicsDebugDrawVBOIdx() const;
+
+  [[nodiscard]]
+  Int32 physicsDebugDrawVAOIdx() const;
+
+  OglBuffer* vboAt(Int32 idx);
+
+  OglVAO*    vaoAt(Int32 idx);
+
+  OglBuffer* iboAt(Int32 idx);
 
 private:
   /**
