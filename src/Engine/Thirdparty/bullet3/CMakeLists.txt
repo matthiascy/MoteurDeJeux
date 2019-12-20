@@ -284,7 +284,6 @@ ENDIF(COMMAND cmake_policy)
 
 # This is the shortcut to finding GLU, GLUT and OpenGL if they are properly installed on your system
 # This should be the case.
-cmake_policy(SET CMP0072 NEW)
 FIND_PACKAGE(OpenGL)
 IF (OPENGL_FOUND)
 	MESSAGE(STATUS "OPENGL FOUND")

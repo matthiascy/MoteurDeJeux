@@ -66,6 +66,8 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Systems/InputSystem.hpp
     ${EngineSrcDir}/GameFramework/Systems/PhysicsSystem.hpp
     ${EngineSrcDir}/GameFramework/Systems/RenderSystem.hpp
+    ${EngineSrcDir}/GameFramework/Systems/Private/AudioSystem.cpp
+    ${EngineSrcDir}/GameFramework/Systems/AudioSystem.hpp
 
     ${EngineSrcDir}/GameFramework/Private/Component.inl
     ${EngineSrcDir}/GameFramework/Private/Engine.cpp
@@ -123,7 +125,19 @@ set(EngineSrc
     GameFramework/Components/Private/PerspectiveCamera.cpp
     GameFramework/Components/PerspectiveCamera.hpp
     Graphics/OglTypes.hpp
-    GameFramework/Components.hpp GameFramework/Managers/Private/SceneManager.cpp GameFramework/Managers/SceneManager.hpp GameFramework/Managers/Private/ComponentManager.cpp GameFramework/Managers/ComponentManager.hpp GameFramework/Types.hpp GameFramework/TypeID.hpp GameFramework/TypeID.hpp GameFramework/Private/AbstractComponent.cpp GameFramework/AbstractComponent.hpp)
+    GameFramework/Components.hpp
+    GameFramework/Managers/Private/SceneManager.cpp
+    GameFramework/Managers/SceneManager.hpp
+    GameFramework/Managers/Private/ComponentManager.cpp
+    GameFramework/Managers/ComponentManager.hpp
+    GameFramework/Types.hpp
+    GameFramework/TypeID.hpp
+    GameFramework/TypeID.hpp
+    GameFramework/Private/AbstractComponent.cpp
+    GameFramework/AbstractComponent.hpp
+    ${EngineSrcDir}/Thirdparty/fmod/fmod.hpp
+    ${EngineSrcDir}/Thirdparty/fmod/fmod_studio.hpp
+    )
 
 add_library(Engine ${EngineSrc} ${QRcs})
 
