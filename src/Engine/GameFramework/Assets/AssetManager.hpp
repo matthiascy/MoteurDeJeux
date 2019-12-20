@@ -3,7 +3,7 @@
 
 #include <Core/Core.hpp>
 #include <Graphics/Mesh.hpp>
-#include <Graphics/GraphicsTypes.hpp>
+#include <Graphics/Types.hpp>
 
 class Engine;
 

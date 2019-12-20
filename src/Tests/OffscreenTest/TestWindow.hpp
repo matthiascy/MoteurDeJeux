@@ -8,7 +8,7 @@
 #include <QtGui/QPainter>
 #include "ExamplePaintSurface.hpp"
 #include "Offscreen.hpp"
-#include <Graphics/OglOffscreenSurface.hpp>
+#include <Engine/Graphics/OpenGL/OglOffscreenSurface.hpp>
 
 class TestMainWindow : public QMainWindow
 {
