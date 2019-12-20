@@ -130,9 +130,14 @@ void RenderSystem::_render_scene(Scene* scene)
 {
   m_surface->makeCurrent();
 
+  if (m_is_physics_debug_draw_enabled) {
+    if (m_physics_debug_draw_vbo_idx != -1)
+      m_physics_debug_draw_vbo_idx = genBufferObject(OglBuffer::VertexBuffer);
+    if (m_physics_debug_draw_vao_idx != -1)
+      m_physics_debug_draw_vbo_idx = genVertexArrayObject();
+  }
+
   if (scene) {
-    m_vaos[0]->bind();
-    m_programs[0]->bind();
 
     auto* camera = scene->mainCamera()->getComponent<PerspectiveCamera>();
 
@@ -143,37 +148,56 @@ void RenderSystem::_render_scene(Scene* scene)
             auto* meshRenderer = gameObject->getComponent<MeshRenderer>();
             auto* mesh = m_engine->assetManager()->getMesh(meshRenderer->meshHandle());
 
-            int vboIdx = m_vbos.size(), iboIdx = m_ibos.size();
-            m_render_graph.insert(gameObject, {vboIdx, {iboIdx, mesh->indices().size()}, {0}});
+            //int vboIdx = m_vbos.size(), iboIdx = m_ibos.size();
+            int vbo_idx = genBufferObject(OglBuffer::Type::VertexBuffer);
+            int ibo_idx = genBufferObject(OglBuffer::Type::IndexBuffer);
+            //m_render_graph.insert(gameObject, {vboIdx, {iboIdx, mesh->indices().size()}, {0}});
+            m_render_graph.insert(gameObject, {vbo_idx, {ibo_idx, mesh->indices().size()}, {0}});
 
-            m_vbos.insert(vboIdx, new OglBuffer(OglBuffer::VertexBuffer));
-            m_ibos.insert(iboIdx, new OglBuffer(OglBuffer::IndexBuffer));
+            //m_vbos.insert(vboIdx, new OglBuffer(OglBuffer::VertexBuffer));
+            //m_ibos.insert(iboIdx, new OglBuffer(OglBuffer::IndexBuffer));
 
-            m_vbos[vboIdx]->create();
-            m_vbos[vboIdx]->bind();
-            m_vbos[vboIdx]->setUsagePattern(OglBuffer::StaticDraw);
-            m_vbos[vboIdx]->allocate(mesh->constData(), mesh->count() * sizeof(float));
+            //m_vbos[vboIdx]->create();
+            //m_vbos[vboIdx]->bind();
+            //m_vbos[vboIdx]->setUsagePattern(OglBuffer::StaticDraw);
+            //m_vbos[vboIdx]->allocate(mesh->constData(), mesh->count() * sizeof(float));
+            m_vbos[vbo_idx]->bind();
+            m_vbos[vbo_idx]->setUsagePattern(OglBuffer::StaticDraw);
+            m_vbos[vbo_idx]->allocate(mesh->constData(), mesh->count() * sizeof(float));
 
-            m_ibos[iboIdx]->create();
-            m_ibos[iboIdx]->bind();
-            m_ibos[iboIdx]->setUsagePattern(OglBuffer::StaticDraw);
-            m_ibos[iboIdx]->allocate(mesh->indices().constData(),mesh->vertexCount() * sizeof(UInt32));
+            //m_ibos[iboIdx]->create();
+            //m_ibos[iboIdx]->bind();
+            //m_ibos[iboIdx]->setUsagePattern(OglBuffer::StaticDraw);
+            //m_ibos[iboIdx]->allocate(mesh->indices().constData(),mesh->vertexCount() * sizeof(UInt32));
+            //m_ibos[ibo_idx]->create();
+            m_ibos[ibo_idx]->bind();
+            m_ibos[ibo_idx]->setUsagePattern(OglBuffer::StaticDraw);
+            m_ibos[ibo_idx]->allocate(mesh->indices().constData(),mesh->vertexCount() * sizeof(UInt32));
           }
         }
       }
     }
 
+    m_vaos[0]->bind();
+    m_programs[0]->bind();
     m_programs[0]->setUniformValue("projectionMatrix", camera->projectionMatrix());
     m_programs[0]->setUniformValue("viewMatrix", camera->viewMatrix());
 
     m_fns->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     for (auto i = m_render_graph.begin(); i != m_render_graph.end(); ++i) {
       _render(i.key(), i.value(), m_programs[0]);
     }
 
     m_programs[0]->release();
     m_vaos[0]->release();
+
+    if (m_is_physics_debug_draw_enabled) {
+      m_vaos[1]->bind();
+      m_programs[0]->bind();
+      m_fns->glDrawArrays(GL_LINES, 0, );
+      m_programs[0]->release();
+      m_vaos[1]->release();
+    }
   }
 
   m_surface->swapBuffers();
@@ -219,4 +243,44 @@ void RenderSystem::resize(const QSize& size)
 void RenderSystem::update(Real dt)
 {
   _render_scene(m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->activatedScene()));
+}
+
+Int32 RenderSystem::genBufferObject(OglBuffer::Type type)
+{
+  switch (type) {
+    case OglBuffer::Type::IndexBuffer: {
+      Int32 idx = m_ibos.size();
+      m_ibos.insert(idx, new OglBuffer(OglBuffer::IndexBuffer));
+      m_ibos[idx]->create();
+      if (!m_ibos[idx]->isCreated()) {
+        m_ibos.remove(idx);
+        return -1;
+      } else {
+        return idx;
+      }
+    }
+
+    case OglBuffer::Type::VertexBuffer: {
+      Int32 idx = m_vbos.size();
+      m_vbos.insert(idx, new OglBuffer(OglBuffer::VertexBuffer));
+      m_vbos[idx]->create();
+      if (!m_vbos[idx]->isCreated()) {
+        m_vbos.remove(idx);
+        return -1;
+      } else {
+        return idx;
+      }
+    }
+
+    default:
+      return -1;
+  }
+}
+
+Int32 RenderSystem::genVertexArrayObject()
+{
+  Int32 idx = m_vaos.size();
+  m_vaos.insert(idx, new OglVAO());
+  m_vaos[idx]->create();
+  return (m_vaos[idx]->isCreated()) ? idx : -1;
 }

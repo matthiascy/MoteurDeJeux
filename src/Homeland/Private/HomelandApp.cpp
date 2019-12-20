@@ -5,6 +5,7 @@
 #include <Engine/Physics/Colliders/SphereCollider.hpp>
 #include <Engine/GameFramework/Managers.hpp>
 #include <Engine/Physics/Colliders/BoxCollider.hpp>
+#include <QApplication>
 
 HomelandApp::HomelandApp(int argc, char** argv)
   : GameApp("家·Homeland", "Strategy island defense game.", {1024, 768}, argc, argv),
@@ -34,6 +35,7 @@ bool HomelandApp::_init_main_scene()
 {
   m_engine->physicsSystem()->setGravity({0, -0.98f, 0});
   m_main_scene = m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->createScene("MainScene"));
+  m_main_scene->setActive(true);
 
   auto* cameraOrbit = m_main_scene->createGameObject("CameraOrbit", "default");
   cameraOrbit->setStatic(false);

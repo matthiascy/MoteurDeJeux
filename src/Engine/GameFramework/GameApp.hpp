@@ -1,8 +1,8 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_GAME_APP_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_GAME_APP_HPP
 
-#include <QtGui/QGuiApplication>
 #include <Core/Core.hpp>
+#include <QCoreApplication>
 
 class Engine;
 class SplashScreen;

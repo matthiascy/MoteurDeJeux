@@ -12,8 +12,6 @@
 
 class Object;
 
-#include <QApplication>
-
 #include <QPixmap>
 
 /* =================== Memory =================== */

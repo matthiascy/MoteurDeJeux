@@ -47,6 +47,10 @@ private:
 
   OglFns* m_fns;
 
+  Int32 m_physics_debug_draw_vbo_idx { -1 };
+  Int32 m_physics_debug_draw_vao_idx { -1 };
+  bool m_is_physics_debug_draw_enabled;
+
 public:
   RenderSystem(const String& name, Engine* engine, Object* parent = nullptr);
   ~RenderSystem() override;
@@ -68,9 +72,12 @@ public:
   [[nodiscard]]
   QImage grabFramebuffer() const;
 
-  OglOffscreenSurface* offscreenSurface() {
-    return m_surface.get();
-  }
+  OglOffscreenSurface* offscreenSurface() { return m_surface.get(); }
+
+
+  Int32 genBufferObject(OglBuffer::Type type);
+
+  Int32 genVertexArrayObject();
 
 private:
   /**

@@ -62,8 +62,7 @@ void PhysicsSystem::preUpdate(Real dt)
       if (object->isSimulated() && !object->isStatic()) {
         auto* rigid_body = object->getComponent<RigidBody>();
         if (rigid_body) {
-          if (m_world->getCollisionObjectArray().findLinearSearch(rigid_body->body()) ==
-              m_world->getCollisionObjectArray().size()) {
+          if (m_world->getCollisionObjectArray().findLinearSearch(rigid_body->body()) == m_world->getCollisionObjectArray().size()) {
             m_world->addRigidBody(rigid_body->body());
           }
         }

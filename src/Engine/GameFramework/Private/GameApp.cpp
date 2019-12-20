@@ -3,10 +3,9 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
 #include <QtGui/QOpenGLWindow>
-#include <QtGui/QGuiApplication>
+#include <QCoreApplication>
 #include <QApplication>
 #include <Editor/EditorMainWindow.hpp>
-#include <QtWidgets/QSplashScreen>
 #include <QtCore/QTimer>
 #include <Graphics/SplashScreen.hpp>
 #include <GameFramework/EngineWindow.hpp>
