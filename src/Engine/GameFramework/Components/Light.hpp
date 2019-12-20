@@ -16,7 +16,7 @@ public:
 
   [[nodiscard]]
   UInt64 typeID() const override {
-    return family::type<Light>;
+    return Component::family::type<Light>;
   }
 
   [[nodiscard]]

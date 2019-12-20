@@ -20,7 +20,26 @@ find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
 qt5_add_resources(QRcs ${EngineSrcDir}/resources.qrc)
 
+set(EngineSrcPhysics
+    ${EngineSrcDir}/Physics/Private/Collider.cpp
+    ${EngineSrcDir}/Physics/Collider.hpp
+    ${EngineSrcDir}/Physics/Colliders/Private/BoxCollider.cpp
+    ${EngineSrcDir}/Physics/Colliders/BoxCollider.hpp
+    ${EngineSrcDir}/Physics/Colliders/Private/CapsuleCollider.cpp
+    ${EngineSrcDir}/Physics/Colliders/CapsuleCollider.hpp
+    ${EngineSrcDir}/Physics/Colliders/Private/StaticMeshCollider.cpp
+    ${EngineSrcDir}/Physics/Colliders/StaticMeshCollider.hpp
+    ${EngineSrcDir}/Physics/Colliders/Private/CylinderCollider.cpp
+    ${EngineSrcDir}/Physics/Colliders/CylinderCollider.hpp
+    ${EngineSrcDir}/Physics/Colliders/Private/SphereCollider.cpp
+    ${EngineSrcDir}/Physics/Colliders/SphereCollider.hpp
+    ${EngineSrcDir}/Physics/Colliders/Private/ConeCollider.cpp
+    ${EngineSrcDir}/Physics/Colliders/ConeCollider.hpp
+    ${EngineSrcDir}/Physics/Colliders/Private/StaticPlaneCollider.cpp
+    ${EngineSrcDir}/Physics/Colliders/StaticPlaneCollider.hpp)
+
 set(EngineSrc
+    ${EngineSrcPhysics}
     ${EngineSrcDir}/Core/Math/Math.hpp
     ${EngineSrcDir}/Core/Math/MathTypes.hpp
     ${EngineSrcDir}/Core/Private/Object.cpp
@@ -42,28 +61,12 @@ set(EngineSrc
     ${EngineSrcDir}/GameFramework/Assets/MeshLoader.hpp
 
     ${EngineSrcDir}/GameFramework/Components/Private/Behavior.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/Collider.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Light.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/MeshRenderer.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Renderer.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Transform.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Camera.cpp
     ${EngineSrcDir}/GameFramework/Components/Behavior.hpp
-    ${EngineSrcDir}/GameFramework/Components/Collider.hpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/BoxCollider.cpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/BoxCollider.hpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/CapsuleCollider.cpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/CapsuleCollider.hpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/StaticMeshCollider.cpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/StaticMeshCollider.hpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/CylinderCollider.cpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/CylinderCollider.hpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/SphereCollider.cpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/SphereCollider.hpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/ConeCollider.cpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/ConeCollider.hpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/Private/StaticPlaneCollider.cpp
-    ${EngineSrcDir}/GameFramework/Components/Colliders/StaticPlaneCollider.hpp
     ${EngineSrcDir}/GameFramework/Components/Light.hpp
     ${EngineSrcDir}/GameFramework/Components/MeshRenderer.hpp
     ${EngineSrcDir}/GameFramework/Components/Renderer.hpp
@@ -139,9 +142,9 @@ set(EngineSrc
     GameFramework/Systems/Private/BehaviorSystem.cpp
     GameFramework/Systems/BehaviorSystem.hpp Graphics/Private/MaterialData.cpp
     Graphics/MaterialData.hpp GameFramework/Components/Private/Material.cpp
-    GameFramework/Components/Material.hpp GameFramework/Components/Colliders.hpp
+    GameFramework/Components/Material.hpp Physics/Colliders.hpp
     GameFramework/Managers.hpp GameFramework/Systems.hpp
-    Core/Utils.hpp Physics/Private/RigidBody.cpp Physics/RigidBody.hpp Physics/Private/Constraint.cpp Physics/Constraint.hpp Physics/Types.hpp Physics/Forward.hpp)
+    Core/Utils.hpp Physics/Private/RigidBody.cpp Physics/RigidBody.hpp Physics/Private/Constraint.cpp Physics/Constraint.hpp Physics/Types.hpp Physics/Forward.hpp Physics/Private/DebugDraw.cpp Physics/DebugDraw.hpp)
 
 add_library(Engine ${EngineSrc} ${QRcs})
 

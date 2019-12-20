@@ -16,7 +16,7 @@ public:
 
   [[nodiscard]]
   UInt64 typeID() const override {
-    return family::type<Behavior>;
+    return Component::family::type<Behavior>;
   }
 
   template <typename T>

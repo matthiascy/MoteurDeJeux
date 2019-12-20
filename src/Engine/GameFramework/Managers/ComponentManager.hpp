@@ -6,6 +6,8 @@
 #include <GameFramework/GameObject.hpp>
 #include <GameFramework/Types.hpp>
 #include <Physics/Collider.hpp>
+#include <Physics/RigidBody.hpp>
+
 
 // TODO::using handle to retrieve components
 
@@ -50,6 +52,26 @@ T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Ar
 
   ComponentTypeID type = Component::family::type<T>;
 
+  if (std::is_base_of_v<Collider, T>) {
+    gameObject->setHasCollider(true);
+    /*
+    auto rigidBody = gameObject->getComponent<RigidBody>();
+    if (rigidBody) {
+      component->setRigidBody(rigidBody);
+    }
+     */
+  }
+
+  /*
+  if (type == Component::family::type<RigidBody>) {
+    if (gameObject->hasCollider()) {
+      for (auto collider : gameObject->getComponentsOfType<Collider>()) {
+        collider->setRigidBody(component);
+      }
+    }
+  }
+   */
+
   if (m_components.contains(type)) {
     m_components[type]->push_back(component);
   } else {
@@ -69,10 +91,6 @@ T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Ar
     m_game_object_components.insert(gameObject, new ComponentTable);
     m_game_object_components[gameObject]->insert(type, new ComponentContainer);
     (*m_game_object_components[gameObject])[type]->push_back(component);
-  }
-
-  if (std::is_base_of_v<Collider, T>) {
-    gameObject->setHasCollider(true);
   }
 
   return component;

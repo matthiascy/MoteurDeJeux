@@ -4,7 +4,7 @@
 #include "Colliders/BoxCollider.hpp"
 #include "Colliders/CapsuleCollider.hpp"
 #include "Colliders/ConeCollider.hpp"
-#include "GameFramework/Components/Colliders/StaticMeshCollider.hpp"
+#include "Colliders/StaticMeshCollider.hpp"
 #include "Colliders/CylinderCollider.hpp"
 #include "Colliders/SphereCollider.hpp"
 #include "Colliders/StaticPlaneCollider.hpp"

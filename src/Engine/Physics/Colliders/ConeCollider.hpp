@@ -5,8 +5,13 @@
 
 class ConeCollider : public Collider {
 public:
-  ConeCollider(const String& name, GameObject* gameObject, Real radius, Real height, Real mass);
+  ConeCollider(const String& name, GameObject* gameObject, Real radius, Real height);
   ~ConeCollider() override = default;
+
+  [[nodiscard]]
+  UInt64 typeID() const override {
+    return family::type<ConeCollider>;
+  }
 };
 
 

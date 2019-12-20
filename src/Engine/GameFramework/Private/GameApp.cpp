@@ -216,12 +216,12 @@ bool GameApp::eventFilter(QObject* object, QEvent* event)
       } break;
 
       case QEvent::MouseButtonPress: {
-        qDebug() << "Mouse Pressed";
+        //qDebug() << "Mouse Pressed";
         m_engine->inputSystem()->_register_mouse_button_press(dynamic_cast<QMouseEvent*>(event)->button());
       } break;
 
       case QEvent::MouseButtonRelease: {
-        qDebug() << "Mouse Release";
+        //qDebug() << "Mouse Release";
         m_engine->inputSystem()->_register_mouse_button_release(dynamic_cast<QMouseEvent*>(event)->button());
       } break;
 

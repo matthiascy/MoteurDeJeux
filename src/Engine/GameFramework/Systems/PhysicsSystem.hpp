@@ -8,6 +8,9 @@
 #include <BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>
 
 class Engine;
+class RigidBody;
+
+// TODO: separated physics world
 
 class PhysicsSystem : public System {
 private:
@@ -41,6 +44,9 @@ public:
   void update(Real dt) override;
 
   void postUpdate(Real dt) override;
+
+  [[nodiscard]]
+  btDiscreteDynamicsWorld* physicsWorld() const;
 };
 
 

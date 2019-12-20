@@ -5,8 +5,13 @@
 
 class BoxCollider : public Collider {
 public:
-  BoxCollider(const String& name, GameObject* gameObject, const Vec3& size, Real mass);
+  BoxCollider(const String& name, GameObject* gameObject, const Vec3& size);
   ~BoxCollider() override = default;
+
+  [[nodiscard]]
+  UInt64 typeID() const override {
+    return Component::family::type<BoxCollider>;
+  }
 };
 
 

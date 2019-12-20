@@ -2,6 +2,6 @@
 #include <BulletCollision/CollisionShapes/btConeShape.h>
 
 
-ConeCollider::ConeCollider(const String &name, GameObject *gameObject, Real radius, Real height, Real mass)
-  : Collider(name, gameObject, new btConeShape(radius, height), mass)
+ConeCollider::ConeCollider(const String &name, GameObject *gameObject, Real radius, Real height)
+  : Collider(name, gameObject, new btConeShape(radius, height))
 { }

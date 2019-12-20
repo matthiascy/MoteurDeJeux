@@ -14,7 +14,7 @@ public:
 
   [[nodiscard]]
   UInt64 typeID() const override {
-    return family::type<PerspectiveCamera>;
+    return Component::family::type<PerspectiveCamera>;
   }
 
   [[nodiscard]]

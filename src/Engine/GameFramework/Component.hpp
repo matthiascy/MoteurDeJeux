@@ -10,8 +10,7 @@ class GameObject;
 
 enum class EComponentType {
   None = 0x00,
-  BoxCollider = 0x01,
-  MeshRenderer = 0x02,
+  Collider = 0x01,
 };
 
 /**
@@ -42,12 +41,14 @@ public:
   virtual UInt64 typeID() const = 0;
 
   [[nodiscard]]
-  inline bool isActive() const { return m_is_active; };
+  virtual bool isActive() const { return m_is_active; };
 
   inline void setActive(bool status) { m_is_active = status; }
 
   [[nodiscard]]
   inline GameObject* gameObject() const { return m_game_object; }
 };
+
+//const UInt64 Component::m_type_id = Family<Component>::type<Component>;
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENT_HPP */

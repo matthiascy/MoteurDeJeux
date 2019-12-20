@@ -5,9 +5,7 @@
 #include <GameFramework/Systems/RenderSystem.hpp>
 #include <GameFramework/Systems/PhysicsSystem.hpp>
 #include <GameFramework/Systems/InputSystem.hpp>
-#include <Graphics/AbstractWindow.hpp>
-
-#include <QtWidgets/QSplashScreen>
+#include <GameFramework/Managers.hpp>
 
 class SceneManager;
 class BehaviorSystem;
@@ -25,6 +23,16 @@ private:
   UniquePtr<InputSystem>      m_input_sys;
   UniquePtr<BehaviorSystem>   m_behavior_sys;
   GameApp*                    m_app;
+
+public:
+  template <typename T, typename... Args>
+  T* addComponent(const String& name, GameObject* gameObject, Args&&... params);
+
+  [[nodiscard]]
+  bool isKeyPressed(Qt::Key key) const;
+
+  [[nodiscard]]
+  bool isKeyTriggered(Qt::Key key) const;
 
 public:
   explicit Engine(GameApp* app);
@@ -53,5 +61,11 @@ public:
   [[nodiscard]]
   BehaviorSystem* behaviorSystem() const;
 };
+
+template <typename T, typename ...Args>
+T* Engine::addComponent(const String& name, GameObject* gameObject, Args&& ...params)
+{
+  return m_component_manager->addComponent<T>(name, gameObject, std::forward<Args>(params)...);
+}
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP */

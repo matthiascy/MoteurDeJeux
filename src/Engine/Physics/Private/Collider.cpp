@@ -1,7 +1,8 @@
 #include <Physics/Collider.hpp>
+#include <Physics/RigidBody.hpp>
 #include <GameFramework/GameObject.hpp>
 
-Collider::Collider(const String& name, GameObject* gameObject, btCollisionShape* shape, Real mass)
+Collider::Collider(const String& name, GameObject* gameObject, btCollisionShape* shape)
   : Component(name, gameObject)
 {
   m_shape.reset(shape);
@@ -34,5 +35,10 @@ btCollisionShape* Collider::collisionShape()
 RigidBody* Collider::rigidBody()
 {
   return m_rigid_body;
+}
+
+void Collider::setRigidBody(RigidBody* rigidBody)
+{
+  m_rigid_body = rigidBody;
 }
 

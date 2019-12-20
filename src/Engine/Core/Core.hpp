@@ -12,6 +12,10 @@
 
 class Object;
 
+#include <QApplication>
+
+#include <QPixmap>
+
 /* =================== Memory =================== */
 #include <QSharedPointer>
 

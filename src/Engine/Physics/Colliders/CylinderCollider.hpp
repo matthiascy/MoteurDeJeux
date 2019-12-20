@@ -5,8 +5,13 @@
 
 class CylinderCollider : public Collider {
 public:
-  CylinderCollider(const String& name, GameObject* gameObject, Real radius, Real height, Real mass);
+  CylinderCollider(const String& name, GameObject* gameObject, Real radius, Real height);
   ~CylinderCollider() override = default;
+
+  [[nodiscard]]
+  UInt64 typeID() const override {
+    return family::type<CylinderCollider>;
+  }
 };
 
 

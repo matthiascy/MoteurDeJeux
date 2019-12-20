@@ -1,10 +1,10 @@
-#include <GameFramework/Components/Colliders.hpp>
+#include <Physics/Colliders.hpp>
 #include <GameFramework/Systems/PhysicsSystem.hpp>
 #include <GameFramework/GameObject.hpp>
 #include <GameFramework/Engine.hpp>
 #include <GameFramework/Managers/SceneManager.hpp>
 #include <Physics/Collider.hpp>
-
+#include <Physics/RigidBody.hpp>
 
 PhysicsSystem::PhysicsSystem(const String& name, Engine* engine, Object* parent, const Vec3& gravity)
   : System(name, engine, parent),
@@ -16,11 +16,11 @@ PhysicsSystem::PhysicsSystem(const String& name, Engine* engine, Object* parent,
 void PhysicsSystem::init()
 {
   qInfo() << "Initialization...";
-  m_config = new btDefaultCollisionConfiguration();
-  m_dispatcher = new btCollisionDispatcher(m_config);
+  m_config      = new btDefaultCollisionConfiguration();
+  m_dispatcher  = new btCollisionDispatcher(m_config);
   m_broad_phase = new btDbvtBroadphase();
-  m_solver = new btSequentialImpulseConstraintSolver();
-  m_world = new btDiscreteDynamicsWorld(m_dispatcher, m_broad_phase, m_solver, m_config);
+  m_solver      = new btSequentialImpulseConstraintSolver();
+  m_world       = new btDiscreteDynamicsWorld(m_dispatcher, m_broad_phase, m_solver, m_config);
   m_world->setGravity(Math::toBtVec3(m_gravity));
 }
 
@@ -50,26 +50,6 @@ inline Vec3 PhysicsSystem::gravity() const
 
 void PhysicsSystem::update(Real dt)
 {
-  m_world->stepSimulation(dt, 10);
-  m_collision_objects = m_world->getCollisionObjectArray();
-
-  for (int i = 0; i < m_collision_objects.size(); ++i) {
-    btCollisionObject* obj = m_world->getCollisionObjectArray()[i];
-    btRigidBody* body = btRigidBody::upcast(obj);
-    btTransform trans;
-
-    if (body && body->getMotionState()) {
-
-      body->getMotionState()->getWorldTransform(trans);
-
-    } else {
-
-      trans = obj->getWorldTransform();
-
-    }
-    printf("world pos object %d = %f,%f,%f\n", i, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-  }
-  // TODO: obtain game object directly from rigid body
 }
 
 void PhysicsSystem::preUpdate(Real dt)
@@ -80,17 +60,11 @@ void PhysicsSystem::preUpdate(Real dt)
   if (scene) {
     for (GameObject* object : scene->gameObjects()) {
       if (object->isSimulated() && !object->isStatic()) {
-        qDebug() << "has collider " << object->hasComponent<Collider>();
-        if (object->hasCollider()) {
-          auto colliders = object->getComponentsOfType<Collider>();
-          qDebug() << colliders.size();
-          for (auto* collider : colliders) {
-            auto* rigid_body = collider->rigidBody();
-            if (m_world->getCollisionObjectArray().findLinearSearch(rigid_body) ==
-                m_world->getCollisionObjectArray().size()) {
-              qDebug() << "Add one collider";
-              m_world->addRigidBody(rigid_body);
-            }
+        auto* rigid_body = object->getComponent<RigidBody>();
+        if (rigid_body) {
+          if (m_world->getCollisionObjectArray().findLinearSearch(rigid_body->body()) ==
+              m_world->getCollisionObjectArray().size()) {
+            m_world->addRigidBody(rigid_body->body());
           }
         }
       }
@@ -100,8 +74,25 @@ void PhysicsSystem::preUpdate(Real dt)
 
 void PhysicsSystem::fixedUpdate(Real dt)
 {
+  m_world->stepSimulation(dt, 10);
+  m_collision_objects = m_world->getCollisionObjectArray();
+
+  for (int i = 0; i < m_collision_objects.size(); ++i) {
+    btTransform trans;
+    auto* rigidBody = static_cast<RigidBody*>(btRigidBody::upcast(m_world->getCollisionObjectArray()[i])->getUserPointer());
+    rigidBody->getWorldTransform(trans);
+    qDebug("world pos object %d = %f,%f,%f\n", i, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+    //Array<RigidBody*> bodies;
+    //rigidBody->collidingBodies(bodies);
+    //qDebug() << bodies.size();
+  }
 }
 
 void PhysicsSystem::postUpdate(Real dt)
 {
+}
+
+btDiscreteDynamicsWorld* PhysicsSystem::physicsWorld() const
+{
+  return m_world;
 }

@@ -78,3 +78,13 @@ BehaviorSystem* Engine::behaviorSystem() const
   return m_behavior_sys.get();
 }
 
+bool Engine::isKeyPressed(Qt::Key key) const
+{
+  return m_input_sys->isKeyPressed(key);
+}
+
+bool Engine::isKeyTriggered(Qt::Key key) const
+{
+  return m_input_sys->isKeyTriggered(key);
+}
+
