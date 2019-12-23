@@ -23,61 +23,61 @@ set(EnginePhysicsSrc
     ${EngineSrcDir}/Physics/Private/Constraint.cpp
     ${EngineSrcDir}/Physics/Private/DebugDrawer.cpp
     ${EngineSrcDir}/Physics/Private/RigidBody.cpp
-    ${EngineSrcDir}/Physics/Colliders/Private/BoxCollider.cpp
-    ${EngineSrcDir}/Physics/Colliders/Private/ConeCollider.cpp
-    ${EngineSrcDir}/Physics/Colliders/Private/SphereCollider.cpp
-    ${EngineSrcDir}/Physics/Colliders/Private/CapsuleCollider.cpp
-    ${EngineSrcDir}/Physics/Colliders/Private/CylinderCollider.cpp
-    ${EngineSrcDir}/Physics/Colliders/Private/StaticMeshCollider.cpp
-    ${EngineSrcDir}/Physics/Colliders/Private/StaticPlaneCollider.cpp
-    ${EngineSrcDir}/Physics/Types.hpp
-    ${EngineSrcDir}/Physics/Forward.hpp
-    ${EngineSrcDir}/Physics/Collider.hpp
-    ${EngineSrcDir}/Physics/RigidBody.hpp
-    ${EngineSrcDir}/Physics/Colliders.hpp
-    ${EngineSrcDir}/Physics/DebugDrawer.hpp
-    ${EngineSrcDir}/Physics/Constraint.hpp
-    ${EngineSrcDir}/Physics/Colliders/BoxCollider.hpp
-    ${EngineSrcDir}/Physics/Colliders/ConeCollider.hpp
-    ${EngineSrcDir}/Physics/Colliders/SphereCollider.hpp
-    ${EngineSrcDir}/Physics/Colliders/CapsuleCollider.hpp
-    ${EngineSrcDir}/Physics/Colliders/CylinderCollider.hpp
-    ${EngineSrcDir}/Physics/Colliders/StaticMeshCollider.hpp
-    ${EngineSrcDir}/Physics/Colliders/StaticPlaneCollider.hpp)
+    ${EngineSrcDir}/Physics/Private/Colliders/BoxCollider.cpp
+    ${EngineSrcDir}/Physics/Private/Colliders/ConeCollider.cpp
+    ${EngineSrcDir}/Physics/Private/Colliders/SphereCollider.cpp
+    ${EngineSrcDir}/Physics/Private/Colliders/CapsuleCollider.cpp
+    ${EngineSrcDir}/Physics/Private/Colliders/CylinderCollider.cpp
+    ${EngineSrcDir}/Physics/Private/Colliders/StaticMeshCollider.cpp
+    ${EngineSrcDir}/Physics/Private/Colliders/StaticPlaneCollider.cpp
+    ${EngineSrcDir}/Physics/Public/Types.hpp
+    ${EngineSrcDir}/Physics/Public/Forward.hpp
+    ${EngineSrcDir}/Physics/Public/Collider.hpp
+    ${EngineSrcDir}/Physics/Public/RigidBody.hpp
+    ${EngineSrcDir}/Physics/Public/Colliders.hpp
+    ${EngineSrcDir}/Physics/Public/Constraint.hpp
+    ${EngineSrcDir}/Physics/Public/DebugDrawer.hpp
+    ${EngineSrcDir}/Physics/Public/Colliders/BoxCollider.hpp
+    ${EngineSrcDir}/Physics/Public/Colliders/ConeCollider.hpp
+    ${EngineSrcDir}/Physics/Public/Colliders/SphereCollider.hpp
+    ${EngineSrcDir}/Physics/Public/Colliders/CapsuleCollider.hpp
+    ${EngineSrcDir}/Physics/Public/Colliders/CylinderCollider.hpp
+    ${EngineSrcDir}/Physics/Public/Colliders/StaticMeshCollider.hpp
+    ${EngineSrcDir}/Physics/Public/Colliders/StaticPlaneCollider.hpp)
 
 set(EngineGraphicsSrc
     ${EngineSrcDir}/Graphics/Private/Mesh.cpp
     ${EngineSrcDir}/Graphics/Private/Shader.cpp
     ${EngineSrcDir}/Graphics/Private/Material.cpp
     ${EngineSrcDir}/Graphics/Private/SplashScreen.cpp
-    ${EngineSrcDir}/Graphics/Components/Private/Light.cpp
-    ${EngineSrcDir}/Graphics/Components/Private/Renderer.cpp
-    ${EngineSrcDir}/Graphics/Components/Private/MeshRenderer.cpp
-    ${EngineSrcDir}/Graphics/OpenGL/Private/OglOffscreenSurface.cpp
-    ${EngineSrcDir}/Graphics/Components/Private/DirectionalLight.cpp
-    ${EngineSrcDir}/Graphics/Mesh.hpp
-    ${EngineSrcDir}/Graphics/Types.hpp
-    ${EngineSrcDir}/Graphics/Shader.hpp
-    ${EngineSrcDir}/Graphics/SplashScreen.hpp
-    ${EngineSrcDir}/Graphics/OpenGL/OglTypes.hpp
-    ${EngineSrcDir}/Graphics/Components/Light.hpp
-    ${EngineSrcDir}/Graphics/Material.hpp
-    ${EngineSrcDir}/Graphics/Components/MeshRenderer.hpp
-    ${EngineSrcDir}/Graphics/OpenGL/OglOffscreenSurface.hpp
-    ${EngineSrcDir}/Graphics/Components/DirectionalLight.hpp)
+    ${EngineSrcDir}/Graphics/Private/Light.cpp
+    ${EngineSrcDir}/Graphics/Private/Renderer.cpp
+    ${EngineSrcDir}/Graphics/Private/MeshRenderer.cpp
+    ${EngineSrcDir}/Graphics/Private/OpenGL/OglOffscreenSurface.cpp
+    ${EngineSrcDir}/Graphics/Private/DirectionalLight.cpp
+    ${EngineSrcDir}/Graphics/Public/Mesh.hpp
+    ${EngineSrcDir}/Graphics/Public/Types.hpp
+    ${EngineSrcDir}/Graphics/Public/Shader.hpp
+    ${EngineSrcDir}/Graphics/Public/SplashScreen.hpp
+    ${EngineSrcDir}/Graphics/Public/OpenGL/OglTypes.hpp
+    ${EngineSrcDir}/Graphics/Public/Light.hpp
+    ${EngineSrcDir}/Graphics/Public/Material.hpp
+    ${EngineSrcDir}/Graphics/Public/MeshRenderer.hpp
+    ${EngineSrcDir}/Graphics/Public/OpenGL/OglOffscreenSurface.hpp
+    ${EngineSrcDir}/Graphics/Public/DirectionalLight.hpp)
 
 set(EngineCoreSrc
-    ${EngineSrcDir}/Core/Math/Private/Math.cpp
-    ${EngineSrcDir}/Core/Math/Math.hpp
-    ${EngineSrcDir}/Core/Math/MathTypes.hpp
     ${EngineSrcDir}/Core/Private/Object.cpp
-    ${EngineSrcDir}/Core/BasicTypes.hpp
-    ${EngineSrcDir}/Core/Container.hpp
-    ${EngineSrcDir}/Core/Core.hpp
-    ${EngineSrcDir}/Core/Handle.hpp
-    ${EngineSrcDir}/Core/Memory.hpp
-    ${EngineSrcDir}/Core/Object.hpp
-    ${EngineSrcDir}/Core/Utils.hpp)
+    ${EngineSrcDir}/Core/Private/Math/Math.cpp
+    ${EngineSrcDir}/Core/Public/Core.hpp
+    ${EngineSrcDir}/Core/Public/Utils.hpp
+    ${EngineSrcDir}/Core/Public/Handle.hpp
+    ${EngineSrcDir}/Core/Public/Memory.hpp
+    ${EngineSrcDir}/Core/Public/Object.hpp
+    ${EngineSrcDir}/Core/Public/Math/Math.hpp
+    ${EngineSrcDir}/Core/Public/Container.hpp
+    ${EngineSrcDir}/Core/Public/BasicTypes.hpp
+    ${EngineSrcDir}/Core/Public/Math/MathTypes.hpp)
 
 set(EngineGameFrameworkSrc
     ${EngineSrcDir}/GameFramework/Private/Scene.cpp
@@ -161,7 +161,7 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.hpp
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
-    ${EditorSrcDir}/Vertex.cpp)
+    ${EditorSrcDir}/Vertex.cpp Physics/Private/PhysicsWorld.cpp Physics/Public/PhysicsWorld.hpp Physics/Public/BulletForward.hpp Physics/Private/CollisionShape.cpp Physics/Public/CollisionShape.hpp)
 
 qt5_add_resources(EngineSrc ${EngineSrcDir}/rscs.qrc ${EngineSrcDir}/Resources/Resources.qrc)
 

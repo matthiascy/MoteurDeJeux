@@ -1,7 +1,7 @@
 #ifndef TYPES_HPP
 #define TYPES_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 
 /* ==================== Enums ==================== */
 

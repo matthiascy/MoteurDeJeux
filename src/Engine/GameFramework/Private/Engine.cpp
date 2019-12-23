@@ -1,4 +1,4 @@
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <GameFramework/Engine.hpp>
 #include <GameFramework/GameApp.hpp>
 #include <Editor/EditorMainWindow.hpp>

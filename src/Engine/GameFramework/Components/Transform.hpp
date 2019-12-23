@@ -1,8 +1,8 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_TRANSFORM_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_TRANSFORM_HPP
 
-#include <Core/Math/Math.hpp>
-#include <Core/Core.hpp>
+#include <Core/Public/Math/Math.hpp>
+#include <Core/Public/Core.hpp>
 #include <GameFramework/Component.hpp>
 #include <GameFramework/Types.hpp>
 

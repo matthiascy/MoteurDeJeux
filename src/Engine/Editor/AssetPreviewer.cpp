@@ -2,7 +2,7 @@
 #include <QModelIndex>
 #include <QFileInfo>
 #include <QImage>
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include "AssetPreviewer.hpp"
 //#include <Framework/Graphics/Model3D.hpp>
 #include <iostream> // debug

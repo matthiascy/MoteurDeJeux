@@ -2,7 +2,7 @@
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_ENGINE_WINDOW_HPP
 
 #include <QtWidgets/QWidget>
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 
 class GameApp;
 class QLCDNumber;

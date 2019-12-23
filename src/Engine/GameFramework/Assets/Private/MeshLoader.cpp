@@ -1,5 +1,5 @@
 #include "GameFramework/Assets/MeshLoader.hpp"
-#include <Graphics/Mesh.hpp>
+#include <Graphics/Public/Mesh.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

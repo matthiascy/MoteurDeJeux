@@ -2,8 +2,9 @@
 #include <GameFramework/GameObject.hpp>
 #include <GameFramework/Engine.hpp>
 #include <GameFramework/Managers/SceneManager.hpp>
-#include <Physics/RigidBody.hpp>
-#include <Physics/DebugDrawer.hpp>
+#include <Physics/Public/RigidBody.hpp>
+#include <Physics/Public/DebugDrawer.hpp>
+#include <btBulletDynamicsCommon.h>
 
 // TODO: better debug draw
 

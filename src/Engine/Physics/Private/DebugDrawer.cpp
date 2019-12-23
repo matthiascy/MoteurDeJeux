@@ -1,5 +1,5 @@
 #include <GameFramework/Systems.hpp>
-#include "Physics/DebugDrawer.hpp"
+#include "Physics/Public/DebugDrawer.hpp"
 
 DebugDrawer::DebugDrawer(RenderSystem* renderSystem)
 {

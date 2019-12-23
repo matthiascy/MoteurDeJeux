@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SUBSYSTEMS_RENDERER_SYSTEM_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SUBSYSTEMS_RENDERER_SYSTEM_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <GameFramework/System.hpp>
 #include <QOpenGLContext>
 #include <QOffscreenSurface>
@@ -9,7 +9,7 @@
 #include <QtGui/QOpenGLShaderProgram>
 #include <QtGui/QOpenGLFramebufferObject>
 #include <QtGui/QOpenGLVertexArrayObject>
-#include <Graphics/OpenGL/OglOffscreenSurface.hpp>
+#include <Graphics/Public/OpenGL/OglOffscreenSurface.hpp>
 
 // TODO forward
 class GameObject;

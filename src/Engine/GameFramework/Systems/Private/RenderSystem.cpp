@@ -5,7 +5,7 @@
 #include <GameFramework/Scene.hpp>
 #include <GameFramework/Engine.hpp>
 #include <GameFramework/Components/PerspectiveCamera.hpp>
-#include <Graphics/Components/MeshRenderer.hpp>
+#include <Graphics/Public/MeshRenderer.hpp>
 #include <GameFramework/GameObject.hpp>
 
 

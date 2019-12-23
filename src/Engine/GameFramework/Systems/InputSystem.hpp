@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SYSTEMS_INPUT_SYSTEM_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SYSTEMS_INPUT_SYSTEM_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <GameFramework/System.hpp>
 #include <QtGui/QWheelEvent>
 

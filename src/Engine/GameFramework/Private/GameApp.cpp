@@ -7,13 +7,13 @@
 #include <QApplication>
 #include <Editor/EditorMainWindow.hpp>
 #include <QtCore/QTimer>
-#include <Graphics/SplashScreen.hpp>
+#include <Graphics/Public/SplashScreen.hpp>
 #include <GameFramework/EngineWindow.hpp>
 #include <QDesktopWidget>
 #include <QScreen>
 #include <GameFramework/Managers/SceneManager.hpp>
 #include <GameFramework/Systems.hpp>
-#include <Physics/DebugDrawer.hpp>
+#include <Physics/Public/DebugDrawer.hpp>
 
 GameApp::GameApp(const String& name, const String& description, QSize&& minSize, int argc, char** argv)
   : QObject(nullptr), m_is_initialized{false}, m_is_quit{false},

@@ -23,6 +23,8 @@ private:
   bool _init_main_scene();
 
   void _load_game_asset();
+
+  void _init_camera();
 };
 
 

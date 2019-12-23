@@ -1,4 +1,4 @@
-#include <Graphics/SplashScreen.hpp>
+#include <Graphics/Public/SplashScreen.hpp>
 #include <QEvent>
 
 SplashScreen::SplashScreen(const QPixmap& pixmap, Qt::WindowFlags f)

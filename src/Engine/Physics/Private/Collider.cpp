@@ -1,5 +1,5 @@
-#include <Physics/Collider.hpp>
-#include <Physics/RigidBody.hpp>
+#include <Physics/Public/Collider.hpp>
+#include <Physics/Public/RigidBody.hpp>
 #include <GameFramework/GameObject.hpp>
 
 Collider::Collider(const String& name, GameObject* gameObject, btCollisionShape* shape)

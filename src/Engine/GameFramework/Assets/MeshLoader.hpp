@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_ASSETS_MESH_LOADER_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_ASSETS_MESH_LOADER_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 
 class Mesh;
 

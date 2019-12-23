@@ -1,4 +1,4 @@
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include "EditorCamera.hpp"
 
 

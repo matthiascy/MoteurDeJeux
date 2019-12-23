@@ -1,11 +1,11 @@
 #ifndef MOTEUR_DE_JEUX_SRC_WORLD_PHYSICS_HPP
 #define MOTEUR_DE_JEUX_SRC_WORLD_PHYSICS_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <GameFramework/System.hpp>
-#include <btBulletCollisionCommon.h>
-#include <btBulletDynamicsCommon.h>
-#include <BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h>
+#include <Physics/Public/BulletForward.hpp>
+#include <Physics/Public/Forward.hpp>
+#include <Thirdparty/bullet3/src/BulletCollision/CollisionDispatch/btCollisionObject.h>
 
 class Engine;
 class RigidBody;
@@ -18,9 +18,10 @@ private:
   Vec3 m_gravity {Math::Down};
 
 protected:
-  btDefaultCollisionConfiguration*     m_config;
-  btCollisionDispatcher*               m_dispatcher;
-  btBroadphaseInterface*               m_broad_phase;
+  //UniquePtr<PhysicsWorld>  m_world;
+  btCollisionConfiguration*   m_config;
+  btDispatcher*               m_dispatcher;
+  btBroadphaseInterface*      m_broad_phase;
   btSequentialImpulseConstraintSolver* m_solver;
   btDiscreteDynamicsWorld*             m_world;
 
@@ -53,6 +54,10 @@ public:
 
   [[nodiscard]]
   DebugDrawer* debugDrawer() const;
+
+private:
+  /** Refresh collision only without updating dynamics. */
+  void _update_collision();
 };
 
 

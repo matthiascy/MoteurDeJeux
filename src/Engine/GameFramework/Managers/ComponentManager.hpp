@@ -1,12 +1,12 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_MANAGERS_COMPONENT_MANAGER_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_MANAGERS_COMPONENT_MANAGER_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <GameFramework/Component.hpp>
 #include <GameFramework/GameObject.hpp>
 #include <GameFramework/Types.hpp>
-#include <Physics/Collider.hpp>
-#include <Physics/RigidBody.hpp>
+#include <Physics/Public/Collider.hpp>
+#include <Physics/Public/RigidBody.hpp>
 
 
 // TODO::using handle to retrieve components

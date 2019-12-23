@@ -1,7 +1,8 @@
-#include <Physics/RigidBody.hpp>
+#include <Physics/Public/RigidBody.hpp>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <GameFramework/GameObject.hpp>
-#include <Physics/Collider.hpp>
+#include <Physics/Public/Collider.hpp>
+#include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
 
 //RigidBody::RigidBody(const String& name, GameObject* gameObject, btDynamicsWorld* world, Real mass)
 RigidBody::RigidBody(const String& name, GameObject* gameObject, PhysicsSystem* system, Real mass)

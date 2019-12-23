@@ -1,7 +1,7 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 
 #define DEFAULT_NEAR 0.25f
 #define DEFAULT_FAR  1024.0f

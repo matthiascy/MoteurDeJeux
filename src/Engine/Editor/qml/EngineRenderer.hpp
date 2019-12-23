@@ -1,7 +1,7 @@
 #ifndef MOTEURDEJEUX_SRC_ENGINERENDERER_HPP
 #define MOTEURDEJEUX_SRC_ENGINERENDERER_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <QtGui/QOpenGLFunctions>
 #include <QKeyEvent>
 #include <QQuickWindow>

@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_CAMERA_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_CAMERA_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <GameFramework/Component.hpp>
 
 class GameObject;

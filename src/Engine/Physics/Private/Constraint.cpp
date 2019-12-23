@@ -2,4 +2,4 @@
 // Created by mouton on 19/12/2019.
 //
 
-#include "Physics/Constraint.hpp"
+#include "Physics/Public/Constraint.hpp"

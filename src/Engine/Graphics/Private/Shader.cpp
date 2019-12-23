@@ -1,4 +1,4 @@
-#include "Graphics/Shader.hpp"
+#include "Graphics/Public/Shader.hpp"
 
 Shader::Shader()
 {

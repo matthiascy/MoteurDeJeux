@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <QWidget>
 #include <QtGui/QtGui>
 #include "Engine/Graphics/GraphicsTypes.hpp"

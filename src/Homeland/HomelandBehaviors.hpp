@@ -1,14 +1,17 @@
 #ifndef HOMELAND_HOMELAND_BEHAVIORS_HPP
 #define HOMELAND_HOMELAND_BEHAVIORS_HPP
 
-#include <Engine/Core/Core.hpp>
+#include <Engine/Core/Public/Core.hpp>
 
 class GameObject;
 class Engine;
 
 struct HomelandBehaviors {
 
-  static void cameraBehavior(GameObject* self, Engine* engine, Real dt);
+  /** Camera  behaviors */
+  static void trackball(GameObject* self, Engine* engine, Real dt);
+
+  static void freeView(GameObject* self, Engine* engine, Real dt);
 
   static void exampleBehavior(GameObject* self, Engine* engine, Real dt);
 

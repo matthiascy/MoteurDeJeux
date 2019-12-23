@@ -2,8 +2,8 @@
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENT_HPP
 
 #include <GameFramework/Forward.hpp>
-#include <Core/Handle.hpp>
-#include <Core/Object.hpp>
+#include <Core/Public/Handle.hpp>
+#include <Core/Public/Object.hpp>
 #include <GameFramework/Types.hpp>
 
 class GameObject;

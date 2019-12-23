@@ -1,9 +1,9 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_ASSETS_ASSET_MANAGER_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_ASSETS_ASSET_MANAGER_HPP
 
-#include <Core/Core.hpp>
-#include <Graphics/Mesh.hpp>
-#include <Graphics/Types.hpp>
+#include <Core/Public/Core.hpp>
+#include <Graphics/Public/Mesh.hpp>
+#include <Graphics/Public/Types.hpp>
 
 class Engine;
 

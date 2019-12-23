@@ -1,7 +1,7 @@
 #ifndef MOTEURDEJEUX_SRC_QML_ENGINEVIEWPORT_HPP
 #define MOTEURDEJEUX_SRC_QML_ENGINEVIEWPORT_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <QTime>
 #include <QTimer>
 #include <QQuickItem>

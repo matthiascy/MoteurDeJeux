@@ -2,9 +2,9 @@
 #include <Engine/GameFramework/Components.hpp>
 #include <Homeland/HomelandApp.hpp>
 #include <Homeland/HomelandBehaviors.hpp>
-#include <Engine/Physics/Colliders/SphereCollider.hpp>
+#include <Engine/Physics/Public/Colliders/SphereCollider.hpp>
 #include <Engine/GameFramework/Managers.hpp>
-#include <Engine/Physics/Colliders/BoxCollider.hpp>
+#include <Engine/Physics/Public/Colliders/BoxCollider.hpp>
 #include <QApplication>
 
 HomelandApp::HomelandApp(int argc, char** argv)
@@ -64,23 +64,7 @@ bool HomelandApp::_init_main_scene()
   m_main_scene = m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->createScene("MainScene"));
   m_main_scene->setActive(true);
 
-  auto* cameraOrbit = m_main_scene->createGameObject("CameraOrbit", "default");
-  cameraOrbit->setStatic(false);
-  auto* behaviroCameraOrbit = m_engine->addComponent<Behavior>("OrbitBehavior", cameraOrbit);
-  behaviroCameraOrbit->setUpdateFn([](GameObject* self, Engine* engine, Real dt){
-    if (engine->inputSystem()->isMouseButtonPressed(Qt::MouseButton::LeftButton)) {
-      self->transform()->rotate(Math::Up, engine->inputSystem()->mouseDelta().x() * 0.1f,ESpace::Local);
-    }
-  });
-
-  auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
-  auto* cameraTransform = camera->transform();
-  cameraTransform->setParent(cameraOrbit->transform());
-  cameraTransform->setPosition({0, 0, 20}, ESpace::World);
-  cameraTransform->lookAt(Math::Zero, cameraTransform->up());
-  m_engine->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 1, 10000);
-  auto* behaviorCamera = m_engine->addComponent<Behavior>("behavior", camera);
-  behaviorCamera->setUpdateFn(HomelandBehaviors::cameraBehavior);
+  _init_camera();
 
   auto* cubeOrbit = m_main_scene->createGameObject("CubeOrbit", "default");
   auto* meshRendererCubeOrbit = m_engine->addComponent<MeshRenderer>("mesh-renderer00", cubeOrbit, m_assets["Cube"]);
@@ -139,6 +123,12 @@ bool HomelandApp::_init_main_scene()
   sun->setIsSimulated(true);
   auto* colliderSun = m_engine->addComponent<SphereCollider>("sphere-collider", sun, 1);
   auto* rigidBody = m_engine->addComponent<RigidBody>("rigid-body", sun, m_engine->physicsSystem(), 0.0001);
+  m_engine->addComponent<Behavior>("", sun)->setUpdateFn([](GameObject* self, Engine* engine, Real dt){
+    if (engine->isKeyPressed(Qt::Key_B)) {
+      qDebug() << "Pousser";
+      self->getComponent<RigidBody>()->applyForce(self->transform()->forward() * 100);
+    }
+  });
 
   auto* cube3 = m_main_scene->createGameObject("Sun", "default");
   auto* meshRenderercube3 = m_engine->addComponent<MeshRenderer>("mesh-renderer00", cube3, m_assets["Cube"]);
@@ -152,6 +142,7 @@ bool HomelandApp::_init_main_scene()
       self->transform()->translate(self->transform()->right() * -dt, ESpace::World);
     }
   });
+
   //auto* collider2Cube3 = m_engine->addComponent<SphereCollider>("sphere", cube3, 10);
   //rigidBodyCube3->setActive(false);
   //rigidBodyCube3->setGravity(Math::Zero);
@@ -171,4 +162,19 @@ bool HomelandApp::_init_main_scene()
   moon->transform()->translateWorld({5, 5, 5});
   auto* meshRendererMoon = m_engine->addComponent<MeshRenderer>("mesh-renderer01", moon, m_assets["Sphere"]);
    */
+}
+
+void HomelandApp::_init_camera()
+{
+  auto* trackball = m_main_scene->createGameObject("trackball", "default");
+  trackball->setStatic(false);
+  m_engine->addComponent<Behavior>("trackball", trackball)->setUpdateFn(HomelandBehaviors::trackball);
+
+  auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
+  auto* cameraTransform = camera->transform();
+  cameraTransform->setParent(trackball->transform());
+  cameraTransform->setPosition({0, 0, 20}, ESpace::World);
+  cameraTransform->lookAt(Math::Zero, cameraTransform->up());
+  m_engine->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 1, 10000);
+  m_engine->addComponent<Behavior>("behavior", camera)->setUpdateFn(HomelandBehaviors::freeView);
 }

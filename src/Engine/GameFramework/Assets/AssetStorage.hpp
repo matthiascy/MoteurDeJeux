@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ASSETS_ASSET_STORAGE_HPP
 #define MOTEUR_DE_JEUX_SRC_ASSETS_ASSET_STORAGE_HPP
 
-#include <Core/BasicTypes.hpp>
+#include <Core/Public/BasicTypes.hpp>
 
 class AssetStorage {
 public:

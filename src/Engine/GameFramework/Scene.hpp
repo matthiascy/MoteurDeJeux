@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SCENE_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_SCENE_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 
 // TODO vbo index for Creating and Destroying GameObject
 

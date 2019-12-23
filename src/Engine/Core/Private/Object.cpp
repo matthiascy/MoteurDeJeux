@@ -1,5 +1,5 @@
-#include <Core/Object.hpp>
-#include <Core/Core.hpp>
+#include <Core/Public/Object.hpp>
+#include <Core/Public/Core.hpp>
 
 Object::Object(const String& name, Object* parent)
   : QObject(parent),

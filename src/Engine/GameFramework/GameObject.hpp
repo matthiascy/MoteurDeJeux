@@ -1,9 +1,9 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_GAME_OBJECT_HPP
 
-#include <Core/Core.hpp>
+#include <Core/Public/Core.hpp>
 #include <GameFramework/Forward.hpp>
-#include <Graphics/Mesh.hpp>
+#include <Graphics/Public/Mesh.hpp>
 #include <btBulletCollisionCommon.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <GameFramework/Assets/AssetsTypes.hpp>
