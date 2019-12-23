@@ -3,6 +3,7 @@
 
 #include <Core/Core.hpp>
 #include <GameFramework/System.hpp>
+#include <QtGui/QWheelEvent>
 
 class InputSystem : public System {
 
@@ -14,6 +15,8 @@ private:
   QPoint m_mouse_delta;
   QPoint m_mouse_prev_position;
   QPoint m_mouse_curr_position;
+  QPoint m_mouse_wheel_angle_delta;
+  bool m_is_mouse_wheel_scrolled;
 
 public:
   InputSystem(const String& name, Engine* engine, Object* parent = nullptr);
@@ -55,11 +58,21 @@ public:
   [[nodiscard]]
   QPoint mouseDelta() const;
 
+  [[nodiscard]]
+  QPoint angleDelta() const;
+
+  [[nodiscard]]
+  Real verticalScroll() const;
+
+  [[nodiscard]]
+  Real horizontalScroll() const;
+
 private:
   void _register_key_press(Qt::Key key);
   void _register_key_release(Qt::Key key);
   void _register_mouse_button_press(Qt::MouseButton button);
   void _register_mouse_button_release(Qt::MouseButton release);
+  void _register_mouse_wheel(QWheelEvent* event);
   void _reset();
   void _update();
 };

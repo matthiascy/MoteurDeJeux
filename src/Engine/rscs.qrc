@@ -1,46 +1,6 @@
 <RCC>
     <qresource prefix="/Textures">
-        <file alias="cube">../../assets/textures/cube.png</file>
-        <file alias="grass">../../assets/textures/grass.png</file>
-        <file alias="heightmap">../../assets/textures/heightmap-1024x1024.png</file>
-        <file alias="rock">../../assets/textures/rock.png</file>
-        <file alias="snowrock">../../assets/textures/snowrocks.png</file>
-        <file alias="terrain">../../assets/textures/terrain.jpg</file>
-        <file alias="ocean">../../assets/textures/ocean.jpg</file>
-        <file alias="earth">../../assets/textures/earth.jpg</file>
-        <file alias="sun">../../assets/textures/sun.jpg</file>
-        <file alias="earth2">../../assets/textures/earth2.jpg</file>
         <file alias="moon">../../assets/textures/moon.jpg</file>
-        <file alias="jupiter">../../assets/textures/jupiter.jpg</file>
-        <file alias="milky">../../assets/textures/milky_way.jpg</file>
-        <file alias="milky2">../../assets/textures/milky2.jpg</file>
-        <file alias="mars">../../assets/textures/mars.jpg</file>
-        <file alias="mercury">../../assets/textures/mercury.jpg</file>
-        <file alias="neptune">../../assets/textures/neptune.jpg</file>
-        <file alias="saturn">../../assets/textures/saturn.jpg</file>
-        <file alias="uranus">../../assets/textures/uranus.jpg</file>
-        <file alias="venus">../../assets/textures/venus.jpg</file>
-    </qresource>
-    <qresource prefix="/Shaders">
-        <file alias="BasicVert">../../assets/shaders/Basic.vert</file>
-        <file alias="BasicFrag">../../assets/shaders/Basic.frag</file>
-        <file alias="CubeVert">../../assets/shaders/vertex_glsl.vert</file>
-        <file alias="CubeFrag">../../assets/shaders/fragment_glsl.frag</file>
-        <file alias="fshader.glsl">../../assets/shaders/fshader.glsl</file>
-        <file alias="vshader.glsl">../../assets/shaders/vshader.glsl</file>
-        <file alias="viewport.frag">../../assets/shaders/viewport.frag</file>
-        <file alias="viewport.vert">../../assets/shaders/viewport.vert</file>
-        <file alias="basic.frag">../../assets/shaders/basic2.frag</file>
-        <file alias="basic.vert">../../assets/shaders/basic2.vert</file>
-        <file alias="preview.frag">../../assets/shaders/preview.frag</file>
-        <file alias="preview.vert">../../assets/shaders/preview.vert</file>
-        <file alias="previewimage.frag">../../assets/shaders/preview_image.frag</file>
-        <file alias="previewimage.vert">../../assets/shaders/preview_image.vert</file>
-        <file alias="SimpleColor">../../assets/shaders/SimpleColor.frag</file>
-        <file alias="SimplePosition">../../assets/shaders/SimplePosition.vert</file>
-    </qresource>
-    <qresource prefix="/Models">
-        <file alias="Sphere">../../assets/models/sphere.obj</file>
     </qresource>
     <qresource prefix="/App">
         <file alias="engine-logo">../../assets/textures/ephemeral-engine.png</file>
@@ -78,8 +38,5 @@
         <file alias="placelight.png">../../assets/icons/place-light.png</file>
         <file alias="placedark.png">../../assets/icons/place-dark.png</file>
         <file alias="rotatelight.png">../../assets/icons/rotate-light.png</file>
-    </qresource>
-    <qresource prefix="/UI">
-        <file alias="MainMenu">../../assets/uis/MainMenu.ui</file>
     </qresource>
 </RCC>

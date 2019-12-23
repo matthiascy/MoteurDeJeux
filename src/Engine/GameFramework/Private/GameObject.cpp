@@ -78,7 +78,6 @@ void GameObject::addComponent(Component* component)
     m_components.push_back(component);
 
     if (component->typeID() == Component::family::type<Transform>) {
-      qDebug() << "Add transform component";
       m_transform = dynamic_cast<Transform*>(component);
     }
   }

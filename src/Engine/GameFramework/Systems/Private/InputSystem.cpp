@@ -37,7 +37,7 @@ static void _remove_if_released(HashMap<T, InputState>& map)
 }
 
 InputSystem::InputSystem(const String& name, Engine* engine, Object* parent)
-  : System(name, engine, parent)
+  : System(name, engine, parent), m_is_mouse_wheel_scrolled{false}
 {
   qInfo() << "Creation =>" << objectName();
 }
@@ -117,6 +117,8 @@ void InputSystem::_update()
   m_mouse_prev_position = m_mouse_curr_position;
   m_mouse_curr_position = QCursor::pos();
   m_mouse_delta = m_mouse_curr_position - m_mouse_prev_position;
+  if (m_is_mouse_wheel_scrolled) m_is_mouse_wheel_scrolled = !m_is_mouse_wheel_scrolled;
+  m_mouse_wheel_angle_delta = {0, 0};
 
   _remove_if_released(m_key_map);
   _remove_if_released(m_btn_map);
@@ -157,4 +159,25 @@ void InputSystem::_reset()
 {
   m_key_map.clear();
   m_btn_map.clear();
+}
+
+QPoint InputSystem::angleDelta() const
+{
+  return m_mouse_wheel_angle_delta;
+}
+
+void InputSystem::_register_mouse_wheel(QWheelEvent* event)
+{
+  m_is_mouse_wheel_scrolled = true;
+  m_mouse_wheel_angle_delta = event->angleDelta();
+}
+
+Real InputSystem::verticalScroll() const
+{
+   return m_mouse_wheel_angle_delta.y();
+}
+
+Real InputSystem::horizontalScroll() const
+{
+  return m_mouse_wheel_angle_delta.x();
 }

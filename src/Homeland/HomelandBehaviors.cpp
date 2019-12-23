@@ -34,8 +34,11 @@ void HomelandBehaviors::cameraBehavior(GameObject* self, Engine* engine, Real dt
     //self->transform()->lookAt({0, 0, 0}, self->transform()->up());
   }
 
+  self->transform()->translate(self->transform()->forward() * -dt*engine->inputSystem()->verticalScroll(), ESpace::World);
+
   //self->transform()->lookAt({0, 0, 0}, self->transform()->up());
   //qDebug() << "Cam world pos : " << self->transform()->worldPosition();
+  //qDebug() << "Wheel y " << engine->inputSystem()->verticalScroll();
 }
 
 void HomelandBehaviors::exampleBehavior(GameObject* self, Engine* engine, Real dt)

@@ -18,8 +18,6 @@ class RenderSystem;
  * Constructor => .setFormat => .create => .init
  */
 
-#include <atomic>
-
 class OglOffscreenSurface : public QOffscreenSurface {
 
   Q_OBJECT
@@ -43,6 +41,9 @@ public:
   /// @return The functions for the context or nullptr if it the context hasn't been created yet.
   [[nodiscard]]
   OglFns* fns() const;
+
+  [[nodiscard]]
+  OglFnsCore4_0* fnsCore40() const;
 
   OglFBO* framebufferObject();
 
@@ -85,7 +86,7 @@ private:
   void init();
 
   /// @brief Internal method that does the actual swap work, NOT using a mutex.
-  void swap_buffers_internal_();
+  void _swap_buffers_internal();
 
   /// @brief Internal method to grab content of a specific framebuffer.
   QImage grab_framebuffer_internal_(OglFBO* fbo);
@@ -114,6 +115,8 @@ private:
 //  OglFBO* m_resolvedFbo;
 
   QSize m_size;
+
+  UniquePtr<OglDebugLogger> m_debug_logger;
 };
 
 

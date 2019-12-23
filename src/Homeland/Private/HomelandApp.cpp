@@ -23,7 +23,34 @@ void HomelandApp::init()
 
 void HomelandApp::_load_game_asset()
 {
-  m_assets.insert("Sphere", m_engine->assetManager()->loadMesh("./assets/models/sphere.obj"));
+  auto sphereHandle = m_engine->assetManager()->loadMesh("./assets/models/sphere.obj");
+  m_assets.insert("Sphere", sphereHandle);
+  auto* sphere = m_engine->assetManager()->getMesh(sphereHandle);
+  Array<float>& data = sphere->dataArray();
+  Real umax = -10.0;
+  Real umin = 20.0;
+  Real vmax = -10.0;
+  Real vmin = 20.0;
+  for (UInt32 i = 0; i < sphere->vertexCount(); ++i) {
+    Vec3 n = Vec3(data[i*8], data[i*8+1], data[i*8+2]).normalized();
+    Real u = qAtan2(n.x(), n.z()) / (2 * M_PI) + 0.5;
+    Real v = n.y() * 0.5 + 0.5;
+    data[i*8+6] = u;
+    data[i*8+7] = v;
+    if (umax < u) umax = u;
+    if (umin > u) umin = u;
+    if (vmax < v) vmax = v;
+    if (vmin > v) vmin = v;
+  }
+
+  qDebug() << "u max:" << umax << "u min:" << umin;
+  qDebug() << "v max:" << vmax << "v min:" << vmin;
+
+  for (UInt32 i = 0; i < sphere->vertexCount(); ++i) {
+    data[i*8+6] = (data[i*8+6] - umin) / (umax - umin);
+    data[i*8+7] = (data[i*8+7] - vmin) / (vmax - vmin);
+  }
+
   m_assets.insert("Klingon", m_engine->assetManager()->loadMesh("./assets/models/klingon.off"));
   m_assets.insert("TreeType001", m_engine->assetManager()->loadMesh("./assets/models/TreeType001.dae"));
   //m_assets.insert("TreeType001", m_engine->assetManager()->loadMesh("./assets/models/TreeType001.dae"));
@@ -49,7 +76,7 @@ bool HomelandApp::_init_main_scene()
   auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
   auto* cameraTransform = camera->transform();
   cameraTransform->setParent(cameraOrbit->transform());
-  cameraTransform->setPosition({0, 0, 10}, ESpace::World);
+  cameraTransform->setPosition({0, 0, 20}, ESpace::World);
   cameraTransform->lookAt(Math::Zero, cameraTransform->up());
   m_engine->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 1, 10000);
   auto* behaviorCamera = m_engine->addComponent<Behavior>("behavior", camera);
@@ -108,20 +135,24 @@ bool HomelandApp::_init_main_scene()
   auto* meshRendererSun = m_engine->addComponent<MeshRenderer>("mesh-renderer00", sun, m_assets["Sphere"]);
   auto* behaviorSun = m_engine->addComponent<Behavior>("behavior", sun);
   behaviorSun->setUpdateFn(HomelandBehaviors::exampleBehavior);
-  sun->transform()->setPosition({3, 3, 3}, ESpace::World);
+  sun->transform()->setPosition({3, 6, 3}, ESpace::World);
   sun->setIsSimulated(true);
   auto* colliderSun = m_engine->addComponent<SphereCollider>("sphere-collider", sun, 1);
-  qDebug() << sun->isSimulated();
-  qDebug() << sun->hasCollider();
-  auto* rigidBody = m_engine->addComponent<RigidBody>("rigid-body", sun, m_engine->physicsSystem(), 1000000);
+  auto* rigidBody = m_engine->addComponent<RigidBody>("rigid-body", sun, m_engine->physicsSystem(), 0.0001);
 
   auto* cube3 = m_main_scene->createGameObject("Sun", "default");
   auto* meshRenderercube3 = m_engine->addComponent<MeshRenderer>("mesh-renderer00", cube3, m_assets["Cube"]);
   cube3->transform()->setPosition({3, 1, 3}, ESpace::World);
   cube3->setIsSimulated(true);
-  auto* colliderCube3 = m_engine->addComponent<BoxCollider>("box-collider", cube3, Vec3{1, 1, 1});
-  //auto* collider2Cube3 = m_engine->addComponent<SphereCollider>("sphere", cube3, 10);
+  auto* colliderCube3 = m_engine->addComponent<BoxCollider>("box-collider", cube3, Vec3{0.5, 0.5, 0.5});
   auto* rigidBodyCube3 = m_engine->addComponent<RigidBody>("rigid-body", cube3, m_engine->physicsSystem(), 0);
+  auto* behaviorCube3 = m_engine->addComponent<Behavior>("behavior", cube3);
+  behaviorCube3->setUpdateFn([](GameObject* self, Engine* engine, Real dt) {
+    if (engine->inputSystem()->isKeyPressed(Qt::Key_Left)) {
+      self->transform()->translate(self->transform()->right() * -dt, ESpace::World);
+    }
+  });
+  //auto* collider2Cube3 = m_engine->addComponent<SphereCollider>("sphere", cube3, 10);
   //rigidBodyCube3->setActive(false);
   //rigidBodyCube3->setGravity(Math::Zero);
 

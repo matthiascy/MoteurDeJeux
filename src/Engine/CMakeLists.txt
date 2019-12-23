@@ -18,14 +18,11 @@ set(CMAKE_AUTOUIC_ON)
 # QtUiTools used for load .ui file dynamically UiTools
 find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
-qt5_add_resources(QRcs ${EngineSrcDir}/resources.qrc)
-
 set(EnginePhysicsSrc
     ${EngineSrcDir}/Physics/Private/Collider.cpp
     ${EngineSrcDir}/Physics/Private/Constraint.cpp
-    ${EngineSrcDir}/Physics/Private/DebugDraw.cpp
+    ${EngineSrcDir}/Physics/Private/DebugDrawer.cpp
     ${EngineSrcDir}/Physics/Private/RigidBody.cpp
-    ${EngineSrcDir}/Physics/Private/DebugDraw.cpp
     ${EngineSrcDir}/Physics/Colliders/Private/BoxCollider.cpp
     ${EngineSrcDir}/Physics/Colliders/Private/ConeCollider.cpp
     ${EngineSrcDir}/Physics/Colliders/Private/SphereCollider.cpp
@@ -38,7 +35,7 @@ set(EnginePhysicsSrc
     ${EngineSrcDir}/Physics/Collider.hpp
     ${EngineSrcDir}/Physics/RigidBody.hpp
     ${EngineSrcDir}/Physics/Colliders.hpp
-    ${EngineSrcDir}/Physics/DebugDraw.hpp
+    ${EngineSrcDir}/Physics/DebugDrawer.hpp
     ${EngineSrcDir}/Physics/Constraint.hpp
     ${EngineSrcDir}/Physics/Colliders/BoxCollider.hpp
     ${EngineSrcDir}/Physics/Colliders/ConeCollider.hpp
@@ -98,27 +95,27 @@ set(EngineGameFrameworkSrc
     ${EngineSrcDir}/GameFramework/Component.hpp
     ${EngineSrcDir}/GameFramework/GameObject.hpp
 
+    ${EngineSrcDir}/GameFramework/Assets/Asset.hpp
     ${EngineSrcDir}/GameFramework/Assets/Private/Asset.cpp
+    ${EngineSrcDir}/GameFramework/Assets/Private/MeshLoader.cpp
     ${EngineSrcDir}/GameFramework/Assets/Private/AssetManager.cpp
     ${EngineSrcDir}/GameFramework/Assets/Private/AssetStorage.cpp
-    ${EngineSrcDir}/GameFramework/Assets/Private/MeshLoader.cpp
-    ${EngineSrcDir}/GameFramework/Assets/Asset.hpp
+    ${EngineSrcDir}/GameFramework/Assets/MeshLoader.hpp
+    ${EngineSrcDir}/GameFramework/Assets/AssetsTypes.hpp
     ${EngineSrcDir}/GameFramework/Assets/AssetManager.hpp
     ${EngineSrcDir}/GameFramework/Assets/AssetStorage.hpp
-    ${EngineSrcDir}/GameFramework/Assets/AssetsTypes.hpp
-    ${EngineSrcDir}/GameFramework/Assets/MeshLoader.hpp
 
+    ${EngineSrcDir}/GameFramework/Components/Private/Camera.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Behavior.cpp
     ${EngineSrcDir}/GameFramework/Components/Private/Transform.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/Camera.cpp
+    ${EngineSrcDir}/GameFramework/Components/Private/OrthogonalCamera.cpp
+    ${EngineSrcDir}/GameFramework/Components/Private/PerspectiveCamera.cpp
+    ${EngineSrcDir}/GameFramework/Components.hpp
+    ${EngineSrcDir}/GameFramework/Components/Camera.hpp
     ${EngineSrcDir}/GameFramework/Components/Behavior.hpp
     ${EngineSrcDir}/GameFramework/Components/Transform.hpp
-    ${EngineSrcDir}/GameFramework/Components/Camera.hpp
-    ${EngineSrcDir}/GameFramework/Components/Private/OrthogonalCamera.cpp
     ${EngineSrcDir}/GameFramework/Components/OrthogonalCamera.hpp
-    ${EngineSrcDir}/GameFramework/Components/Private/PerspectiveCamera.cpp
     ${EngineSrcDir}/GameFramework/Components/PerspectiveCamera.hpp
-    ${EngineSrcDir}/GameFramework/Components.hpp
 
     ${EngineSrcDir}/GameFramework/Systems.hpp
     ${EngineSrcDir}/GameFramework/Systems/Private/BehaviorSystem.cpp
@@ -166,7 +163,9 @@ set(EngineSrc
     ${EditorSrcDir}/Vertex.hpp
     ${EditorSrcDir}/Vertex.cpp)
 
-add_library(Engine ${EngineSrc} ${QRcs})
+qt5_add_resources(EngineSrc ${EngineSrcDir}/rscs.qrc ${EngineSrcDir}/Resources/Resources.qrc)
+
+add_library(Engine ${EngineSrc})
 
 set_target_properties(Engine PROPERTIES
     LINKER_LANGUAGE CXX

@@ -16,9 +16,19 @@ class GameObject;
 class Engine;
 class QOpenGLPaintDevice;
 class Scene;
-class PhysicsDebugDrawSystem;
+class PhysicsDebugDraw;
 
 class RenderSystem : public System {
+public:
+  struct physics_debug_draw_info_t {
+    Int32 vboIdx        { -1 };
+    Int32 vaoIdx        { -1 };
+    Int32 programIdx    { -1 };
+    Int32 vertShaderIdx { -1 };
+    Int32 fragShaderIdx { -1 };
+    Int32 size          {  0 };
+  };
+
 private:
   struct RenderInfo {
     Int32 vboIdx {};
@@ -39,6 +49,7 @@ private:
   Array<OglVAO*>     m_vaos;
   Array<OglBuffer*>  m_vbos;
   Array<OglBuffer*>  m_ibos;
+  Array<OglShader*>  m_shaders;
   Array<OglProgram*> m_programs;
   Array<OglTexture*> m_textures;
 
@@ -46,11 +57,11 @@ private:
   Mat4 m_model_matrix;
   Mat4 m_projection_matrix;
 
-  OglFns* m_fns;
+  OglFns*       m_fns;
+  OglFnsCore4_0* m_fns4_0;
 
-  Int32 m_physics_debug_draw_vbo_idx  { -1 };
-  Int32 m_physics_debug_draw_vao_idx  { -1 };
-  Int32 m_physics_debug_draw_vbo_size { 0 };
+  physics_debug_draw_info_t m_physics_debug_draw_info { };
+
   bool m_is_physics_debug_draw_enabled;
 
 public:
@@ -76,21 +87,31 @@ public:
 
   OglOffscreenSurface* offscreenSurface() { return m_surface.get(); }
 
-  Int32 genBufferObject(OglBuffer::Type type);
+  void makeCurrent();
 
-  Int32 genVertexArrayObject();
+  void doneCurrent();
+
+  Int32 createBufferObject(OglBuffer::Type type);
+
+  Int32 createVertexArrayObject();
+
+  Int32 createShaderProgram();
+
+  Int32 createShader(OglShader::ShaderTypeBit type);
 
   [[nodiscard]]
-  Int32 physicsDebugDrawVBOIdx() const;
+  physics_debug_draw_info_t& physicsDebugDrawInfo();
 
   [[nodiscard]]
-  Int32 physicsDebugDrawVAOIdx() const;
+  const physics_debug_draw_info_t& physicsDebugDrawInfo() const;
 
   OglBuffer* vboAt(Int32 idx);
 
   OglVAO*    vaoAt(Int32 idx);
 
   OglBuffer* iboAt(Int32 idx);
+
+  OglProgram* programAt(Int32 idx);
 
 private:
   /**
@@ -110,6 +131,8 @@ private:
   /* Used only for destroy render system arrays. */
   template <typename T>
   void _destroy_array(Array<T*>& array);
+
+  void _init_physics_system_debug_draw();
 
 public slots:
   void resize(const QSize& size);

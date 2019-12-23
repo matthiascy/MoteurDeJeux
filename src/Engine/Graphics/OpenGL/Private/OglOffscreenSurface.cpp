@@ -1,5 +1,4 @@
 #include <Graphics/OpenGL/OglOffscreenSurface.hpp>
-#include <GameFramework/Systems/RenderSystem.hpp>
 #include <QCoreApplication>
 #include <QtGui/QImage>
 
@@ -39,6 +38,7 @@ OglOffscreenSurface::~OglOffscreenSurface()
     m_resolvedFbo = nullptr;
   }
    */
+  m_debug_logger.reset(nullptr);
   m_context->doneCurrent();
   delete m_context;
   m_context = nullptr;
@@ -152,12 +152,12 @@ QImage OglOffscreenSurface::grab_framebuffer_internal_(OglFBO* fbo)
 
 void OglOffscreenSurface::swapBuffers()
 {
-  swap_buffers_internal_();
+  _swap_buffers_internal();
   emit frameSwapped();
 }
 
 
-void OglOffscreenSurface::swap_buffers_internal_()
+void OglOffscreenSurface::_swap_buffers_internal()
 {
   m_context->makeCurrent(this);
   m_fns->glFlush();
@@ -232,6 +232,15 @@ void OglOffscreenSurface::init()
       m_fns->initializeOpenGLFunctions();
       m_fns4_0 = m_context->versionFunctions<OglFnsCore4_0>();
 
+      m_debug_logger = makeUnique<OglDebugLogger>();
+      m_debug_logger->initialize();
+      connect(m_debug_logger.get(), &OglDebugLogger::messageLogged, [this](OglDebugMessage msg){
+        qDebug() << msg;
+      });
+      m_debug_logger->startLogging(OglDebugLogger::SynchronousLogging);
+      m_debug_logger->disableMessages(QOpenGLDebugMessage::Source::APISource);
+      //m_debug_logger->enableMessages();
+
       if (m_fns4_0)
         m_fns4_0->initializeOpenGLFunctions();
 
@@ -269,4 +278,9 @@ void OglOffscreenSurface::resize(const QSize& size)
 QSize OglOffscreenSurface::bufferSize() const
 {
   return m_size;
+}
+
+OglFnsCore4_0* OglOffscreenSurface::fnsCore40() const
+{
+  return m_fns4_0;
 }

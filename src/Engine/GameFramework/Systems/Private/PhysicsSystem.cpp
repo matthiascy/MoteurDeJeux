@@ -1,10 +1,11 @@
-#include <Physics/Colliders.hpp>
 #include <GameFramework/Systems/PhysicsSystem.hpp>
 #include <GameFramework/GameObject.hpp>
 #include <GameFramework/Engine.hpp>
 #include <GameFramework/Managers/SceneManager.hpp>
-#include <Physics/Collider.hpp>
 #include <Physics/RigidBody.hpp>
+#include <Physics/DebugDrawer.hpp>
+
+// TODO: better debug draw
 
 PhysicsSystem::PhysicsSystem(const String& name, Engine* engine, Object* parent, const Vec3& gravity)
   : System(name, engine, parent),
@@ -21,7 +22,9 @@ void PhysicsSystem::init()
   m_broad_phase = new btDbvtBroadphase();
   m_solver      = new btSequentialImpulseConstraintSolver();
   m_world       = new btDiscreteDynamicsWorld(m_dispatcher, m_broad_phase, m_solver, m_config);
+  m_debug_drawer = makeUnique<DebugDrawer>(m_engine->renderSystem());
   m_world->setGravity(Math::toBtVec3(m_gravity));
+  m_world->setDebugDrawer(m_debug_drawer.get());
 }
 
 PhysicsSystem::~PhysicsSystem()
@@ -80,18 +83,27 @@ void PhysicsSystem::fixedUpdate(Real dt)
     btTransform trans;
     auto* rigidBody = static_cast<RigidBody*>(btRigidBody::upcast(m_world->getCollisionObjectArray()[i])->getUserPointer());
     rigidBody->getWorldTransform(trans);
-    qDebug("world pos object %d = %f,%f,%f\n", i, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+    //qDebug("world pos object %d = %f,%f,%f\n", i, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
     //Array<RigidBody*> bodies;
     //rigidBody->collidingBodies(bodies);
     //qDebug() << bodies.size();
+    //m_world->debugDrawObject(trans, rigidBody->compoundShape(), {1.0, 0.5, 0.8});
   }
+  m_world->debugDrawWorld();
 }
 
 void PhysicsSystem::postUpdate(Real dt)
 {
+  //m_debug_drawer->clearLines();
+  m_debug_drawer->clear();
 }
 
 btDiscreteDynamicsWorld* PhysicsSystem::physicsWorld() const
 {
   return m_world;
+}
+
+DebugDrawer* PhysicsSystem::debugDrawer() const
+{
+  return m_debug_drawer.get();
 }

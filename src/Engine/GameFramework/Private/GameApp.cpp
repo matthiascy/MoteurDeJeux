@@ -13,12 +13,14 @@
 #include <QScreen>
 #include <GameFramework/Managers/SceneManager.hpp>
 #include <GameFramework/Systems.hpp>
+#include <Physics/DebugDrawer.hpp>
 
 GameApp::GameApp(const String& name, const String& description, QSize&& minSize, int argc, char** argv)
   : QObject(nullptr), m_is_initialized{false}, m_is_quit{false},
     m_start_time{0}, m_frames{0}, m_fps{0.0f}, m_elapsed_timer{}, m_win_min_size{minSize}
 {
-  Q_INIT_RESOURCE(resources);
+  Q_INIT_RESOURCE(rscs);
+  Q_INIT_RESOURCE(Resources);
 
   qputenv("QT_MESSAGE_PATTERN",
           "\033[32m%{time h:mm:ss.zzz} "
@@ -170,6 +172,7 @@ void GameApp::run()
     /** Systems' post update */
     m_engine->renderSystem()->postUpdate(frameTime);
     m_engine->inputSystem()->postUpdate(frameTime);
+    m_engine->physicsSystem()->postUpdate(frameTime);
 
     m_frames++;
     m_window->repaint();
@@ -200,6 +203,14 @@ bool GameApp::eventFilter(QObject* object, QEvent* event)
           event->ignore();
         else {
           m_engine->inputSystem()->_register_key_press(static_cast<Qt::Key>(e->key()));
+          if (e->key() == Qt::Key_1) {
+            qInfo("Key 1");
+            m_engine->physicsSystem()->debugDrawer()->toggleDebugFlag(btIDebugDraw::DBG_DrawWireframe);
+          }
+          if (e->key() == Qt::Key_2) {
+            qInfo("Key 2");
+            m_engine->physicsSystem()->debugDrawer()->toggleDebugFlag(btIDebugDraw::DBG_DrawAabb);
+          }
           event->accept();
         }
       } break;
@@ -215,14 +226,16 @@ bool GameApp::eventFilter(QObject* object, QEvent* event)
       } break;
 
       case QEvent::MouseButtonPress: {
-        //qDebug() << "Mouse Pressed";
         m_engine->inputSystem()->_register_mouse_button_press(dynamic_cast<QMouseEvent*>(event)->button());
       } break;
 
       case QEvent::MouseButtonRelease: {
-        //qDebug() << "Mouse Release";
         m_engine->inputSystem()->_register_mouse_button_release(dynamic_cast<QMouseEvent*>(event)->button());
       } break;
+
+      case QEvent::Wheel: {
+        m_engine->inputSystem()->_register_mouse_wheel(dynamic_cast<QWheelEvent*>(event));
+      }
 
       default:
         break;

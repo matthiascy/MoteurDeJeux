@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/Shaders">
+        <file alias="PhysicsDebugDrawVert">./Shaders/PhysicsDebugDraw.vert</file>
+        <file alias="PhysicsDebugDrawFrag">./Shaders/PhysicsDebugDraw.frag</file>
+        <file alias="BasicVert">./Shaders/Basic.vert</file>
+        <file alias="BasicFrag">./Shaders/Basic.frag</file>
+        <file alias="CubeVert">./Shaders/vertex_glsl.vert</file>
+        <file alias="CubeFrag">./Shaders/fragment_glsl.frag</file>
+        <file alias="fshader.glsl">./Shaders/fshader.glsl</file>
+        <file alias="vshader.glsl">./Shaders/vshader.glsl</file>
+        <file alias="viewport.frag">./Shaders/viewport.frag</file>
+        <file alias="viewport.vert">./Shaders/viewport.vert</file>
+        <file alias="basic.frag">./Shaders/basic2.frag</file>
+        <file alias="basic.vert">./Shaders/basic2.vert</file>
+        <file alias="preview.frag">./Shaders/preview.frag</file>
+        <file alias="preview.vert">./Shaders/preview.vert</file>
+        <file alias="previewimage.frag">./Shaders/preview_image.frag</file>
+        <file alias="previewimage.vert">./Shaders/preview_image.vert</file>
+        <file alias="SimpleColor">./Shaders/SimpleColor.frag</file>
+        <file alias="SimplePosition">./Shaders/SimplePosition.vert</file>
+    </qresource>
+</RCC>

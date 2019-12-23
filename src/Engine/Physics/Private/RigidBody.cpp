@@ -122,8 +122,10 @@ void RigidBody::_add_body_to_world()
       Array<Collider*> shapes = m_game_object->getComponentsOfType<Collider>();
 
       btTransform transform;
-      transform.setRotation(Math::toBtQuat(gameObject()->transform()->worldRotation()));
-      transform.setOrigin(Math::toBtVec3(gameObject()->transform()->worldPosition()));
+      //transform.setRotation(Math::toBtQuat(gameObject()->transform()->worldRotation()));
+      //transform.setOrigin(Math::toBtVec3(gameObject()->transform()->worldPosition()));
+      transform.setRotation(btQuaternion::getIdentity());
+      transform.setOrigin({0, 0, 0});
 
       for (auto& shape : shapes) {
         shape->setRigidBody(this);
@@ -132,6 +134,9 @@ void RigidBody::_add_body_to_world()
 
       qDebug() << m_compound_collision_shape->getNumChildShapes();
     }
+
+    if (m_mass > 0.0f)
+      m_compound_collision_shape->calculateLocalInertia(m_mass, localInertia);
 
     m_body = makeUnique<btRigidBody>(m_mass, this, m_compound_collision_shape.get(), localInertia);
     m_body->setUserPointer(this);

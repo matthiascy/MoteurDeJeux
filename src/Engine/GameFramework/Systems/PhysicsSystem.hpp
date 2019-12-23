@@ -9,6 +9,7 @@
 
 class Engine;
 class RigidBody;
+class DebugDrawer;
 
 // TODO: separated physics world
 
@@ -25,6 +26,8 @@ protected:
 
   Array<btCollisionShape*> m_collision_shapes;
   btCollisionObjectArray   m_collision_objects;
+
+  UniquePtr<DebugDrawer> m_debug_drawer;
 
 public:
   PhysicsSystem(const String& name, Engine* engine, Object* parent = nullptr, const Vec3& gravity = Math::Down);
@@ -47,6 +50,9 @@ public:
 
   [[nodiscard]]
   btDiscreteDynamicsWorld* physicsWorld() const;
+
+  [[nodiscard]]
+  DebugDrawer* debugDrawer() const;
 };
 
 
