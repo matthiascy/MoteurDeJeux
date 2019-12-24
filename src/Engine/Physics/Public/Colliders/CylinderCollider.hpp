@@ -5,7 +5,7 @@
 
 class CylinderCollider : public Collider {
 public:
-  CylinderCollider(const String& name, GameObject* gameObject, Real radius, Real height);
+  CylinderCollider(const String& name, GameObject* gameObject, PhysicsWorld* world, RigidBody* rigidBody, Real radius, Real height);
   ~CylinderCollider() override = default;
 
   [[nodiscard]]

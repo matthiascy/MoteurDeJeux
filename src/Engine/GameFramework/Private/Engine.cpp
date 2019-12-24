@@ -5,12 +5,13 @@
 #include <GameFramework/Managers/ComponentManager.hpp>
 #include <GameFramework/Managers/SceneManager.hpp>
 #include <GameFramework/Systems/BehaviorSystem.hpp>
+#include <GameFramework/Systems.hpp>
 
 Engine::Engine(GameApp* app)
   : m_app{app}
 {
   qInfo() << "Instance creation.";
-  m_component_manager = makeUnique<ComponentManager>(m_app->name() + "ComponentManager");
+  m_component_manager = makeUnique<ComponentManager>(m_app->name() + "ComponentManager", this);
   m_asset_manager     = makeUnique<AssetManager>(m_app->name() + "AssetManager");
   m_scene_manager     = makeUnique<SceneManager>(m_app->name() + "SceneManager", this);
 

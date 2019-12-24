@@ -6,7 +6,7 @@
 
 class RenderSystem;
 
-class DebugDrawer : public btIDebugDraw {
+class PhysicsDebugDraw : public btIDebugDraw {
 private:
   RenderSystem* m_render_system;
   /** | x y z r g b | */
@@ -18,7 +18,7 @@ private:
   static void _push_back_vertex(Array<Real>& array, const btVector3& position, const btVector3& color);
 
 public:
-  explicit DebugDrawer(RenderSystem* renderSystem);
+  explicit PhysicsDebugDraw(RenderSystem* renderSystem);
 
   void drawLine(const btVector3& from, const btVector3& to, const btVector3& color) override;
 

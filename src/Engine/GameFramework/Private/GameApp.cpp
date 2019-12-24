@@ -13,7 +13,7 @@
 #include <QScreen>
 #include <GameFramework/Managers/SceneManager.hpp>
 #include <GameFramework/Systems.hpp>
-#include <Physics/Public/DebugDrawer.hpp>
+#include <Physics/Public/PhysicsDebugDraw.hpp>
 
 GameApp::GameApp(const String& name, const String& description, QSize&& minSize, int argc, char** argv)
   : QObject(nullptr), m_is_initialized{false}, m_is_quit{false},
@@ -155,15 +155,15 @@ void GameApp::run()
 
 
     m_engine->inputSystem()->update(frameTime);
-    m_engine->behaviorSystem()->update(frameTime);
     m_engine->physicsSystem()->update(frameTime);
+    m_engine->behaviorSystem()->update(frameTime);
 
     /** Systems' fixed update */
     while (frameTime > 0.0) {
       float deltaTime = std::min(frameTime, m_dt);
       m_engine->inputSystem()->fixedUpdate(deltaTime);
-      m_engine->behaviorSystem()->fixedUpdate(deltaTime);
       m_engine->physicsSystem()->fixedUpdate(deltaTime);
+      m_engine->behaviorSystem()->fixedUpdate(deltaTime);
       frameTime -= deltaTime;
     }
 
@@ -173,6 +173,7 @@ void GameApp::run()
     m_engine->renderSystem()->postUpdate(frameTime);
     m_engine->inputSystem()->postUpdate(frameTime);
     m_engine->physicsSystem()->postUpdate(frameTime);
+    m_engine->behaviorSystem()->postUpdate(frameTime);
 
     m_frames++;
     m_window->repaint();
@@ -204,12 +205,11 @@ bool GameApp::eventFilter(QObject* object, QEvent* event)
         else {
           m_engine->inputSystem()->_register_key_press(static_cast<Qt::Key>(e->key()));
           if (e->key() == Qt::Key_1) {
-            qInfo("Key 1");
-            m_engine->physicsSystem()->debugDrawer()->toggleDebugFlag(btIDebugDraw::DBG_DrawWireframe);
-          }
-          if (e->key() == Qt::Key_2) {
-            qInfo("Key 2");
-            m_engine->physicsSystem()->debugDrawer()->toggleDebugFlag(btIDebugDraw::DBG_DrawAabb);
+            m_engine->physicsSystem()->setIsDebugDrawEnabled(!m_engine->physicsSystem()->isDebugDrawEnabled());
+            if (m_engine->physicsSystem()->isDebugDrawEnabled()) {
+              //m_engine->physicsSystem()->debugDrawer()->toggleDebugFlag(btIDebugDraw::DBG_DrawWireframe);
+              m_engine->physicsSystem()->debugDrawer()->toggleDebugFlag(btIDebugDraw::DBG_DrawAabb);
+            }
           }
           event->accept();
         }

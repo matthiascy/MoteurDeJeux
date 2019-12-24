@@ -1,7 +1,10 @@
 #include <Physics/Public/Colliders/BoxCollider.hpp>
-#include <BulletCollision/CollisionShapes/btBoxShape.h>
+#include <Physics/Public/CollisionShape.hpp>
+#include <Physics/Public/BulletTypes.hpp>
 #include <Core/Public/Math/Math.hpp>
 
-BoxCollider::BoxCollider(const String& name, GameObject* gameObject, const Vec3& size)
-  : Collider(name, gameObject, new btBoxShape(Math::toBtVec3(size)))
+BoxCollider::BoxCollider(const String& name, GameObject* gameObject,
+                         PhysicsWorld* world, RigidBody* rigidBody, const Vec3& size)
+  : Collider(name, gameObject, world, rigidBody, CollisionShapeType::Box,
+             Math::Zero, Math::QuatIdentity, size)
 { }

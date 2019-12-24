@@ -2,12 +2,14 @@
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_MANAGERS_COMPONENT_MANAGER_HPP
 
 #include <Core/Public/Core.hpp>
+#include <GameFramework/Engine.hpp>
 #include <GameFramework/Component.hpp>
 #include <GameFramework/GameObject.hpp>
 #include <GameFramework/Types.hpp>
 #include <Physics/Public/Collider.hpp>
 #include <Physics/Public/RigidBody.hpp>
-
+#include <Physics/Public/Colliders.hpp>
+#include <GameFramework/Components/Transform.hpp>
 
 // TODO::using handle to retrieve components
 
@@ -25,9 +27,10 @@ private:
   ComponentTable m_components;
   /* It contains only the reference to the components and gameobjects. */
   GameObjectComponentTable m_game_object_components;
+  Engine* m_engine;
 
 public:
-  explicit ComponentManager(const String& name, Object* parent = nullptr);
+  ComponentManager(const String& name, Engine* engine, Object* parent = nullptr);
   ~ComponentManager() override;
 
   template <typename T, typename... Args>
@@ -46,31 +49,21 @@ template <typename T, typename... Args>
 T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Args&&... params)
 {
   // TODO::specify names(name generator)
-  T* component = new T(name, gameObject, std::forward<Args>(params)...);
+  T* component = nullptr;
+  if constexpr (std::is_base_of_v<Collider, T>) {
+    component = new T(name, gameObject, m_engine->physicsSystem()->physicsWorld(),
+                      gameObject->getComponent<RigidBody>(), std::forward<Args>(params)...);
+    gameObject->setHasCollider(true);
+  } else if constexpr (std::is_base_of_v<RigidBody, T>) {
+    component = new T(name, gameObject, m_engine->physicsSystem()->physicsWorld(),
+                      std::forward<Args>(params)...);
+  } else {
+    component = new T(name, gameObject, std::forward<Args>(params)...);
+  }
 
   gameObject->addComponent(component);
 
   ComponentTypeID type = Component::family::type<T>;
-
-  if (std::is_base_of_v<Collider, T>) {
-    gameObject->setHasCollider(true);
-    /*
-    auto rigidBody = gameObject->getComponent<RigidBody>();
-    if (rigidBody) {
-      component->setRigidBody(rigidBody);
-    }
-     */
-  }
-
-  /*
-  if (type == Component::family::type<RigidBody>) {
-    if (gameObject->hasCollider()) {
-      for (auto collider : gameObject->getComponentsOfType<Collider>()) {
-        collider->setRigidBody(component);
-      }
-    }
-  }
-   */
 
   if (m_components.contains(type)) {
     m_components[type]->push_back(component);

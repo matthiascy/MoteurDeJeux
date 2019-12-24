@@ -5,7 +5,7 @@
 
 class SphereCollider : public Collider {
 public:
-  SphereCollider(const String& name, GameObject* gameObject, Real radius);
+  SphereCollider(const String& name, GameObject* gameObject, PhysicsWorld* world, RigidBody* rigidBody, Real radius);
   ~SphereCollider() override = default;
 
   [[nodiscard]]

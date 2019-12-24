@@ -1,12 +1,12 @@
 #include <GameFramework/Engine.hpp>
+#include <GameFramework/GameApp.hpp>
+#include <GameFramework/Systems.hpp>
 #include <GameFramework/EngineWindow.hpp>
 #include <QPainter>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>
 #include <QtWidgets/QPushButton>
-//#include <QtUiTools/QUiLoader>
 #include <QtWidgets/QLCDNumber>
-#include <GameFramework/GameApp.hpp>
 
 EngineWindow::EngineWindow(GameApp* app, QWidget* parent)
   : QWidget(parent), m_app{app}, m_image{},

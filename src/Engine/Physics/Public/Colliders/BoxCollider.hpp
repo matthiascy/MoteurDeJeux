@@ -5,7 +5,7 @@
 
 class BoxCollider : public Collider {
 public:
-  BoxCollider(const String& name, GameObject* gameObject, const Vec3& size);
+  BoxCollider(const String& name, GameObject* gameObject, PhysicsWorld* world, RigidBody* rigidBody, const Vec3& size);
   ~BoxCollider() override = default;
 
   [[nodiscard]]

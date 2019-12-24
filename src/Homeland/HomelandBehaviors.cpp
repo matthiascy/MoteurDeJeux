@@ -4,29 +4,19 @@
 
 void HomelandBehaviors::freeView(GameObject* self, Engine* engine, Real dt)
 {
-  // Pan - up
-  if (engine->inputSystem()->isKeyPressed(Qt::Key_Up)) {
-    self->transform()->translate(self->transform()->up() * dt, ESpace::World);
-  }
+  if (engine->inputSystem()->isMouseButtonPressed(Qt::MouseButton::MiddleButton)) {
+    if (engine->inputSystem()->isKeyPressed(Qt::Key_Shift)) {
 
-  // Pan - down
-  if (engine->inputSystem()->isKeyPressed(Qt::Key_Down)) {
-    self->transform()->translate(self->transform()->up() * -dt, ESpace::World);
-  }
+      // Pan
+      self->transform()->translate(self->transform()->up() * dt * engine->inputSystem()->mouseDelta().y(), ESpace::World);
+      self->transform()->translate(self->transform()->right() * dt * -engine->inputSystem()->mouseDelta().x(), ESpace::World);
 
-  // Pan - left
-  if (engine->inputSystem()->isKeyPressed(Qt::Key_Left)) {
-    self->transform()->translate(self->transform()->right() * -dt, ESpace::World);
-  }
+    } else {
 
-  // Pan - right
-  if (engine->inputSystem()->isKeyPressed(Qt::Key_Right)) {
-    self->transform()->translate(self->transform()->right() * dt, ESpace::World);
-  }
+      // Free view
+      self->transform()->rotate({static_cast<float>(-engine->inputSystem()->mouseDelta().y())*0.1f,static_cast<float>(-engine->inputSystem()->mouseDelta().x())*0.1f, 0}, ESpace::Local);
 
-  // Free view
-  if (engine->inputSystem()->isMouseButtonPressed(Qt::MouseButton::MidButton)) {
-    self->transform()->rotate({static_cast<float>(-engine->inputSystem()->mouseDelta().y())*0.1f,static_cast<float>(-engine->inputSystem()->mouseDelta().x())*0.1f, 0}, ESpace::Local);
+    }
   }
 
   // Zoom
@@ -40,7 +30,6 @@ void HomelandBehaviors::trackball(GameObject* self, Engine* engine, Real dt)
     self->transform()->rotate(Math::Right, engine->inputSystem()->mouseDelta().y() * 0.1f, ESpace::Local);
   }
 }
-
 
 
 

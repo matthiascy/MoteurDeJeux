@@ -25,6 +25,8 @@ private:
   void _load_game_asset();
 
   void _init_camera();
+
+  void _init_terrain();
 };
 
 

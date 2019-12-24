@@ -1,7 +1,8 @@
 #include <Physics/Public/Colliders/SphereCollider.hpp>
-#include <BulletCollision/CollisionShapes/btSphereShape.h>
 
 
-SphereCollider::SphereCollider(const String &name, GameObject *gameObject, Real radius)
-  : Collider(name, gameObject, new btSphereShape(radius))
+SphereCollider::SphereCollider(const String &name, GameObject *gameObject, PhysicsWorld* world, RigidBody* rigidBody,
+                               Real radius)
+  : Collider(name, gameObject, world, rigidBody, CollisionShapeType::Sphere,
+             Math::Zero, Math::QuatIdentity, {radius, 0, 0})
 { }

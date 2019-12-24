@@ -1,34 +1,33 @@
-#ifndef MOTEUR_DE_JEUX_SRC_PHYSICS_COLLIDER_HPP
-#define MOTEUR_DE_JEUX_SRC_PHYSICS_COLLIDER_HPP
+#ifndef MOTEUR_DE_JEUX_SRC_PHYSICS_PUBLIC_COLLIDER_HPP
+#define MOTEUR_DE_JEUX_SRC_PHYSICS_PUBLIC_COLLIDER_HPP
 
 #include <Core/Public/Math/Math.hpp>
 #include <Core/Public/Memory.hpp>
 #include <GameFramework/Component.hpp>
-
-class RigidBody;
-class btCollisionShape;
+#include "Forward.hpp"
 
 class Collider : public Component {
-private:
-  UniquePtr<btCollisionShape> m_shape;
+protected:
+  UniquePtr<CollisionShape> m_collision_shape;
   RigidBody* m_rigid_body;
 
 public:
-  using OnCollisionFunction = std::function<void(RigidBody* other)>;
+  //using OnCollisionFunction = std::function<void(RigidBody* other)>;
 
 public:
-  Collider(const String& name, GameObject* gameObject, btCollisionShape* shape);
+  Collider(const String& name, GameObject* gameObject, PhysicsWorld* world, RigidBody* rigidBody, CollisionShapeType shapeType,
+           const Vec3& position, const Quat& rotation, const Vec3& size);
   ~Collider() override;
 
-  virtual btCollisionShape* collisionShape();
+  virtual CollisionShape* collisionShape();
   virtual RigidBody* rigidBody();
 
   virtual void setRigidBody(RigidBody* rigidBody);
 
-  void onCollision(RigidBody* other);
+  //void onCollision(RigidBody* other);
 
 private:
-  OnCollisionFunction m_on_collision_fn;
+  //OnCollisionFunction m_on_collision_fn;
 };
 
-#endif  /* !MOTEUR_DE_JEUX_SRC_PHYSICS_COLLIDER_HPP */
+#endif  /* !MOTEUR_DE_JEUX_SRC_PHYSICS_PUBLIC_COLLIDER_HPP */

@@ -3,13 +3,13 @@
 
 #include <Core/Public/Core.hpp>
 #include <GameFramework/System.hpp>
-#include <Physics/Public/BulletForward.hpp>
 #include <Physics/Public/Forward.hpp>
-#include <Thirdparty/bullet3/src/BulletCollision/CollisionDispatch/btCollisionObject.h>
+#include <Thirdparty/bullet3/src/BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h>
+#include <BulletCollision/CollisionDispatch/btCollisionDispatcher.h>
 
 class Engine;
 class RigidBody;
-class DebugDrawer;
+class PhysicsDebugDraw;
 
 // TODO: separated physics world
 
@@ -18,28 +18,15 @@ private:
   Vec3 m_gravity {Math::Down};
 
 protected:
-  //UniquePtr<PhysicsWorld>  m_world;
-  btCollisionConfiguration*   m_config;
-  btDispatcher*               m_dispatcher;
-  btBroadphaseInterface*      m_broad_phase;
-  btSequentialImpulseConstraintSolver* m_solver;
-  btDiscreteDynamicsWorld*             m_world;
-
-  Array<btCollisionShape*> m_collision_shapes;
-  btCollisionObjectArray   m_collision_objects;
-
-  UniquePtr<DebugDrawer> m_debug_drawer;
+  UniquePtr<PhysicsWorld>     m_world;
+  UniquePtr<PhysicsDebugDraw> m_debug_drawer;
+  bool m_is_debug_draw_enabled;
 
 public:
   PhysicsSystem(const String& name, Engine* engine, Object* parent = nullptr, const Vec3& gravity = Math::Down);
   ~PhysicsSystem() override;
 
   void init() override;
-
-  [[nodiscard]]
-  Vec3 gravity() const;
-
-  void setGravity(const Vec3& gravity);
 
   void fixedUpdate(Real dt) override;
 
@@ -50,10 +37,14 @@ public:
   void postUpdate(Real dt) override;
 
   [[nodiscard]]
-  btDiscreteDynamicsWorld* physicsWorld() const;
+  PhysicsWorld* physicsWorld() const;
 
   [[nodiscard]]
-  DebugDrawer* debugDrawer() const;
+  PhysicsDebugDraw* debugDrawer() const;
+
+  [[nodiscard]]
+  bool isDebugDrawEnabled() const;
+  void setIsDebugDrawEnabled(bool enabled);
 
 private:
   /** Refresh collision only without updating dynamics. */

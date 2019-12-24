@@ -1,4 +1,5 @@
 #include <GameFramework/Components/Transform.hpp>
+#include <Physics/Public/RigidBody.hpp>
 #include <GameFramework/GameObject.hpp>
 
 Transform::Transform(const String& name, GameObject* gameObject, Transform* parent, const Vec3& localPosition, const Quat& localRotation, const Vec3& localScale)
@@ -312,6 +313,15 @@ void Transform::_update()
 
     m_world_matrix = m_local_matrix;
 
+  }
+
+  auto* rigidBody = m_game_object->getComponent<RigidBody>();
+  if (rigidBody) {
+    //btTransform t;
+    //t.setOrigin(Math::toBtVec3(worldPosition()));
+    //t.setRotation(Math::toBtQuat(worldRotation()));
+    rigidBody->setTransform(worldPosition(), worldRotation());
+    //rigidBody->setWorldTransform(t);
   }
 
   if (!m_children.isEmpty()) {

@@ -20,9 +20,11 @@ find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
 
 set(EnginePhysicsSrc
     ${EngineSrcDir}/Physics/Private/Collider.cpp
-    ${EngineSrcDir}/Physics/Private/Constraint.cpp
-    ${EngineSrcDir}/Physics/Private/DebugDrawer.cpp
     ${EngineSrcDir}/Physics/Private/RigidBody.cpp
+    ${EngineSrcDir}/Physics/Private/Constraint.cpp
+    ${EngineSrcDir}/Physics/Private/PhysicsWorld.cpp
+    ${EngineSrcDir}/Physics/Private/CollisionShape.cpp
+    ${EngineSrcDir}/Physics/Private/PhysicsDebugDraw.cpp
     ${EngineSrcDir}/Physics/Private/Colliders/BoxCollider.cpp
     ${EngineSrcDir}/Physics/Private/Colliders/ConeCollider.cpp
     ${EngineSrcDir}/Physics/Private/Colliders/SphereCollider.cpp
@@ -36,7 +38,9 @@ set(EnginePhysicsSrc
     ${EngineSrcDir}/Physics/Public/RigidBody.hpp
     ${EngineSrcDir}/Physics/Public/Colliders.hpp
     ${EngineSrcDir}/Physics/Public/Constraint.hpp
-    ${EngineSrcDir}/Physics/Public/DebugDrawer.hpp
+    ${EngineSrcDir}/Physics/Public/PhysicsWorld.hpp
+    ${EngineSrcDir}/Physics/Public/CollisionShape.hpp
+    ${EngineSrcDir}/Physics/Public/PhysicsDebugDraw.hpp
     ${EngineSrcDir}/Physics/Public/Colliders/BoxCollider.hpp
     ${EngineSrcDir}/Physics/Public/Colliders/ConeCollider.hpp
     ${EngineSrcDir}/Physics/Public/Colliders/SphereCollider.hpp
@@ -161,7 +165,7 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.hpp
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
-    ${EditorSrcDir}/Vertex.cpp Physics/Private/PhysicsWorld.cpp Physics/Public/PhysicsWorld.hpp Physics/Public/BulletForward.hpp Physics/Private/CollisionShape.cpp Physics/Public/CollisionShape.hpp)
+    ${EditorSrcDir}/Vertex.cpp Core/Private/Math/BoundingBox.cpp Core/Public/Math/BoundingBox.hpp Physics/Public/BulletTypes.hpp GameFramework/Family.hpp Core/Public/NameGenerator.cpp Core/Public/NameGenerator.hpp)
 
 qt5_add_resources(EngineSrc ${EngineSrcDir}/rscs.qrc ${EngineSrcDir}/Resources/Resources.qrc)
 

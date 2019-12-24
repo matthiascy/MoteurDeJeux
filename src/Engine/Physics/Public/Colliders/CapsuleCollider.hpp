@@ -5,7 +5,7 @@
 
 class CapsuleCollider : public Collider {
 public:
-  CapsuleCollider(const String& name, GameObject* gameObject, Real radius, Real height);
+  CapsuleCollider(const String& name, GameObject* gameObject, PhysicsWorld* world, RigidBody* rigidBody, Real radius, Real height);
   ~CapsuleCollider() override = default;
 
   [[nodiscard]]

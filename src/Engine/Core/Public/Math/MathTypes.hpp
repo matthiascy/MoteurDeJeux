@@ -1,5 +1,5 @@
-#ifndef MOTEUR_DE_JEUX_SRC_CORE_MATH_MATH_TYPES_HPP
-#define MOTEUR_DE_JEUX_SRC_CORE_MATH_MATH_TYPES_HPP
+#ifndef MOTEUR_DE_JEUX_SRC_CORE_PUBLIC_MATH_TYPES_HPP
+#define MOTEUR_DE_JEUX_SRC_CORE_PUBLIC_MATH_TYPES_HPP
 
 /* =================== Math types =================== */
 #include <QtMath>
@@ -22,12 +22,7 @@ typedef QMatrix4x4 Mat4;
 typedef QQuaternion Quat;
 typedef float Real;
 class Transform;
-
-struct BBox {
-  Vec3 min;
-  Vec3 max;
-  Vec3 size;
-};
+class BoundingBox;
 
 /**
  * Transformation space.
@@ -39,4 +34,11 @@ enum class ESpace {
 
 using EulerAngles = Vec3;
 
-#endif  /* !MOTEUR_DE_JEUX_SRC_CORE_MATH_MATH_TYPES_HPP */
+struct BBox {
+  Vec3 min;
+  Vec3 max;
+};
+
+#include "BoundingBox.hpp"
+
+#endif  /* !MOTEUR_DE_JEUX_SRC_CORE_PUBLIC_MATH_TYPES_HPP */

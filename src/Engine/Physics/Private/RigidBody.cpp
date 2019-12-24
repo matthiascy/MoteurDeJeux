@@ -2,13 +2,12 @@
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 #include <GameFramework/GameObject.hpp>
 #include <Physics/Public/Collider.hpp>
-#include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
+#include <Physics/Public/CollisionShape.hpp>
+#include <Physics/Public/PhysicsWorld.hpp>
+#include <Physics/Public/BulletTypes.hpp>
 
-//RigidBody::RigidBody(const String& name, GameObject* gameObject, btDynamicsWorld* world, Real mass)
-RigidBody::RigidBody(const String& name, GameObject* gameObject, PhysicsSystem* system, Real mass)
-  : Component(name, gameObject),
-    m_system{system}
-    //m_system->physicsWorld(){world}
+RigidBody::RigidBody(const String& name, GameObject* gameObject, PhysicsWorld* world, Real mass)
+  : Component(name, gameObject), m_physics_world{world}
 {
   m_mass = std::max(mass, 0.0f);
   m_compound_collision_shape = makeUnique<btCompoundShape>();
@@ -41,16 +40,13 @@ void RigidBody::setWorldTransform(const btTransform &worldTransform)
 
   if (m_game_object) {
     //auto* parent = m_game_object->transform()->parent();
-
     //if (parent)
       //parentRigidBody = parent->gameObject()->getComponent<RigidBody>();
-
     //if (!parentRigidBody) {
 
       _apply_world_transform(newWorldPosition, newWorldRotation);
 
     //} else {
-      // TODO: parent
     //}
   }
 }
@@ -91,7 +87,7 @@ Vec3 RigidBody::totalTorque() const
 
 void RigidBody::_apply_world_transform(const Vec3& position, const Quat& rotation)
 {
-  if (!m_game_object || !m_system->physicsWorld())
+  if (!m_game_object || !m_physics_world)
     return;
 
   m_game_object->transform()->setPosition(position, ESpace::World);
@@ -102,7 +98,7 @@ void RigidBody::_apply_world_transform(const Vec3& position, const Quat& rotatio
 
 void RigidBody::_add_body_to_world()
 {
-  if (!m_system->physicsWorld())
+  if (!m_physics_world)
     return;
 
   if (m_mass < 0.0f)
@@ -114,42 +110,30 @@ void RigidBody::_add_body_to_world()
 
   } else {
 
-    // Calculate correct inertia
     btVector3 localInertia(0, 0, 0);
-
-    // Check if collision shapes already exist in the game object and add them to the compound shape.
-    // TODO: child shape offset
-    if (m_game_object->hasCollider()) {
-      Array<Collider*> shapes = m_game_object->getComponentsOfType<Collider>();
-
-      btTransform transform;
-      //transform.setRotation(Math::toBtQuat(gameObject()->transform()->worldRotation()));
-      //transform.setOrigin(Math::toBtVec3(gameObject()->transform()->worldPosition()));
-      transform.setRotation(btQuaternion::getIdentity());
-      transform.setOrigin({0, 0, 0});
-
-      for (auto& shape : shapes) {
-        shape->setRigidBody(this);
-        m_compound_collision_shape->addChildShape(transform, shape->collisionShape());
-      }
-
-      qDebug() << m_compound_collision_shape->getNumChildShapes();
-    }
-
-    if (m_mass > 0.0f)
-      m_compound_collision_shape->calculateLocalInertia(m_mass, localInertia);
-
     m_body = makeUnique<btRigidBody>(m_mass, this, m_compound_collision_shape.get(), localInertia);
     m_body->setUserPointer(this);
 
+    // Check if collision shapes already exist in the game object and add them to the compound shape.
+    if (m_game_object->hasCollider()) {
+      Array<Collider*> colliders = m_game_object->getComponentsOfType<Collider>();
+
+      for (auto& collider : colliders) {
+        collider->setRigidBody(this);
+        m_compound_collision_shape->addChildShape(collider->collisionShape()->transform(),
+                                                  collider->collisionShape()->bulletCollisionShape());
+      }
+    }
+
     _update_mass();
+    _update_gravity();
   }
 }
 
 void RigidBody::_remove_body_from_world()
 {
-  if (m_system->physicsWorld() && m_body) {
-    m_system->physicsWorld()->removeRigidBody(m_body.get());
+  if (m_physics_world && m_body) {
+    m_physics_world->removeRigidBody(this);
     m_is_in_world = false;
   }
 }
@@ -165,7 +149,7 @@ void RigidBody::_destroy_body()
 
 void RigidBody::_update_gravity()
 {
-  if (m_system->physicsWorld() && m_body) {
+  if (m_physics_world && m_body) {
     int flags = m_body->getFlags();
 
     if (m_is_using_gravity && m_overridden_gravity == Math::Zero)
@@ -178,7 +162,7 @@ void RigidBody::_update_gravity()
     if (m_is_using_gravity) {
 
       if (m_overridden_gravity == Math::Zero)
-        m_body->setGravity(m_system->physicsWorld()->getGravity());
+        m_body->setGravity(m_physics_world->world()->getGravity());
       else
         m_body->setGravity(Math::toBtVec3(m_overridden_gravity));
 
@@ -190,50 +174,20 @@ void RigidBody::_update_gravity()
   }
 }
 
-void RigidBody::_update_mass()
+void RigidBody::updateCollisionShape(CollisionShape* shape)
 {
-  if (!m_body || !m_is_mass_update_enabled)
+  if (!m_body)
     return;
 
-  btTransform principal;
-  principal.setRotation(btQuaternion::getIdentity());
-  principal.setOrigin(btVector3(0, 0, 0));
-
-  // Calculate center of mass shift from all the collision shapes
-  auto shapes_num = m_compound_collision_shape->getNumChildShapes();
-  if ( shapes_num > 0) {
-    Array<Real> masses(m_compound_collision_shape->getNumChildShapes(), 1.0f);
-    btVector3 inertia(0, 0, 0);
-    m_compound_collision_shape->calculatePrincipalAxisTransform(&masses[0], principal, inertia);
+  for (int i = 0; i < m_compound_collision_shape->getNumChildShapes(); ++i) {
+    if (m_compound_collision_shape->getChildShape(i) == shape->bulletCollisionShape()) {
+      qDebug() << "Update collision shape";
+      m_compound_collision_shape->updateChildTransform(i, shape->transform());
+    }
   }
 
-  btCollisionShape* old_collision_shape = m_body->getCollisionShape();
-  m_body->setCollisionShape(m_compound_collision_shape.get());
-
-  Vec3 old_position = position();
-  m_center_of_mass = Math::fromBtVec3(principal.getOrigin());
-  setPosition(old_position);
-
-  // Calculate final inertia
-  btVector3 localInertia(0, 0, 0);
-  if (m_mass > 0)
-    m_compound_collision_shape->calculateLocalInertia(m_mass, localInertia);
-
-  m_body->setMassProps(m_mass, localInertia);
-  m_body->updateInertiaTensor();
-
-  if (m_is_in_world && m_body->getCollisionShape() != old_collision_shape && m_system->physicsWorld()) {
-    m_system->physicsWorld()->removeRigidBody(m_body.get());
-    m_system->physicsWorld()->addRigidBody(m_body.get(), m_collision_layer, m_collision_mask);
-  }
-}
-
-void RigidBody::collidingBodies(Array<RigidBody*>& result) const
-{
-  if (m_system->physicsWorld()) {
-    result.clear();
-    qFatal("Not implemented.");
-  }
+  _update_mass();
+  _update_gravity();
 }
 
 bool RigidBody::isActive() const
@@ -333,19 +287,6 @@ Vec3 RigidBody::position() const
     return Math::Zero;
 
   }
-}
-
-void RigidBody::enableMassUpdate()
-{
-  if (m_is_mass_update_enabled) {
-    m_is_mass_update_enabled = true;
-    _update_mass();
-  }
-}
-
-void RigidBody::disableMassUpdate()
-{
-  m_is_mass_update_enabled = false;
 }
 
 void RigidBody::activate()
@@ -656,4 +597,93 @@ UInt32 RigidBody::collisionMask() const
 Vec3 RigidBody::centerOfMass() const
 {
   return m_center_of_mass;
+}
+
+void RigidBody::removeCollisionShape(CollisionShape* shape)
+{
+  if (m_collision_shapes.contains(shape)) {
+    m_collision_shapes.removeOne(shape);
+    m_compound_collision_shape->removeChildShape(shape->bulletCollisionShape());
+    _update_mass();
+    _update_gravity();
+  }
+}
+
+void RigidBody::addCollisionShape(CollisionShape* shape)
+{
+  if (!m_collision_shapes.contains(shape)) {
+    m_collision_shapes.append(shape);
+    m_compound_collision_shape->addChildShape(shape->transform(), shape->bulletCollisionShape());
+    _update_mass();
+    _update_gravity();
+  }
+}
+
+void RigidBody::_update_mass()
+{
+  if (!m_body)
+    return;
+
+  btTransform principal;
+  principal.setRotation(btQuaternion::getIdentity());
+  principal.setOrigin(btVector3(0.0f, 0.0f, 0.0f));
+
+  // Calculate center of mass shift from all the collision shapes
+  auto numShapes = (unsigned)m_compound_collision_shape->getNumChildShapes();
+  if (numShapes)
+  {
+    Array<float> masses(numShapes, 1.0f);
+    btVector3 inertia(0.0f, 0.0f, 0.0f);
+    m_compound_collision_shape->calculatePrincipalAxisTransform(&masses[0], principal, inertia);
+  }
+
+  btCollisionShape* oldCollisionShape = m_body->getCollisionShape();
+  m_body->setCollisionShape(m_compound_collision_shape.get());
+
+  /*
+  // If we have one shape and this is a triangle mesh, we use a custom material callback in order to adjust internal edges
+  if (!useCompound && body_->getCollisionShape()->getShapeType() == SCALED_TRIANGLE_MESH_SHAPE_PROXYTYPE &&
+      physicsWorld_->GetInternalEdge())
+    body_->setCollisionFlags(body_->getCollisionFlags() | btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+  else
+   */
+  m_body->setCollisionFlags(m_body->getCollisionFlags() & ~btCollisionObject::CF_CUSTOM_MATERIAL_CALLBACK);
+
+  // Reapply rigid body position with new center of mass shift
+  Vec3 oldPosition = position();
+  m_center_of_mass = Math::fromBtVec3(principal.getOrigin());
+  setPosition(oldPosition);
+
+  // Calculate final inertia
+  btVector3 localInertia(0.0f, 0.0f, 0.0f);
+  if (m_mass > 0.0f)
+    m_compound_collision_shape->calculateLocalInertia(m_mass, localInertia);
+  m_body->setMassProps(m_mass, localInertia);
+  m_body->updateInertiaTensor();
+
+  /*
+  // Reapply constraint positions for new center of mass shift
+  if (node_)
+  {
+    for (PODVector<Constraint*>::Iterator i = constraints_.Begin(); i != constraints_.End(); ++i)
+      (*i)->ApplyFrames();
+  }
+   */
+
+  // Re add body to world to reset Bullet collision cache if collision shape was changed
+  if (m_is_in_world && m_body->getCollisionShape() != oldCollisionShape && m_physics_world)
+  {
+    m_physics_world->removeRigidBody(this);
+    m_physics_world->addRigidBody(this);
+  }
+}
+
+bool RigidBody::isInWorld() const
+{
+  return m_is_in_world;
+}
+
+void RigidBody::setIsInWorld(bool inOut)
+{
+  m_is_in_world = inOut;
 }

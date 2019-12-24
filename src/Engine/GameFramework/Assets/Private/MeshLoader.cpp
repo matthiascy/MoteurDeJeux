@@ -16,7 +16,8 @@ Mesh* MeshLoader::loadMesh(const String& path)
   const aiScene* scene = importer.ReadFile(path.toStdString(),
         aiProcess_Triangulate
       | aiProcess_CalcTangentSpace
-      | aiProcess_SortByPType);
+      | aiProcess_SortByPType
+      | aiProcess_GenNormals);
 
   if (!scene) {
     qDebug() << "loadMesh error: " << importer.GetErrorString();

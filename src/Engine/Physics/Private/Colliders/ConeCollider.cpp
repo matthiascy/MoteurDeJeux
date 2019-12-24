@@ -1,7 +1,8 @@
 #include <Physics/Public/Colliders/ConeCollider.hpp>
-#include <BulletCollision/CollisionShapes/btConeShape.h>
 
 
-ConeCollider::ConeCollider(const String &name, GameObject *gameObject, Real radius, Real height)
-  : Collider(name, gameObject, new btConeShape(radius, height))
+ConeCollider::ConeCollider(const String& name, GameObject* gameObject, PhysicsWorld* world, RigidBody* rigidBody,
+                           Real radius, Real height)
+  : Collider(name, gameObject, world, rigidBody, CollisionShapeType::Cone,
+             Math::Zero, Math::QuatIdentity, {radius, height, 0})
 { }

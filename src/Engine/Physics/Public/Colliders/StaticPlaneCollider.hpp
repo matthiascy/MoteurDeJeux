@@ -5,7 +5,7 @@
 
 class StaticPlaneCollider : public Collider {
 public:
-  StaticPlaneCollider(const String& name, GameObject* gameObject, const Vec3& normal, Real distance);
+  StaticPlaneCollider(const String& name, GameObject* gameObject, PhysicsWorld* world, RigidBody* rigidBody, const Vec3& normal, Real distance);
   ~StaticPlaneCollider() override = default;
 };
 

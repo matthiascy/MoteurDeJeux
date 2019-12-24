@@ -1,16 +1,8 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP
 
-#include <GameFramework/Assets/AssetManager.hpp>
-#include <GameFramework/Systems/RenderSystem.hpp>
-#include <GameFramework/Systems/PhysicsSystem.hpp>
-#include <GameFramework/Systems/InputSystem.hpp>
-#include <GameFramework/Managers.hpp>
-
-class SceneManager;
-class BehaviorSystem;
-class ComponentManager;
-class GameApp;
+#include <Core/Public/Core.hpp>
+#include "Forward.hpp"
 
 class Engine {
 private:
@@ -25,8 +17,6 @@ private:
   GameApp*                    m_app;
 
 public:
-  template <typename T, typename... Args>
-  T* addComponent(const String& name, GameObject* gameObject, Args&&... params);
 
   [[nodiscard]]
   bool isKeyPressed(Qt::Key key) const;
@@ -61,11 +51,5 @@ public:
   [[nodiscard]]
   BehaviorSystem* behaviorSystem() const;
 };
-
-template <typename T, typename ...Args>
-T* Engine::addComponent(const String& name, GameObject* gameObject, Args&& ...params)
-{
-  return m_component_manager->addComponent<T>(name, gameObject, std::forward<Args>(params)...);
-}
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP */

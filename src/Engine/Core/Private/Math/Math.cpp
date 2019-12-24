@@ -98,3 +98,8 @@ Vec3 Math::extractAxisZ(const Mat4& mat)
   Vec4 v = mat.column(2);
   return {v.x(), v.y(), v.z()};
 }
+
+Real Math::clamp(Real value, Real low, Real high)
+{
+  return value < low ? low : (value > high ? high : value);
+}

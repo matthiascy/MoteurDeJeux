@@ -1,10 +1,11 @@
 #include <GameFramework/Managers/ComponentManager.hpp>
 #include <GameFramework/GameObject.hpp>
 
-ComponentManager::ComponentManager(const String &name, Object *parent)
+ComponentManager::ComponentManager(const String &name, Engine* engine, Object *parent)
   : Object(name, parent)
 {
   qInfo() << "Creation =>" << objectName();
+  m_engine = engine;
 }
 
 void ComponentManager::removeAllComponents(GameObject* gameObject)

@@ -7,6 +7,7 @@
 #include <GameFramework/Components/PerspectiveCamera.hpp>
 #include <Graphics/Public/MeshRenderer.hpp>
 #include <GameFramework/GameObject.hpp>
+#include <GameFramework/Managers/SceneManager.hpp>
 
 
 RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
@@ -111,21 +112,19 @@ void RenderSystem::init()
   m_programs[0]->setUniformValue("texture1", 1);
   m_programs[0]->setUniformValue("texture2", 2);
   m_programs[0]->setUniformValue("texture3", 3);
-  m_programs[0]->setUniformValue("lightPos", Vec3(0, 0, 70));
+  m_programs[0]->setUniformValue("lightPos", Vec3(0, 70, 70));
   m_programs[0]->release();
 
   m_vaos.insert(0,new OglVAO);
   m_vaos[0]->create();
-  //m_vaos[0]->bind();
-  //m_vaos[0]->release();
 
   _init_physics_system_debug_draw();
 
   m_fns->glEnable(GL_DEPTH_TEST);
   m_fns->glDepthFunc(GL_LESS);
-  m_fns->glEnable(GL_CULL_FACE);
-  m_fns->glCullFace(GL_BACK);
-  m_fns->glFrontFace(GL_CCW);
+  //m_fns->glEnable(GL_CULL_FACE);
+  //m_fns->glCullFace(GL_BACK);
+  //m_fns->glFrontFace(GL_CCW);
   m_fns->glViewport(0, 0, m_surface->size().width(), m_surface->size().height());
   m_fns->glClearColor(0.2, 0.2, 0.2, 1.0);
 

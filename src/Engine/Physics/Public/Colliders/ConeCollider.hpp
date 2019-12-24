@@ -5,7 +5,7 @@
 
 class ConeCollider : public Collider {
 public:
-  ConeCollider(const String& name, GameObject* gameObject, Real radius, Real height);
+  ConeCollider(const String& name, GameObject* gameObject, PhysicsWorld* world, RigidBody* rigidBody, Real radius, Real height);
   ~ConeCollider() override = default;
 
   [[nodiscard]]

@@ -10,12 +10,13 @@
 
 class RigidBody : public Component, public btMotionState {
 private:
-  //btDynamicsWorld*           m_world;
-  PhysicsSystem*             m_system;
+  PhysicsWorld*              m_physics_world;
+  Array<CollisionShape*>     m_collision_shapes;
+
   UniquePtr<btRigidBody>     m_body;
   UniquePtr<btCompoundShape> m_compound_collision_shape;
-  // TODO: UniquePtr<btCompoundShape> m_compound_collision_shape_shifted;
-  // TODO: Array<Constraint*>         m_constraints;
+  //TODO: UniquePtr<btCompoundShape> m_compound_collision_shape_shifted;
+  //TODO: Array<Constraint*>         m_constraints;
   Vec3 m_overridden_gravity { Math::Zero };/**< Overridden gravity, if equals zero, we use world gravity. */
   Vec3 m_center_of_mass     { Math::Zero };
   Real m_mass               { kDefaultMass };
@@ -28,7 +29,6 @@ private:
   bool m_is_kinematic           { false };
   bool m_is_trigger             { false };
   bool m_is_using_gravity       { true  };
-  bool m_is_mass_update_enabled { true  };
   bool m_is_in_world            { false };
 
   constexpr static Real   kDefaultMass            { 0.0f };
@@ -39,8 +39,7 @@ private:
   constexpr static UInt32 kDefaultCollisionMask   { UINT_MAX };
 
 public:
-  //RigidBody(const String& name, GameObject* gameObject, btDynamicsWorld* world, Real mass);
-  RigidBody(const String& name, GameObject* gameObject, PhysicsSystem* system, Real mass);
+  RigidBody(const String& name, GameObject* gameObject, PhysicsWorld* world, Real mass);
   ~RigidBody() override;
 
   /**
@@ -224,10 +223,6 @@ public:
 
   // TODO: void removeConstraint(Constraint* constraint);
 
-  void enableMassUpdate();
-
-  void disableMassUpdate();
-
   /**
    * @brief Activate rigid body if it was sleeping.
    */
@@ -261,9 +256,20 @@ public:
 
   void setCollisionLayer(UInt32 layer);
 
+  [[nodiscard]]
+  bool isInWorld() const;
+
+  void setIsInWorld(bool inOut);
+
   UInt64 typeID() const override {
     return family::type<RigidBody>;
   };
+
+  void addCollisionShape(CollisionShape* shape);
+
+  void removeCollisionShape(CollisionShape* shape);
+
+  void updateCollisionShape(CollisionShape* shape);
 
 private:
   void _apply_world_transform(const Vec3& position, const Quat& rotation);

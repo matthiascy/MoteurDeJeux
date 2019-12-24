@@ -7,6 +7,8 @@ struct Math {
 
   constexpr static const Vec3 Zero = Vec3(0.0, 0.0, 0.0);
 
+  constexpr static const Vec3 One = Vec3(1.0, 1.0, 1.0);
+
   constexpr static const Vec3 AxisX = Vec3(1.0, 0.0, 0.0);
 
   constexpr static const Vec3 AxisY = Vec3(0.0, 1.0, 0.0);
@@ -74,6 +76,8 @@ struct Math {
   static Vec3 extractAxisY(const Mat4& mat);
 
   static Vec3 extractAxisZ(const Mat4& mat);
+
+  static Real clamp(Real value, Real low, Real high);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_MATH_MATH_HPP */

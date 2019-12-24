@@ -1,20 +1,12 @@
-#ifndef MOTEUR_DE_JEUX_SRC_PHYSICS_CONSTRAINT_HPP
-#define MOTEUR_DE_JEUX_SRC_PHYSICS_CONSTRAINT_HPP
+#ifndef MOTEUR_DE_JEUX_SRC_PHYSICS_PUBLIC_BULLET_CONSTRAINT_HPP
+#define MOTEUR_DE_JEUX_SRC_PHYSICS_PUBLIC_BULLET_CONSTRAINT_HPP
 
 #include <Core/Public/Core.hpp>
-#include "BulletForward.hpp"
-#include "Forward.hpp"
-
-enum class ConstraintType {
-  Point,
-  Hinge,
-  Slider,
-  ConeTwist
-};
+#include "Physics/Public/Forward.hpp"
 
 class Constraint {
 private:
-  PhysicsSystem* m_physics_system;
+  PhysicsWorld* m_physics_system;
   RigidBody*     m_own_body;
   RigidBody*     m_other_body;
   UniquePtr<btTypedConstraint> m_constraint;
@@ -28,7 +20,10 @@ private:
   Vec3           m_low_limit;
   Real           m_erp; /**< Error reduction parameter. */
   Real           m_cfm; /**< Constraint force mixing parameter. */
+
+public:
+  btTypedConstraint* constraint() const;
 };
 
 
-#endif  /* !MOTEUR_DE_JEUX_SRC_PHYSICS_CONSTRAINT_HPP */
+#endif  /* !MOTEUR_DE_JEUX_SRC_PHYSICS_PUBLIC_BULLET_CONSTRAINT_HPP */
