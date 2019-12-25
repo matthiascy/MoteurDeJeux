@@ -1,7 +1,7 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_RENDERER_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_RENDERER_HPP
 
-#include <GameFramework/Component.hpp>
+#include <GameFramework/Public/ECS/Component.hpp>
 
 class Renderer : public Component {
 private:

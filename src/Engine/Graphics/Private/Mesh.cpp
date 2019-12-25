@@ -81,14 +81,18 @@ void Mesh::calculateSphericalUV()
   Real vmin = FLT_MAX;
   for (UInt32 i = 0; i < vertexCount(); ++i) {
     Vec3 n = Vec3(m_data[i*8], m_data[i*8+1], m_data[i*8+2]).normalized();
+
     Real u = qAtan2(n.x(), n.z()) / (2 * M_PI) + 0.5;
     Real v = n.y() * 0.5 + 0.5;
+
     m_data[i*8+6] = u;
     m_data[i*8+7] = v;
+
     if (umax < u) umax = u;
     if (umin > u) umin = u;
     if (vmax < v) vmax = v;
     if (vmin > v) vmin = v;
+
   }
 
   for (UInt32 i = 0; i < vertexCount(); ++i) {

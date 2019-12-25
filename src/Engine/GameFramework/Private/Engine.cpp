@@ -1,11 +1,11 @@
 #include <Core/Public/Core.hpp>
-#include <GameFramework/Engine.hpp>
-#include <GameFramework/GameApp.hpp>
+#include <GameFramework/Public/Engine.hpp>
+#include <GameFramework/Public/GameApp.hpp>
 #include <Editor/EditorMainWindow.hpp>
-#include <GameFramework/Managers/ComponentManager.hpp>
-#include <GameFramework/Managers/SceneManager.hpp>
-#include <GameFramework/Systems/BehaviorSystem.hpp>
-#include <GameFramework/Systems.hpp>
+#include <GameFramework/Public/Managers/ComponentManager.hpp>
+#include <GameFramework/Public/Managers/SceneManager.hpp>
+#include <GameFramework/Public/Systems/BehaviorSystem.hpp>
+#include <GameFramework/Public/Systems.hpp>
 
 Engine::Engine(GameApp* app)
   : m_app{app}

@@ -85,60 +85,55 @@ set(EngineCoreSrc
 
 set(EngineGameFrameworkSrc
     ${EngineSrcDir}/GameFramework/Private/Scene.cpp
-    ${EngineSrcDir}/GameFramework/Private/System.cpp
+    ${EngineSrcDir}/GameFramework/Private/ECS/System.cpp
     ${EngineSrcDir}/GameFramework/Private/Engine.cpp
     ${EngineSrcDir}/GameFramework/Private/GameApp.cpp
-    ${EngineSrcDir}/GameFramework/Private/Component.cpp
-    ${EngineSrcDir}/GameFramework/Private/GameObject.cpp
-    ${EngineSrcDir}/GameFramework/Scene.hpp
-    ${EngineSrcDir}/GameFramework/Types.hpp
-    ${EngineSrcDir}/GameFramework/Engine.hpp
-    ${EngineSrcDir}/GameFramework/System.hpp
-    ${EngineSrcDir}/GameFramework/GameApp.hpp
-    ${EngineSrcDir}/GameFramework/Forward.hpp
-    ${EngineSrcDir}/GameFramework/Component.hpp
-    ${EngineSrcDir}/GameFramework/GameObject.hpp
+    ${EngineSrcDir}/GameFramework/Private/ECS/Component.cpp
+    ${EngineSrcDir}/GameFramework/Private/ECS/GameObject.cpp
+    ${EngineSrcDir}/GameFramework/Public/Scene.hpp
+    ${EngineSrcDir}/GameFramework/Public/Types.hpp
+    ${EngineSrcDir}/GameFramework/Public/Engine.hpp
+    ${EngineSrcDir}/GameFramework/Public/ECS/System.hpp
+    ${EngineSrcDir}/GameFramework/Public/GameApp.hpp
+    ${EngineSrcDir}/GameFramework/Public/Forward.hpp
+    ${EngineSrcDir}/GameFramework/Public/ECS/Component.hpp
+    ${EngineSrcDir}/GameFramework/Public/ECS/GameObject.hpp
 
-    ${EngineSrcDir}/GameFramework/Assets/Asset.hpp
-    ${EngineSrcDir}/GameFramework/Assets/Private/Asset.cpp
-    ${EngineSrcDir}/GameFramework/Assets/Private/MeshLoader.cpp
-    ${EngineSrcDir}/GameFramework/Assets/Private/AssetManager.cpp
-    ${EngineSrcDir}/GameFramework/Assets/Private/AssetStorage.cpp
-    ${EngineSrcDir}/GameFramework/Assets/MeshLoader.hpp
-    ${EngineSrcDir}/GameFramework/Assets/AssetsTypes.hpp
-    ${EngineSrcDir}/GameFramework/Assets/AssetManager.hpp
-    ${EngineSrcDir}/GameFramework/Assets/AssetStorage.hpp
+    ${EngineSrcDir}/GameFramework/Private/Managers/MeshLoader.cpp
+    ${EngineSrcDir}/GameFramework/Private/Managers/AssetManager.cpp
+    ${EngineSrcDir}/GameFramework/Public/Managers/MeshLoader.hpp
+    ${EngineSrcDir}/GameFramework/Public/Managers/AssetManager.hpp
 
-    ${EngineSrcDir}/GameFramework/Components/Private/Camera.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/Behavior.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/Transform.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/OrthogonalCamera.cpp
-    ${EngineSrcDir}/GameFramework/Components/Private/PerspectiveCamera.cpp
-    ${EngineSrcDir}/GameFramework/Components.hpp
-    ${EngineSrcDir}/GameFramework/Components/Camera.hpp
-    ${EngineSrcDir}/GameFramework/Components/Behavior.hpp
-    ${EngineSrcDir}/GameFramework/Components/Transform.hpp
-    ${EngineSrcDir}/GameFramework/Components/OrthogonalCamera.hpp
-    ${EngineSrcDir}/GameFramework/Components/PerspectiveCamera.hpp
+    ${EngineSrcDir}/GameFramework/Private/Components/Camera.cpp
+    ${EngineSrcDir}/GameFramework/Private/Components/Behavior.cpp
+    ${EngineSrcDir}/GameFramework/Private/Components/Transform.cpp
+    ${EngineSrcDir}/GameFramework/Private/Components/OrthogonalCamera.cpp
+    ${EngineSrcDir}/GameFramework/Private/Components/PerspectiveCamera.cpp
+    ${EngineSrcDir}/GameFramework/Public/Components.hpp
+    ${EngineSrcDir}/GameFramework/Public/Components/Camera.hpp
+    ${EngineSrcDir}/GameFramework/Public/Components/Behavior.hpp
+    ${EngineSrcDir}/GameFramework/Public/Components/Transform.hpp
+    ${EngineSrcDir}/GameFramework/Public/Components/OrthogonalCamera.hpp
+    ${EngineSrcDir}/GameFramework/Public/Components/PerspectiveCamera.hpp
 
-    ${EngineSrcDir}/GameFramework/Systems.hpp
-    ${EngineSrcDir}/GameFramework/Systems/Private/BehaviorSystem.cpp
-    ${EngineSrcDir}/GameFramework/Systems/BehaviorSystem.hpp
-    ${EngineSrcDir}/GameFramework/Systems/Private/InputSystem.cpp
-    ${EngineSrcDir}/GameFramework/Systems/Private/PhysicsSystem.cpp
-    ${EngineSrcDir}/GameFramework/Systems/Private/RenderSystem.cpp
-    ${EngineSrcDir}/GameFramework/Systems/InputSystem.hpp
-    ${EngineSrcDir}/GameFramework/Systems/PhysicsSystem.hpp
-    ${EngineSrcDir}/GameFramework/Systems/RenderSystem.hpp
+    ${EngineSrcDir}/GameFramework/Public/Systems.hpp
+    ${EngineSrcDir}/GameFramework/Private/Systems/BehaviorSystem.cpp
+    ${EngineSrcDir}/GameFramework/Public/Systems/BehaviorSystem.hpp
+    ${EngineSrcDir}/GameFramework/Private/Systems/InputSystem.cpp
+    ${EngineSrcDir}/GameFramework/Private/Systems/PhysicsSystem.cpp
+    ${EngineSrcDir}/GameFramework/Private/Systems/RenderSystem.cpp
+    ${EngineSrcDir}/GameFramework/Public/Systems/InputSystem.hpp
+    ${EngineSrcDir}/GameFramework/Public/Systems/PhysicsSystem.hpp
+    ${EngineSrcDir}/GameFramework/Public/Systems/RenderSystem.hpp
 
-    ${EngineSrcDir}/GameFramework/Managers.hpp
-    ${EngineSrcDir}/GameFramework/Managers/Private/ComponentManager.cpp
-    ${EngineSrcDir}/GameFramework/Managers/Private/SceneManager.cpp
-    ${EngineSrcDir}/GameFramework/Managers/ComponentManager.hpp
-    ${EngineSrcDir}/GameFramework/Managers/SceneManager.hpp
+    ${EngineSrcDir}/GameFramework/Public/Managers.hpp
+    ${EngineSrcDir}/GameFramework/Private/Managers/ComponentManager.cpp
+    ${EngineSrcDir}/GameFramework/Private/Managers/SceneManager.cpp
+    ${EngineSrcDir}/GameFramework/Public/Managers/ComponentManager.hpp
+    ${EngineSrcDir}/GameFramework/Public/Managers/SceneManager.hpp
 
     ${EngineSrcDir}/GameFramework/Private/EngineWindow.cpp
-    ${EngineSrcDir}/GameFramework/EngineWindow.hpp)
+    ${EngineSrcDir}/GameFramework/Public/EngineWindow.hpp)
 
 set(EngineSrc
     ${EngineCoreSrc}
@@ -165,7 +160,7 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.hpp
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
-    ${EditorSrcDir}/Vertex.cpp Core/Private/Math/BoundingBox.cpp Core/Public/Math/BoundingBox.hpp Physics/Public/BulletTypes.hpp GameFramework/Family.hpp Core/Public/NameGenerator.cpp Core/Public/NameGenerator.hpp)
+    ${EditorSrcDir}/Vertex.cpp Core/Private/Math/BoundingBox.cpp Core/Public/Math/BoundingBox.hpp Physics/Public/BulletTypes.hpp GameFramework/Public/ECS/Family.hpp Core/Public/NameGenerator.cpp Core/Public/NameGenerator.hpp Graphics/Private/Model.cpp Graphics/Public/Model.hpp Graphics/Private/PointLight.cpp Graphics/Public/PointLight.hpp Graphics/Private/SpotLight.cpp Graphics/Public/SpotLight.hpp Graphics/Public/Forward.hpp)
 
 qt5_add_resources(EngineSrc ${EngineSrcDir}/rscs.qrc ${EngineSrcDir}/Resources/Resources.qrc)
 

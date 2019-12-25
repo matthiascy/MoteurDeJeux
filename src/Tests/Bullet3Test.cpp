@@ -7,7 +7,7 @@
 #include <QCommandLineOption>
 #include <QWindow>
 #include <QOpenGLWindow>
-#include <GameFramework/GameApp.hpp>
+#include <GameFramework/Public/GameApp.hpp>
 
 /// This is a Hello World program for running a basic Bullet physics simulation
 

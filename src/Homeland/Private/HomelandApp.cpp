@@ -1,11 +1,12 @@
-#include <Engine/GameFramework/Engine.hpp>
-#include <Engine/GameFramework/Components.hpp>
+#include <Engine/GameFramework/Public/Engine.hpp>
+#include <Engine/GameFramework/Public/Components.hpp>
 #include <Homeland/HomelandApp.hpp>
 #include <Homeland/HomelandBehaviors.hpp>
-#include <Engine/Physics/Public/Colliders/SphereCollider.hpp>
-#include <Engine/GameFramework/Managers.hpp>
-#include <Engine/Physics/Public/Colliders/BoxCollider.hpp>
+#include <Physics/Public/Colliders/SphereCollider.hpp>
+#include <GameFramework/Public/Managers.hpp>
+#include <Physics/Public/Colliders/BoxCollider.hpp>
 #include <Physics/Public/PhysicsWorld.hpp>
+#include <Graphics/Public/DirectionalLight.hpp>
 #include <QApplication>
 
 HomelandApp::HomelandApp(int argc, char** argv)
@@ -44,12 +45,13 @@ bool HomelandApp::_init_main_scene()
 
   _init_camera();
   _init_terrain();
+  _init_lights();
 
   auto* cubeOrbit = m_main_scene->createGameObject("CubeOrbit", "default");
   auto* meshRendererCubeOrbit = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", cubeOrbit, m_assets["Cube"]);
   auto* behaviorCubeOrbit = m_engine->componentManager()->addComponent<Behavior>("behavior", cubeOrbit);
   behaviorCubeOrbit->setUpdateFn([](GameObject* self, Engine* engine, Real dt){
-    self->transform()->rotate({0, 0, 10*dt}, ESpace::Local);
+    self->transform()->rotate({0, 10*dt, 0*dt}, ESpace::Local);
   });
 
   auto* cube = m_main_scene->createGameObject("Cube", "default");
@@ -110,7 +112,7 @@ bool HomelandApp::_init_main_scene()
 
   auto* cube3 = m_main_scene->createGameObject("Cube3", "default");
   auto* meshRenderercube3 = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", cube3, m_assets["Cube"]);
-  cube3->transform()->setPosition({3, 1, 3}, ESpace::World);
+  cube3->transform()->setPosition({3, -4, 3}, ESpace::World);
   cube3->setIsSimulated(true);
   auto* colliderCube3 = m_engine->componentManager()->addComponent<BoxCollider>("box-collider", cube3, Vec3{1.5, 1.5, 1.5});
   auto* rigidBodyCube3 = m_engine->componentManager()->addComponent<RigidBody>("rigid-body", cube3, 0);
@@ -124,7 +126,7 @@ bool HomelandApp::_init_main_scene()
     if (!bodies.isEmpty()) {
       for (auto body : bodies) {
         if (body->gameObject()->name() == "Sun") {
-          qDebug() << "BLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLl";
+          //qDebug() << "BLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLl";
         }
       }
     }
@@ -167,5 +169,19 @@ terrain0->transform()->setPosition({0, 0, 0}, ESpace::World);
   terrain003->transform()->setLocalScale({1, 1 ,1});
   terrain003->transform()->setPosition({0, 0, 0}, ESpace::World);
    */
+}
+
+void HomelandApp::_init_lights()
+{
+  auto* orbit = m_main_scene->createGameObject("Light000Orbit", "default");
+  orbit->transform()->setPosition({0, 0, 0}, ESpace::World);
+  m_engine->componentManager()->addComponent<Behavior>("behavior", orbit)->setUpdateFn([](GameObject* self, Engine* engine, Real dt){
+    //self->transform()->rotate(Math::AxisY, 40*dt, ESpace::Local);
+  });
+
+  auto* light000 = m_main_scene->createGameObject("light000", "default");
+  light000->transform()->setPosition({-5, -5, -5}, ESpace::World);
+  light000->transform()->setParent(orbit->transform());
+  auto* lightComp = m_engine->componentManager()->addComponent<DirectionalLight>("DirectionalLight", light000, Vec3{1.0f, 0.0f, 0.0f}, 1.0f);
 }
 

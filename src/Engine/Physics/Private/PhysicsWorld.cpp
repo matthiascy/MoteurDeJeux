@@ -3,7 +3,7 @@
 #include <Physics/Public/BulletTypes.hpp>
 #include <Physics/Public/PhysicsDebugDraw.hpp>
 #include <Physics/Public/Constraint.hpp>
-#include <GameFramework/GameObject.hpp>
+#include <GameFramework/Public/ECS/GameObject.hpp>
 
 struct PhysicsQueryCallback : public btCollisionWorld::ContactResultCallback {
   Array<RigidBody*>& result;

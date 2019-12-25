@@ -1,0 +1,154 @@
+#ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SUBSYSTEMS_RENDERER_SYSTEM_HPP
+#define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SUBSYSTEMS_RENDERER_SYSTEM_HPP
+
+#include <Core/Public/Core.hpp>
+#include <GameFramework/Public/ECS/System.hpp>
+#include <QOpenGLContext>
+#include <QOffscreenSurface>
+#include <QOpenGLBuffer>
+#include <QtGui/QOpenGLShaderProgram>
+#include <QtGui/QOpenGLFramebufferObject>
+#include <QtGui/QOpenGLVertexArrayObject>
+#include <Graphics/Public/OpenGL/OglOffscreenSurface.hpp>
+
+// TODO forward
+class GameObject;
+class Engine;
+class QOpenGLPaintDevice;
+class Scene;
+class PhysicsDebugDraw;
+class Camera;
+
+class RenderSystem : public System {
+public:
+  struct physics_debug_draw_info_t {
+    Int32 vboIdx        { -1 };
+    Int32 vaoIdx        { -1 };
+    Int32 programIdx    { -1 };
+    Int32 vertShaderIdx { -1 };
+    Int32 fragShaderIdx { -1 };
+    Int32 size          {  0 };
+  };
+
+private:
+  struct RenderInfo {
+    Int32 vboIdx {};
+
+    struct ibo_ {
+      Int32  idx {};
+      Int32 size {};
+    } ibo {};
+
+    Array<Int32> texIds;
+  };
+
+  UniquePtr<OglOffscreenSurface>   m_surface;
+
+  HashMap<GameObject*, RenderInfo> m_render_graph;
+
+  /** Arrays own the memory. */
+  Array<OglVAO*>     m_vaos;
+  Array<OglBuffer*>  m_vbos;
+  Array<OglBuffer*>  m_ibos;
+  Array<OglShader*>  m_shaders;
+  Array<OglProgram*> m_programs;
+  Array<OglTexture*> m_textures;
+
+  Mat4 m_view_matrix;
+  Mat4 m_model_matrix;
+  Mat4 m_projection_matrix;
+
+  OglFns*       m_fns;
+  OglFnsCore4_0* m_fns4_0;
+
+  physics_debug_draw_info_t m_physics_debug_draw_info { };
+
+  bool m_is_physics_debug_draw_enabled;
+
+public:
+  RenderSystem(const String& name, Engine* engine, Object* parent = nullptr);
+  ~RenderSystem() override;
+
+  void init() override;
+
+  void fixedUpdate(Real dt) override { };
+
+  void preUpdate(Real dt) override { };
+
+  void update(Real dt) override;
+
+  void postUpdate(Real dt) override { };
+
+  /**
+   * Grab the rendered frame buffer from offscreen surface.
+   * @return Frame buffer as an image.
+   */
+  [[nodiscard]]
+  QImage grabFramebuffer() const;
+
+  OglOffscreenSurface* offscreenSurface() { return m_surface.get(); }
+
+  void makeCurrent();
+
+  void doneCurrent();
+
+  Int32 createBufferObject(OglBuffer::Type type);
+
+  Int32 createVertexArrayObject();
+
+  Int32 createShaderProgram();
+
+  Int32 createShader(OglShader::ShaderTypeBit type);
+
+  [[nodiscard]]
+  physics_debug_draw_info_t& physicsDebugDrawInfo();
+
+  [[nodiscard]]
+  const physics_debug_draw_info_t& physicsDebugDrawInfo() const;
+
+  OglBuffer* vboAt(Int32 idx);
+
+  OglVAO*    vaoAt(Int32 idx);
+
+  OglBuffer* iboAt(Int32 idx);
+
+  OglProgram* programAt(Int32 idx);
+
+private:
+  /**
+   * Render the game object with the corresponding render info and shader program.
+   * @param gameObject [in] GameObject to be rendered.
+   * @param info       [in] gameObject's RenderInfo.
+   * @param program    [in] shader program used to render gameObject.
+   */
+  void _render(const GameObject* gameObject, const RenderInfo& info, OglProgram* program);
+
+  /***
+   * Render the game scene.
+   * @param scene [in] Scene to be rendered.
+   */
+  void _render_scene(Scene* scene);
+
+  /* Used only for destroy render system arrays. */
+  template <typename T>
+  void _destroy_array(Array<T*>& array);
+
+  void _init_physics_system_debug_draw();
+
+  void _physics_system_debug_draw(Camera* camera);
+
+public slots:
+  void resize(const QSize& size);
+};
+
+template<typename T>
+void RenderSystem::_destroy_array(Array<T*>& array)
+{
+  for (auto* ptr : array) {
+    ptr->release();
+    delete ptr;
+    ptr = nullptr;
+  }
+}
+
+#endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_SUBSYSTEMS_RENDERER_SYSTEM_HPP */

@@ -3,7 +3,7 @@
 #include <QHBoxLayout>
 #include "EditorMainWindow.hpp"
 #include "Viewport.hpp"
-#include <GameFramework/GameApp.hpp>
+#include <GameFramework/Public/GameApp.hpp>
 
 EditorMainWindow::EditorMainWindow(EngineWindow* viewport, GameApp* gameApp, QWidget *parent)
   : QMainWindow(parent),

@@ -1,11 +1,7 @@
-#include <GameFramework/Scene.hpp>
-#include <GameFramework/GameObject.hpp>
-#include <GameFramework/Engine.hpp>
-#include <GameFramework/Assets/AssetManager.hpp>
-#include <GameFramework/Systems/RenderSystem.hpp>
-#include <GameFramework/Component.hpp>
-#include <GameFramework/Systems/PhysicsSystem.hpp>
-#include <GameFramework/Managers.hpp>
+#include <GameFramework/Public/Scene.hpp>
+#include <GameFramework/Public/ECS/GameObject.hpp>
+#include <GameFramework/Public/Engine.hpp>
+#include <GameFramework/Public/Managers.hpp>
 
 Scene::Scene(const String& name, Engine* engine, Object* parent)
   : Object(name, parent), m_game_objects{}, m_root{}

@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/Shaders">
+        <file alias="StandardVert">./Shaders/Standard.vert</file>
+        <file alias="StandardFrag">./Shaders/Standard.frag</file>
         <file alias="PhysicsDebugDrawVert">./Shaders/PhysicsDebugDraw.vert</file>
         <file alias="PhysicsDebugDrawFrag">./Shaders/PhysicsDebugDraw.frag</file>
         <file alias="BasicVert">./Shaders/Basic.vert</file>
@@ -18,5 +20,9 @@
         <file alias="previewimage.vert">./Shaders/preview_image.vert</file>
         <file alias="SimpleColor">./Shaders/SimpleColor.frag</file>
         <file alias="SimplePosition">./Shaders/SimplePosition.vert</file>
+    </qresource>
+    <qresource prefix="/Textures">
+        <file alias="Checker000">./Textures/checker000.jpg</file>
+        <file alias="Checker001">./Textures/checker001.jpg</file>
     </qresource>
 </RCC>

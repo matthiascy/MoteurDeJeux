@@ -17,7 +17,7 @@
 #include "mainwindow.h"
 #include "Editor/EditorMainWindow.hpp"
 
-#include <GameFramework/GameApp.hpp>
+#include <GameFramework/Public/GameApp.hpp>
 
 int main(int argc, char *argv[])
 {

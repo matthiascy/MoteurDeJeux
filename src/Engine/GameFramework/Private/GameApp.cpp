@@ -1,5 +1,5 @@
-#include <GameFramework/GameApp.hpp>
-#include <GameFramework/Engine.hpp>
+#include <GameFramework/Public/GameApp.hpp>
+#include <GameFramework/Public/Engine.hpp>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
 #include <QtGui/QOpenGLWindow>
@@ -8,11 +8,11 @@
 #include <Editor/EditorMainWindow.hpp>
 #include <QtCore/QTimer>
 #include <Graphics/Public/SplashScreen.hpp>
-#include <GameFramework/EngineWindow.hpp>
+#include <GameFramework/Public/EngineWindow.hpp>
 #include <QDesktopWidget>
 #include <QScreen>
-#include <GameFramework/Managers/SceneManager.hpp>
-#include <GameFramework/Systems.hpp>
+#include <GameFramework/Public/Managers/SceneManager.hpp>
+#include <GameFramework/Public/Systems.hpp>
 #include <Physics/Public/PhysicsDebugDraw.hpp>
 
 GameApp::GameApp(const String& name, const String& description, QSize&& minSize, int argc, char** argv)

@@ -1,7 +1,7 @@
 #ifndef PLANE_H
 #define PLANE_H
 
-#include <GameFramework/GameObject.hpp>
+#include <GameFramework/Public/ECS/GameObject.hpp>
 
 class Terrain : public GameObject {
 public:

@@ -238,8 +238,8 @@ void OglOffscreenSurface::init()
         qDebug() << msg;
       });
       m_debug_logger->startLogging(OglDebugLogger::SynchronousLogging);
+      m_debug_logger->enableMessages();
       m_debug_logger->disableMessages(QOpenGLDebugMessage::Source::APISource);
-      //m_debug_logger->enableMessages();
 
       if (m_fns4_0)
         m_fns4_0->initializeOpenGLFunctions();

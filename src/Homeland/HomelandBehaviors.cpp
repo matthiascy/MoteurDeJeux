@@ -1,6 +1,6 @@
 #include "HomelandBehaviors.hpp"
-#include <Engine/GameFramework/Engine.hpp>
-#include <Engine/GameFramework/GameObject.hpp>
+#include <Engine/GameFramework/Public/Engine.hpp>
+#include <Engine/GameFramework/Public/ECS/GameObject.hpp>
 
 void HomelandBehaviors::freeView(GameObject* self, Engine* engine, Real dt)
 {

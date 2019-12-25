@@ -1,9 +1,9 @@
 #ifndef MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_RIGID_BODY_HPP
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_RIGID_BODY_HPP
 
-#include <GameFramework/Component.hpp>
+#include <GameFramework/Public/ECS/Component.hpp>
 #include <LinearMath/btMotionState.h>
-#include <GameFramework/Systems/PhysicsSystem.hpp>
+#include <GameFramework/Public/Systems/PhysicsSystem.hpp>
 #include "Forward.hpp"
 
 // TODO: PhysicsWorld

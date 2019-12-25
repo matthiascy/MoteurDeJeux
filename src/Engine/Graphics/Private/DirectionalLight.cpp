@@ -1,6 +1,10 @@
 #include <Graphics/Public/DirectionalLight.hpp>
 
-DirectionalLight::DirectionalLight(String name, GameObject* gameObject,
+DirectionalLight::DirectionalLight(const String& name, GameObject* gameObject,
                                    const Vec3& color, Real intensity)
-  : Light(std::move(name), gameObject, color, intensity)
+  : Light(name, gameObject, color, intensity, ELightType::Directional)
 { }
+
+UInt64 DirectionalLight::typeID() const {
+  return Component::family::type<DirectionalLight>;
+}

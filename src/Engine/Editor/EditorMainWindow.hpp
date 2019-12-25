@@ -12,7 +12,7 @@
 #include <QLabel>
 #include <QActionGroup>
 #include <QLineEdit>
-#include <GameFramework/EngineWindow.hpp>
+#include <GameFramework/Public/EngineWindow.hpp>
 //#include "Viewport.hpp"
 #include "CommandLine.hpp"
 #include "SimpleOutput.hpp"

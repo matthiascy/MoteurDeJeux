@@ -2,7 +2,7 @@
 #define MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_MESH_RENDERER_HPP
 
 #include "Renderer.hpp"
-#include <GameFramework/Assets/AssetsTypes.hpp>
+#include <GameFramework/Public/Managers/AssetManager.hpp>
 
 class MeshRenderer : public Renderer {
 private:

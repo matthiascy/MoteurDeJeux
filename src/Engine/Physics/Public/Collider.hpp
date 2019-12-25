@@ -3,7 +3,7 @@
 
 #include <Core/Public/Math/Math.hpp>
 #include <Core/Public/Memory.hpp>
-#include <GameFramework/Component.hpp>
+#include <GameFramework/Public/ECS/Component.hpp>
 #include "Forward.hpp"
 
 class Collider : public Component {

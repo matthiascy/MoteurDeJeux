@@ -1,6 +1,6 @@
 #include <Physics/Public/RigidBody.hpp>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
-#include <GameFramework/GameObject.hpp>
+#include <GameFramework/Public/ECS/GameObject.hpp>
 #include <Physics/Public/Collider.hpp>
 #include <Physics/Public/CollisionShape.hpp>
 #include <Physics/Public/PhysicsWorld.hpp>

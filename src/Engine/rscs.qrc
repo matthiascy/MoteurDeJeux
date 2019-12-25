@@ -1,7 +1,4 @@
 <RCC>
-    <qresource prefix="/Textures">
-        <file alias="moon">../../assets/textures/moon.jpg</file>
-    </qresource>
     <qresource prefix="/App">
         <file alias="engine-logo">../../assets/textures/ephemeral-engine.png</file>
         <file alias="loading-engine">../../assets/textures/loading-engine.png</file>

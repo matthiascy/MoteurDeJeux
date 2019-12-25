@@ -1,6 +1,6 @@
 #include <Physics/Public/Collider.hpp>
 #include <Physics/Public/RigidBody.hpp>
-#include <GameFramework/GameObject.hpp>
+#include <GameFramework/Public/ECS/GameObject.hpp>
 #include <Physics/Public/CollisionShape.hpp>
 
 

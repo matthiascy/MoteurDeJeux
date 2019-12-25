@@ -1,7 +1,7 @@
-#include <GameFramework/Engine.hpp>
-#include <GameFramework/GameApp.hpp>
-#include <GameFramework/Systems.hpp>
-#include <GameFramework/EngineWindow.hpp>
+#include <GameFramework/Public/Engine.hpp>
+#include <GameFramework/Public/GameApp.hpp>
+#include <GameFramework/Public/Systems.hpp>
+#include <GameFramework/Public/EngineWindow.hpp>
 #include <QPainter>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLayout>

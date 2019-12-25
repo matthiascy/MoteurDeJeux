@@ -1,17 +1,24 @@
-#ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_LIGHT_HPP
-#define MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_LIGHT_HPP
+#ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_PUBLIC_LIGHT_HPP
+#define MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_PUBLIC_LIGHT_HPP
 
 #include <Core/Public/Core.hpp>
-#include <GameFramework/Forward.hpp>
-#include <GameFramework/Component.hpp>
+#include <GameFramework/Public/ECS/Component.hpp>
+#include "Forward.hpp"
+
+enum class EAttenuationType {
+  Constant,
+  Linear,
+  Exponent
+};
 
 class Light : public Component {
 protected:
+  ELightType m_type;
   Vec3 m_color;
   Real m_intensity;
 
 public:
-  Light(String name, GameObject* gameObject, const Vec3& color, Real intensity);
+  Light(const String& name, GameObject* gameObject, const Vec3& color, Real intensity, ELightType type);
   ~Light() override = default;
 
   [[nodiscard]]
@@ -22,8 +29,16 @@ public:
   [[nodiscard]]
   const Vec3& color() const;
 
+  void setColor(const Vec3& color);
+
   [[nodiscard]]
   Real intensity() const;
+
+  void setIntensity(Real intensity);
+
+  [[nodiscard]]
+  ELightType lightType() const;
+
 };
 
-#endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_COMPONENTS_LIGHT_HPP */
+#endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_PUBLIC_LIGHT_HPP */

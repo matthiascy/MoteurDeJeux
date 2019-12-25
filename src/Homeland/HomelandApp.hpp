@@ -1,8 +1,8 @@
 #ifndef HOMELAND_HOMELAND_APP_HPP
 #define HOMELAND_HOMELAND_APP_HPP
 
-#include <GameFramework/GameApp.hpp>
-#include <GameFramework/Assets/AssetManager.hpp>
+#include <Engine/GameFramework/Public/GameApp.hpp>
+#include <Engine/GameFramework/Public/Managers/AssetManager.hpp>
 
 class Scene;
 class GameObject;
@@ -25,6 +25,8 @@ private:
   void _load_game_asset();
 
   void _init_camera();
+
+  void _init_lights();
 
   void _init_terrain();
 };
