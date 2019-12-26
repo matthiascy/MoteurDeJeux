@@ -11,6 +11,7 @@ enum class EAssetType {
   Texture,
   Audio,
   Mesh,
+  Model,
 };
 
 struct AssetHandle {
@@ -22,16 +23,18 @@ class AssetManager : public Object {
 public:
 
 protected:
-  Array<Mesh*>       m_meshes;
+  UniquePtr<Array<Mesh*>> m_meshes;
   Array<OglTexture*> m_textures;
 
 public:
   AssetManager() = delete;
   explicit AssetManager(const String& name, Object* parent = nullptr);
+  AssetManager(const AssetManager& other) = delete;
   ~AssetManager() override;
 
   AssetHandle loadMesh(const String& path);
   AssetHandle loadTexture(const String& path);
+  AssetHandle loadModel(const String& path);
 
   // TODO
   //Asset* getAsset(AssetHandle handle);

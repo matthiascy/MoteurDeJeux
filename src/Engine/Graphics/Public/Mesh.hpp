@@ -11,6 +11,7 @@ class Mesh {
 public:
   Mesh();
   Mesh(UInt32 vertexCount, const Array<float>& data, const Array<UInt32>& indices);
+  ~Mesh() = default;
 
   [[nodiscard]]
   UInt32 count() const { return m_count; }
@@ -41,6 +42,8 @@ public:
 
   [[nodiscard]]
   const float* constData() const { return m_data.constData(); }
+
+  void setData(UInt32 vertexCount, const Array<float>& data, const Array<UInt32>& indices);
 
   void addVertex(const Vec3& v, const Vec3& n, const Vec2& t);
   void addQuad(const Vec3& p1, const Vec3& p2, const Vec3& p3, const Vec3& p4,

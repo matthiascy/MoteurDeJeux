@@ -1,13 +1,17 @@
-//
-// Created by mouton on 25/12/2019.
-//
+#ifndef MOTEUR_DE_JEUX_SRC_GRAPHICS_MODEL_HPP
+#define MOTEUR_DE_JEUX_SRC_GRAPHICS_MODEL_HPP
 
-#ifndef HOMELAND_MODEL_HPP
-#define HOMELAND_MODEL_HPP
+#include "Mesh.hpp"
 
-
+/**
+ * Class Model doesn't own the Mesh.
+ */
 class Model {
+private:
+  Array<Mesh*> meshes;
 
+public:
+  Model();
 };
 
 

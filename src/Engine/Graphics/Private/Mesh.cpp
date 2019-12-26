@@ -101,3 +101,13 @@ void Mesh::calculateSphericalUV()
   }
 }
 
+void Mesh::setData(UInt32 vertexCount, const Array<float>& data, const Array<UInt32>& indices)
+{
+  m_vertex_count = vertexCount;
+  m_data.clear();
+  m_data = data;
+  m_indices.clear();
+  m_indices = indices;
+  m_count = m_data.size();
+}
+
