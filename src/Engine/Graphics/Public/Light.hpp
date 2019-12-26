@@ -5,10 +5,10 @@
 #include <GameFramework/Public/ECS/Component.hpp>
 #include "Forward.hpp"
 
-enum class EAttenuationType {
-  Constant,
-  Linear,
-  Exponent
+struct Attenuation {
+  Real constant {};
+  Real linear   {};
+  Real exponent {};
 };
 
 class Light : public Component {

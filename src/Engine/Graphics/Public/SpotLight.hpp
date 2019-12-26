@@ -5,14 +5,13 @@
 
 class SpotLight : public Light {
 private:
-  EAttenuationType m_attenuation_type;
-  Real m_attenuation;
+  Attenuation m_attenuation;
   Real m_cutoff_angle;
   Real m_range;
 
 public:
   SpotLight(const String& name, GameObject* gameObject, const Vec3& color, Real intensity,
-            Real range, Real cutOffAngle, EAttenuationType type, Real attenuation);
+            Real range, Real cutOffAngle, Attenuation attenuation);
 
   ~SpotLight() override = default;
 
@@ -22,14 +21,17 @@ public:
   [[nodiscard]]
   Real range() const;
 
+  void setRange(Real range);
+
   [[nodiscard]]
   Real cutOffAngle() const;
 
-  [[nodiscard]]
-  Real attenuation() const;
+  void setCutOffAngle(Real angle);
 
   [[nodiscard]]
-  EAttenuationType attenuationType() const;
+  Attenuation attenuation() const;
+
+  void setAttenuation(Attenuation attenuation);
 };
 
 

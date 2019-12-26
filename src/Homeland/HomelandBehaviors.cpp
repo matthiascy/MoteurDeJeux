@@ -31,9 +31,7 @@ void HomelandBehaviors::trackball(GameObject* self, Engine* engine, Real dt)
   }
 }
 
-
-
-void HomelandBehaviors::exampleBehavior(GameObject* self, Engine* engine, Real dt)
+void HomelandBehaviors::exampleBehavior000(GameObject* self, Engine* engine, Real dt)
 {
   if (engine->inputSystem()->isKeyPressed(Qt::Key_W)) {
     self->transform()->translate({0, 10 * dt, 0}, ESpace::World);
@@ -49,5 +47,40 @@ void HomelandBehaviors::exampleBehavior(GameObject* self, Engine* engine, Real d
 
   if (engine->inputSystem()->isKeyPressed(Qt::Key_D)) {
     self->transform()->translate({dt * 10, 0, 0}, ESpace::World);
+  }
+
+  if (engine->inputSystem()->isKeyPressed(Qt::Key_Z)) {
+    self->transform()->translate({0, 0, -dt*10}, ESpace::World);
+  }
+
+  if (engine->inputSystem()->isKeyPressed(Qt::Key_X)) {
+    self->transform()->translate({0, 0, dt*10}, ESpace::World);
+  }
+}
+
+void HomelandBehaviors::exampleBehavior001(GameObject* self, Engine* engine, Real dt)
+{
+  if (engine->inputSystem()->isKeyPressed(Qt::Key_Up)) {
+    self->transform()->translate({0, 10 * dt, 0}, ESpace::World);
+  }
+
+  if (engine->inputSystem()->isKeyPressed(Qt::Key_Down)) {
+    self->transform()->translate({0, -10 * dt, 0}, ESpace::World);
+  }
+
+  if (engine->inputSystem()->isKeyPressed(Qt::Key_Left)) {
+    self->transform()->translate({-dt * 10, 0, 0}, ESpace::World);
+  }
+
+  if (engine->inputSystem()->isKeyPressed(Qt::Key_Right)) {
+    self->transform()->translate({dt * 10, 0, 0}, ESpace::World);
+  }
+
+  if (engine->inputSystem()->isKeyPressed(Qt::Key_PageUp)) {
+    self->transform()->translate({0, 0, -dt*10}, ESpace::World);
+  }
+
+  if (engine->inputSystem()->isKeyPressed(Qt::Key_PageDown)) {
+    self->transform()->translate({0, 0, dt*10}, ESpace::World);
   }
 }

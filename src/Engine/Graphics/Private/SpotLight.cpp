@@ -1,10 +1,10 @@
 #include "Graphics/Public/SpotLight.hpp"
 
 SpotLight::SpotLight(const String& name, GameObject* gameObject, const Vec3& color, Real intensity,
-                     Real range, Real cutOffAngle, EAttenuationType type, Real attenuation)
+                     Real range, Real cutOffAngle, Attenuation attenuation)
   : Light(name, gameObject, color, intensity, ELightType::Spot),
     m_range{range}, m_cutoff_angle{cutOffAngle},
-    m_attenuation_type{type}, m_attenuation{attenuation}
+    m_attenuation{attenuation}
 { }
 
 UInt64 SpotLight::typeID() const
@@ -22,12 +22,22 @@ Real SpotLight::cutOffAngle() const
   return m_cutoff_angle;
 }
 
-Real SpotLight::attenuation() const
+Attenuation SpotLight::attenuation() const
 {
   return m_attenuation;
 }
 
-EAttenuationType SpotLight::attenuationType() const
+void SpotLight::setRange(Real range)
 {
-  return m_attenuation_type;
+  m_range = range;
+}
+
+void SpotLight::setCutOffAngle(Real angle)
+{
+  m_cutoff_angle = angle;
+}
+
+void SpotLight::setAttenuation(Attenuation attenuation)
+{
+  m_attenuation = attenuation;
 }

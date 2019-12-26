@@ -61,9 +61,6 @@ void RenderSystem::init()
   m_programs[0]->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/StandardVert");
   m_programs[0]->addShaderFromSourceFile(OglShader::Fragment, ":/Shaders/StandardFrag");
   m_programs[0]->link();
-  //m_programs[0]->bind();
-
-  //m_programs[0]->release();
 
   m_vaos.insert(0,new OglVAO);
   m_vaos[0]->create();
@@ -72,9 +69,9 @@ void RenderSystem::init()
 
   m_fns->glEnable(GL_DEPTH_TEST);
   m_fns->glDepthFunc(GL_LESS);
-  m_fns->glEnable(GL_CULL_FACE);
-  m_fns->glCullFace(GL_BACK);
-  m_fns->glFrontFace(GL_CCW);
+  //m_fns->glEnable(GL_CULL_FACE);
+  //m_fns->glCullFace(GL_BACK);
+  //m_fns->glFrontFace(GL_CCW);
   m_fns->glViewport(0, 0, m_surface->size().width(), m_surface->size().height());
   m_fns->glClearColor(0.2, 0.2, 0.2, 1.0);
 
@@ -88,12 +85,12 @@ void RenderSystem::_render_scene(Scene* scene)
   if (scene) {
 
     auto* camera = scene->mainCamera()->getComponent<PerspectiveCamera>();
-    Light* light = nullptr;
+    Array<Light*> lights;
 
     for (GameObject* gameObject : scene->gameObjects()) {
       // TODO: multiple lights
       if (gameObject->hasComponent<Light>())
-        light = gameObject->getComponent<Light>();
+        lights.push_back(gameObject->getComponent<Light>());
 
       if (gameObject->isVisible()) {
         if (gameObject->hasComponent<MeshRenderer>()) {
@@ -127,33 +124,56 @@ void RenderSystem::_render_scene(Scene* scene)
 
     // Ambient color
     m_programs[0]->setUniformValue("lighting.ambient.color", Vec3{0.7, 0.7, 0.7});
-    m_programs[0]->setUniformValue("lighting.ambient.intensity", 0.3f);
-    m_programs[0]->setUniformValue("lighting.ambientCoeff", 0.5f);
-    m_programs[0]->setUniformValue("lighting.diffuseCoeff", 0.5f);
+    m_programs[0]->setUniformValue("lighting.ambient.intensity", 0.4f);
+    m_programs[0]->setUniformValue("lighting.ambientCoeff", 1.0f);
+    m_programs[0]->setUniformValue("lighting.diffuseCoeff", 1.0f);
     m_programs[0]->setUniformValue("lighting.specularCoeff", 1.0f);
 
-    if (light) {
-      switch (light->lightType()) {
-        // Directional light
-        case ELightType::Directional: {
-          m_programs[0]->setUniformValue("lighting.directional.color", light->color());
-          m_programs[0]->setUniformValue("lighting.directional.direction", light->gameObject()->transform()->forward());
-          m_programs[0]->setUniformValue("lighting.directional.intensity", light->intensity());
-        } break;
+    if (!lights.isEmpty()) {
+      int idx_directional = 0, idx_spot = 0, idx_point = 0;
+      for (Light* light : lights) {
+        switch (light->lightType()) {
+          case ELightType::Directional: {
+            String lightName = QStringLiteral("lighting.directionalLights[%1]").arg(idx_directional++);;
+            m_programs[0]->setUniformValue((lightName + ".color").toStdString().c_str(), light->color());
+            m_programs[0]->setUniformValue((lightName + ".direction").toStdString().c_str(), light->gameObject()->transform()->forward());
+            m_programs[0]->setUniformValue((lightName + ".intensity").toStdString().c_str(), light->intensity());
+          } break;
 
-        case ELightType::Spot: {
-          m_programs[0]->setUniformValue("spotLight.position", light->gameObject()->transform()->worldPosition());
-          m_programs[0]->setUniformValue("spotLight.color", dynamic_cast<SpotLight*>(light)->color());
-        } break;
+          case ELightType::Spot: {
+            auto* ptr = dynamic_cast<SpotLight*>(light);
+            String lightName = QStringLiteral("lighting.spotLights[%1]").arg(idx_spot++);;
+            m_programs[0]->setUniformValue((lightName + ".color").toStdString().c_str(), light->color());
+            m_programs[0]->setUniformValue((lightName + ".position").toStdString().c_str(), light->gameObject()->transform()->worldPosition());
+            m_programs[0]->setUniformValue((lightName + ".direction").toStdString().c_str(), light->gameObject()->transform()->forward());
+            m_programs[0]->setUniformValue((lightName + ".intensity").toStdString().c_str(), light->intensity());
+            m_programs[0]->setUniformValue((lightName + ".range").toStdString().c_str(), ptr->range());
+            m_programs[0]->setUniformValue((lightName + ".cutOff").toStdString().c_str(), std::cos(qDegreesToRadians(ptr->cutOffAngle())));
+            m_programs[0]->setUniformValue((lightName + ".attenuation.constant").toStdString().c_str(), ptr->attenuation().constant);
+            m_programs[0]->setUniformValue((lightName + ".attenuation.linear").toStdString().c_str(), ptr->attenuation().linear);
+            m_programs[0]->setUniformValue((lightName + ".attenuation.exponent").toStdString().c_str(), ptr->attenuation().exponent);
+          } break;
 
-        case ELightType::Point: {
-          m_programs[0]->setUniformValue("pointLight.position", light->gameObject()->transform()->worldPosition());
-          m_programs[0]->setUniformValue("pointLight.color", dynamic_cast<PointLight*>(light)->color());
-        } break;
+          case ELightType::Point: {
+            auto* ptr = dynamic_cast<PointLight*>(light);
+            String lightName = QStringLiteral("lighting.pointLights[%1]").arg(idx_point++);;
+            m_programs[0]->setUniformValue((lightName + ".color").toStdString().c_str(), light->color());
+            m_programs[0]->setUniformValue((lightName + ".position").toStdString().c_str(), light->gameObject()->transform()->worldPosition());
+            m_programs[0]->setUniformValue((lightName + ".intensity").toStdString().c_str(), light->intensity());
+            m_programs[0]->setUniformValue((lightName + ".range").toStdString().c_str(), ptr->range());
+            m_programs[0]->setUniformValue((lightName + ".attenuation.constant").toStdString().c_str(), ptr->attenuation().constant);
+            m_programs[0]->setUniformValue((lightName + ".attenuation.linear").toStdString().c_str(), ptr->attenuation().linear);
+            m_programs[0]->setUniformValue((lightName + ".attenuation.exponent").toStdString().c_str(), ptr->attenuation().exponent);
+          }
+            break;
 
-        default:
-          break;
+          default:
+            break;
+        }
       }
+      m_programs[0]->setUniformValue("directionalLightsNum", idx_directional);
+      m_programs[0]->setUniformValue("pointLightsNum", idx_point);
+      m_programs[0]->setUniformValue("spotLightsNum", idx_spot);
     }
 
     m_fns->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

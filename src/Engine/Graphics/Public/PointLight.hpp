@@ -5,13 +5,12 @@
 
 class PointLight : public Light {
 private:
-  EAttenuationType m_attenuation_type;
-  Real m_attenuation;
+  Attenuation m_attenuation;
   Real m_range;
 
 public:
   PointLight(const String& name, GameObject* gameObject, const Vec3& color, Real intensity,
-             Real range = 1.0f, EAttenuationType type = EAttenuationType::Constant, Real attenuation = 1.0f);
+             Real range = 1.0f, Attenuation attenuation = {});
 
   ~PointLight() override = default;
 
@@ -19,13 +18,14 @@ public:
   UInt64 typeID() const override;
 
   [[nodiscard]]
-  EAttenuationType attenuationType() const;
+  Attenuation attenuation() const;
 
-  [[nodiscard]]
-  Real attenuation() const;
+  void setAttenuation(Attenuation attenuation);
 
   [[nodiscard]]
   Real range() const;
+
+  void setRange(Real range);
 };
 
 

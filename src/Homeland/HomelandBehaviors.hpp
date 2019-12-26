@@ -13,7 +13,9 @@ struct HomelandBehaviors {
 
   static void freeView(GameObject* self, Engine* engine, Real dt);
 
-  static void exampleBehavior(GameObject* self, Engine* engine, Real dt);
+  static void exampleBehavior000(GameObject* self, Engine* engine, Real dt);
+
+  static void exampleBehavior001(GameObject* self, Engine* engine, Real dt);
 
 };
 
