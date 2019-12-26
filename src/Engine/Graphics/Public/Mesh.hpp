@@ -2,12 +2,22 @@
 #define MESH_HPP
 
 #include <Core/Public/Core.hpp>
+#include <Graphics/Public/Forward.hpp>
 
 /*
  * Compact layout { position | normal | texCoord }
  *                  0  1  2    3  4  5   6  7
  */
 class Mesh {
+protected:
+  UInt32 m_vertex_count;
+  Array<UInt32> m_indices;
+  Array<float> m_data;
+  UInt32 m_count;
+  String m_name;
+
+  MaterialHandle m_material;
+
 public:
   Mesh();
   Mesh(UInt32 vertexCount, const Array<float>& data, const Array<UInt32>& indices);
@@ -50,13 +60,6 @@ public:
                const Vec2& uv1, const Vec2& uv2, const Vec2& uv3, const Vec2& uv4);
 
   const String& name() { return m_name; }
-
-protected:
-  UInt32 m_vertex_count;
-  Array<UInt32> m_indices;
-  Array<float> m_data;
-  UInt32 m_count;
-  String m_name;
 };
 
 #endif // MESH_HPP

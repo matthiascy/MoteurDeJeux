@@ -6,10 +6,10 @@
 
 class MeshRenderer : public Renderer {
 private:
-  AssetHandle m_mesh_handle;
+  ModelHandle m_model_handle;
 
 public:
-  MeshRenderer(const String& name, GameObject* gameObject, const AssetHandle& handle);
+  MeshRenderer(const String& name, GameObject* gameObject, const ModelHandle& handle);
 
   [[nodiscard]]
   UInt64 typeID() const override {
@@ -17,7 +17,7 @@ public:
   }
 
   [[nodiscard]]
-  AssetHandle meshHandle() const;
+  ModelHandle modelHandle() const;
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_MESH_RENDERER_HPP */

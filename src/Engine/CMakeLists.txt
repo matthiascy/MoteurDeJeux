@@ -53,22 +53,24 @@ set(EngineGraphicsSrc
     ${EngineSrcDir}/Graphics/Private/Mesh.cpp
     ${EngineSrcDir}/Graphics/Private/Shader.cpp
     ${EngineSrcDir}/Graphics/Private/Material.cpp
-    ${EngineSrcDir}/Graphics/Private/SplashScreen.cpp
     ${EngineSrcDir}/Graphics/Private/Light.cpp
     ${EngineSrcDir}/Graphics/Private/Renderer.cpp
     ${EngineSrcDir}/Graphics/Private/MeshRenderer.cpp
-    ${EngineSrcDir}/Graphics/Private/OpenGL/OglOffscreenSurface.cpp
+    ${EngineSrcDir}/Graphics/Private/SplashScreen.cpp
+    ${EngineSrcDir}/Graphics/Private/RenderSystem.cpp
     ${EngineSrcDir}/Graphics/Private/DirectionalLight.cpp
+    ${EngineSrcDir}/Graphics/Private/OpenGL/OglOffscreenSurface.cpp
     ${EngineSrcDir}/Graphics/Public/Mesh.hpp
     ${EngineSrcDir}/Graphics/Public/Types.hpp
     ${EngineSrcDir}/Graphics/Public/Shader.hpp
-    ${EngineSrcDir}/Graphics/Public/SplashScreen.hpp
-    ${EngineSrcDir}/Graphics/Public/OpenGL/OglTypes.hpp
     ${EngineSrcDir}/Graphics/Public/Light.hpp
     ${EngineSrcDir}/Graphics/Public/Material.hpp
+    ${EngineSrcDir}/Graphics/Public/RenderSystem.hpp
     ${EngineSrcDir}/Graphics/Public/MeshRenderer.hpp
-    ${EngineSrcDir}/Graphics/Public/OpenGL/OglOffscreenSurface.hpp
-    ${EngineSrcDir}/Graphics/Public/DirectionalLight.hpp)
+    ${EngineSrcDir}/Graphics/Public/SplashScreen.hpp
+    ${EngineSrcDir}/Graphics/Public/OpenGL/OglTypes.hpp
+    ${EngineSrcDir}/Graphics/Public/DirectionalLight.hpp
+    ${EngineSrcDir}/Graphics/Public/OpenGL/OglOffscreenSurface.hpp)
 
 set(EngineCoreSrc
     ${EngineSrcDir}/Core/Private/Object.cpp
@@ -99,9 +101,7 @@ set(EngineGameFrameworkSrc
     ${EngineSrcDir}/GameFramework/Public/ECS/Component.hpp
     ${EngineSrcDir}/GameFramework/Public/ECS/GameObject.hpp
 
-    ${EngineSrcDir}/GameFramework/Private/Managers/MeshLoader.cpp
     ${EngineSrcDir}/GameFramework/Private/Managers/AssetManager.cpp
-    ${EngineSrcDir}/GameFramework/Public/Managers/MeshLoader.hpp
     ${EngineSrcDir}/GameFramework/Public/Managers/AssetManager.hpp
 
     ${EngineSrcDir}/GameFramework/Private/Components/Camera.cpp
@@ -121,10 +121,8 @@ set(EngineGameFrameworkSrc
     ${EngineSrcDir}/GameFramework/Public/Systems/BehaviorSystem.hpp
     ${EngineSrcDir}/GameFramework/Private/Systems/InputSystem.cpp
     ${EngineSrcDir}/GameFramework/Private/Systems/PhysicsSystem.cpp
-    ${EngineSrcDir}/GameFramework/Private/Systems/RenderSystem.cpp
     ${EngineSrcDir}/GameFramework/Public/Systems/InputSystem.hpp
     ${EngineSrcDir}/GameFramework/Public/Systems/PhysicsSystem.hpp
-    ${EngineSrcDir}/GameFramework/Public/Systems/RenderSystem.hpp
 
     ${EngineSrcDir}/GameFramework/Public/Managers.hpp
     ${EngineSrcDir}/GameFramework/Private/Managers/ComponentManager.cpp

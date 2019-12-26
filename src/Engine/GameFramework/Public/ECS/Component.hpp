@@ -6,6 +6,10 @@
 #include <Core/Public/Object.hpp>
 #include <GameFramework/Public/Types.hpp>
 
+// TODO: system requirement
+//       1 => pass reference of system to component
+//       2 => system deals with specifique component
+
 class GameObject;
 
 enum class EComponentType {

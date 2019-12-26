@@ -1,10 +1,10 @@
 #include <Graphics/Public/MeshRenderer.hpp>
 
-MeshRenderer::MeshRenderer(const String& name, GameObject* gameObject, const AssetHandle& handle)
-  : Renderer(name, gameObject), m_mesh_handle{handle}
+MeshRenderer::MeshRenderer(const String& name, GameObject* gameObject, const ModelHandle& handle)
+  : Renderer(name, gameObject), m_model_handle{handle}
 { }
 
-AssetHandle MeshRenderer::meshHandle() const
+ModelHandle MeshRenderer::modelHandle() const
 {
-  return m_mesh_handle;
+  return m_model_handle;
 }

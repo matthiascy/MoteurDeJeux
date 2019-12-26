@@ -1,4 +1,4 @@
-#include <GameFramework/Public/Systems/RenderSystem.hpp>
+#include <Graphics/Public/RenderSystem.hpp>
 #include <QOpenGLFunctions>
 #include <QtGui/QOpenGLPaintDevice>
 #include <QtGui/QPainter>
@@ -12,6 +12,7 @@
 #include <Graphics/Public/DirectionalLight.hpp>
 #include <Graphics/Public/SpotLight.hpp>
 #include <Graphics/Public/PointLight.hpp>
+#include <Graphics/Public/Model.hpp>
 
 
 RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
@@ -69,9 +70,9 @@ void RenderSystem::init()
 
   m_fns->glEnable(GL_DEPTH_TEST);
   m_fns->glDepthFunc(GL_LESS);
-  //m_fns->glEnable(GL_CULL_FACE);
-  //m_fns->glCullFace(GL_BACK);
-  //m_fns->glFrontFace(GL_CCW);
+  m_fns->glEnable(GL_CULL_FACE);
+  m_fns->glCullFace(GL_BACK);
+  m_fns->glFrontFace(GL_CCW);
   m_fns->glViewport(0, 0, m_surface->size().width(), m_surface->size().height());
   m_fns->glClearColor(0.2, 0.2, 0.2, 1.0);
 
@@ -95,20 +96,7 @@ void RenderSystem::_render_scene(Scene* scene)
       if (gameObject->isVisible()) {
         if (gameObject->hasComponent<MeshRenderer>()) {
           if (!m_render_graph.contains(gameObject)) {
-            auto* meshRenderer = gameObject->getComponent<MeshRenderer>();
-            auto* mesh = m_engine->assetManager()->getMesh(meshRenderer->meshHandle());
-
-            int vbo_idx = createBufferObject(OglBuffer::Type::VertexBuffer);
-            int ibo_idx = createBufferObject(OglBuffer::Type::IndexBuffer);
-            m_render_graph.insert(gameObject, {vbo_idx, {ibo_idx, mesh->indices().size()}, {0}});
-
-            m_vbos[vbo_idx]->bind();
-            m_vbos[vbo_idx]->setUsagePattern(OglBuffer::StaticDraw);
-            m_vbos[vbo_idx]->allocate(mesh->constData(), mesh->count() * sizeof(float));
-
-            m_ibos[ibo_idx]->bind();
-            m_ibos[ibo_idx]->setUsagePattern(OglBuffer::StaticDraw);
-            m_ibos[ibo_idx]->allocate(mesh->indices().constData(),mesh->vertexCount() * sizeof(UInt32));
+            _register_mesh_renderer(gameObject->getComponent<MeshRenderer>());
           }
         }
       }
@@ -204,7 +192,6 @@ void RenderSystem::_render(const GameObject* gameObject, const RenderInfo& info,
   for (auto i = 0, j = 0; i < info.texIds.size(); ++i, ++j) {
     m_textures[i]->bind(j);
   }
-
   m_vbos[info.vboIdx]->bind();
   m_fns->glEnableVertexAttribArray(0);
   m_fns->glEnableVertexAttribArray(1);
@@ -376,4 +363,27 @@ void RenderSystem::_physics_system_debug_draw(Camera* camera)
   m_fns->glDrawArrays(GL_LINES, 0, m_physics_debug_draw_info.size);
   m_vaos[m_physics_debug_draw_info.vaoIdx]->release();
   m_programs[m_physics_debug_draw_info.programIdx]->release();
+}
+
+void RenderSystem::_register_mesh_renderer(MeshRenderer* meshRenderer)
+{
+  auto* model = m_engine->assetManager()->getModel(meshRenderer->modelHandle());
+  auto meshes = model->meshes();
+
+  auto* mesh = m_engine->assetManager()->getMesh(meshes[0]);
+
+  int vbo_idx = createBufferObject(OglBuffer::Type::VertexBuffer);
+  int ibo_idx = createBufferObject(OglBuffer::Type::IndexBuffer);
+  m_render_graph.insert(meshRenderer->gameObject(), {vbo_idx, {ibo_idx, mesh->indices().size()}, {0}});
+
+  m_vbos[vbo_idx]->bind();
+  m_vbos[vbo_idx]->setUsagePattern(OglBuffer::StaticDraw);
+  m_vbos[vbo_idx]->allocate(mesh->constData(), mesh->count() * sizeof(float));
+
+  m_ibos[ibo_idx]->bind();
+  m_ibos[ibo_idx]->setUsagePattern(OglBuffer::StaticDraw);
+  m_ibos[ibo_idx]->allocate(mesh->indices().constData(),mesh->vertexCount() * sizeof(UInt32));
+
+  m_ibos[ibo_idx]->release();
+  m_vbos[vbo_idx]->release();
 }

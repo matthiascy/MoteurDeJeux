@@ -7,14 +7,14 @@ GameObject::GameObject(const String& name, Scene* scene, Object* parent)
   : Object(name, parent), m_tag{"None"}, m_transform{nullptr},
     m_is_static{false}, m_is_visible{true}, m_is_simulated{false},
     m_has_collider{false}, m_scene{scene},
-    m_components{}, m_mesh{}
+    m_components{}
 { }
 
 GameObject::GameObject(const String& name, Scene* scene, const String& tag, Object* parent)
     : Object(name, parent), m_tag{tag}, m_transform{nullptr},
       m_is_static{false}, m_is_visible{true}, m_is_simulated{false},
       m_has_collider{false}, m_scene{scene},
-      m_components{}, m_mesh{}
+      m_components{}
 { }
 
 StringView GameObject::tag() const
@@ -60,11 +60,6 @@ bool GameObject::isStatic() const
 void GameObject::setStatic(bool isStatic)
 {
   m_is_static = isStatic;
-}
-
-AssetHandle GameObject::meshHandle() const
-{
-  return m_mesh;
 }
 
 Scene* GameObject::scene() const

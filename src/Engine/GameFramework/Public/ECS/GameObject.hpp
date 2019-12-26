@@ -26,7 +26,6 @@ private:
   bool m_is_simulated;
   bool m_has_collider;
   Scene* m_scene;
-  AssetHandle m_mesh;
   Array<Component*> m_components;
   // TODO::using handle to retrieve components
 
@@ -61,8 +60,6 @@ public:
   bool isSimulated() const;
 
   void setIsSimulated(bool isSimulated);
-
-  [[nodiscard]] AssetHandle meshHandle() const;
 
   [[nodiscard]] Scene* scene() const;
 

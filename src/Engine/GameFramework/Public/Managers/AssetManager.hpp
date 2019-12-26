@@ -2,28 +2,19 @@
 #define MOTEUR_DE_JEUX_SRC_ENGINE_ASSETS_ASSET_MANAGER_HPP
 
 #include <Core/Public/Core.hpp>
+#include <Graphics/Public/Forward.hpp>
 #include <Graphics/Public/Mesh.hpp>
-#include <Graphics/Public/Types.hpp>
+#include <Graphics/Public/OpenGL/OglTypes.hpp>
 
 class Engine;
-
-enum class EAssetType {
-  Texture,
-  Audio,
-  Mesh,
-  Model,
-};
-
-struct AssetHandle {
-  UInt32 idx;
-  EAssetType type;
-};
 
 class AssetManager : public Object {
 public:
 
 protected:
   UniquePtr<Array<Mesh*>> m_meshes;
+  UniquePtr<Array<Model*>> m_models;
+  UniquePtr<Array<Material*>> m_materials;
   Array<OglTexture*> m_textures;
 
 public:
@@ -32,14 +23,19 @@ public:
   AssetManager(const AssetManager& other) = delete;
   ~AssetManager() override;
 
-  AssetHandle loadMesh(const String& path);
-  AssetHandle loadTexture(const String& path);
-  AssetHandle loadModel(const String& path);
+  ModelHandle loadModel(const String& path);
+
+  TextureHandle loadTexture(const String& path);
 
   // TODO
   //Asset* getAsset(AssetHandle handle);
-  OglTexture* getTexture(AssetHandle handle);
-  Mesh* getMesh(AssetHandle handle);
+  OglTexture* getTexture(TextureHandle handle);
+  Model* getModel(ModelHandle handle);
+  Mesh* getMesh(MeshHandle handle);
+
+private:
+  Mesh*  _load_mesh(const String& path);
+  Model* _load_model(const String& path);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_ASSETS_ASSET_MANAGER_HPP */

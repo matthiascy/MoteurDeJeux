@@ -18,6 +18,7 @@ class QOpenGLPaintDevice;
 class Scene;
 class PhysicsDebugDraw;
 class Camera;
+class MeshRenderer;
 
 class RenderSystem : public System {
 public:
@@ -136,6 +137,8 @@ private:
   void _init_physics_system_debug_draw();
 
   void _physics_system_debug_draw(Camera* camera);
+
+  void _register_mesh_renderer(MeshRenderer* meshRenderer);
 
 public slots:
   void resize(const QSize& size);

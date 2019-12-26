@@ -6,6 +6,7 @@
 #include <GameFramework/Public/Managers.hpp>
 #include <Physics/Public/Colliders/BoxCollider.hpp>
 #include <Physics/Public/PhysicsWorld.hpp>
+#include <Graphics/Public/Model.hpp>
 
 #include <Graphics/Public/SpotLight.hpp>
 #include <Graphics/Public/PointLight.hpp>
@@ -28,18 +29,18 @@ void HomelandApp::init()
 
 void HomelandApp::_load_game_asset()
 {
-  auto sphereHandle = m_engine->assetManager()->loadMesh("./assets/models/sphere.obj");
+  auto sphereHandle = m_engine->assetManager()->loadModel("./assets/models/sphere.obj");
   m_assets.insert("Sphere", sphereHandle);
-  m_assets.insert("Klingon", m_engine->assetManager()->loadMesh("./assets/models/klingon.off"));
-  //m_assets.insert("Tree000", m_engine->assetManager()->loadMesh("./assets/models/tree.fbx"));
-  m_assets.insert("TreeType001", m_engine->assetManager()->loadMesh("./assets/models/TreeType001.dae"));
-  m_assets.insert("Cube", m_engine->assetManager()->loadMesh("./assets/models/cube.obj"));
-  m_assets.insert("Plane", m_engine->assetManager()->loadMesh("./assets/models/plane.obj"));
-  //m_assets.insert("Terrain000", m_engine->assetManager()->loadMesh("./src/Homeland/Assets/models/background.obj"));
-  //m_assets.insert("Terrain001", m_engine->assetManager()->loadMesh("./src/Homeland/Assets/models/ground.obj"));
-  //m_assets.insert("Terrain002", m_engine->assetManager()->loadMesh("./src/Homeland/Assets/models/ground2.obj"));
-  //m_assets.insert("Terrain003", m_engine->assetManager()->loadMesh("./src/Homeland/Assets/models/cube1.fbx"));
-  m_engine->assetManager()->getMesh(m_assets["Sphere"])->calculateSphericalUV();
+  m_assets.insert("Klingon", m_engine->assetManager()->loadModel("./assets/models/klingon.off"));
+  //m_assets.insert("Tree000", m_engine->assetManager()->loadModel("./assets/models/tree.fbx"));
+  m_assets.insert("TreeType001", m_engine->assetManager()->loadModel("./assets/models/TreeType001.dae"));
+  m_assets.insert("Cube", m_engine->assetManager()->loadModel("./assets/models/cube.obj"));
+  m_assets.insert("Plane", m_engine->assetManager()->loadModel("./assets/models/plane.obj"));
+  //m_assets.insert("Terrain000", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/background.obj"));
+  //m_assets.insert("Terrain001", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground.obj"));
+  //m_assets.insert("Terrain002", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground2.obj"));
+  //m_assets.insert("Terrain003", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/cube1.fbx"));
+  m_engine->assetManager()->getMesh(m_engine->assetManager()->getModel(m_assets["Sphere"])->meshes()[0])->calculateSphericalUV();
 }
 
 bool HomelandApp::_init_main_scene()
