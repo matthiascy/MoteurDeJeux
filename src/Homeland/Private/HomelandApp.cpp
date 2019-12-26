@@ -36,7 +36,7 @@ void HomelandApp::_load_game_asset()
   m_assets.insert("TreeType001", m_engine->assetManager()->loadModel("./assets/models/TreeType001.dae"));
   m_assets.insert("Cube", m_engine->assetManager()->loadModel("./assets/models/cube.obj"));
   m_assets.insert("Plane", m_engine->assetManager()->loadModel("./assets/models/plane.obj"));
-  //m_assets.insert("Terrain000", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/background.obj"));
+  m_assets.insert("Terrain000", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/island.obj"));
   //m_assets.insert("Terrain001", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground.obj"));
   //m_assets.insert("Terrain002", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground2.obj"));
   //m_assets.insert("Terrain003", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/cube1.fbx"));
@@ -131,19 +131,17 @@ void HomelandApp::_init_camera()
 
 void HomelandApp::_init_terrain()
 {
-  /*
-auto* terrain000 = m_main_scene->createGameObject("terrain0", "default");
-m_engine->componentManager()->addComponent<MeshRenderer>("terrain001-mesh-renderer", terrain000, m_assets["Terrain001"]);
-terrain000->transform()->setLocalScale({10, 10 ,10});
-terrain000->transform()->setPosition({0, 0, 0}, ESpace::World);
+  auto* terrain000 = m_main_scene->createGameObject("terrain0", "default");
+  m_engine->componentManager()->addComponent<MeshRenderer>("terrain001-mesh-renderer", terrain000, m_assets["Terrain000"]);
+  //terrain000->transform()->setLocalScale({10, 10 ,10});
+  terrain000->transform()->setPosition({0, -5, 0}, ESpace::World);
 
+/*
 auto* terrain001 = m_main_scene->createGameObject("terrain0", "default");
 m_engine->componentManager()->addComponent<MeshRenderer>("terrain002-mesh-renderer", terrain0, m_assets["Terrain002"]);
 terrain0->transform()->setLocalScale({10, 10 ,10});
 terrain0->transform()->setPosition({0, 0, 0}, ESpace::World);
- */
 
-  /*
   auto* terrain003 = m_main_scene->createGameObject("terrain3", "default");
   m_engine->componentManager()->addComponent<MeshRenderer>("terrain001-mesh-renderer", terrain003, m_assets["Terrain003"]);
   terrain003->transform()->setLocalScale({1, 1 ,1});
@@ -155,9 +153,9 @@ void HomelandApp::_init_lights()
 {
   auto* orbit = m_main_scene->createGameObject("Light000Orbit", "default");
   orbit->transform()->setPosition({0, 0, 0}, ESpace::World);
-  //m_engine->componentManager()->addComponent<Behavior>("behavior", orbit)->setUpdateFn([](GameObject* self, Engine* engine, Real dt){
-    //self->transform()->rotate(Math::AxisY, 40*dt, ESpace::Local);
-  //});
+  m_engine->componentManager()->addComponent<Behavior>("behavior", orbit)->setUpdateFn([](GameObject* self, Engine* engine, Real dt){
+    self->transform()->rotate(Math::AxisY, 40*dt, ESpace::Local);
+  });
 
   // Directional
   auto* light000 = m_main_scene->createGameObject("light000", "default");

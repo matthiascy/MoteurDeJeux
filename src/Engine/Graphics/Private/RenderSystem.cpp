@@ -189,20 +189,25 @@ void RenderSystem::_render(const GameObject* gameObject, const RenderInfo& info,
   program->setUniformValue("modelMatrix", transform->worldMatrix());
   program->setUniformValue("normalMatrix", transform->worldMatrix().normalMatrix());
 
-  for (auto i = 0, j = 0; i < info.texIds.size(); ++i, ++j) {
-    m_textures[i]->bind(j);
+  for (auto i = 0; i < info.meshes.size(); ++i) {
+    for (auto j = 0, k = 0; j < info.meshes[i].texIndices.size(); ++j, ++k) {
+      m_textures[j]->bind(k);
+    }
+
+    m_vbos[info.meshes[i].vboIdx]->bind();
+    m_fns->glEnableVertexAttribArray(0);
+    m_fns->glEnableVertexAttribArray(1);
+    m_fns->glEnableVertexAttribArray(2);
+    m_fns->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
+    m_fns->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),reinterpret_cast<void*>(3 * sizeof(float)));
+    m_fns->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),reinterpret_cast<void*>(6 * sizeof(float)));
+
+    m_ibos[info.meshes[i].ibo.idx]->bind();
+    m_fns->glDrawElements(GL_TRIANGLES, info.meshes[i].ibo.size, GL_UNSIGNED_INT, (void*) nullptr);
+
+    m_vbos[info.meshes[i].vboIdx]->release();
+    m_ibos[info.meshes[i].ibo.idx]->release();
   }
-  m_vbos[info.vboIdx]->bind();
-  m_fns->glEnableVertexAttribArray(0);
-  m_fns->glEnableVertexAttribArray(1);
-  m_fns->glEnableVertexAttribArray(2);
-  m_fns->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
-  m_fns->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void*>(3*sizeof(float)));
-  m_fns->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), reinterpret_cast<void*>(6*sizeof(float)));
-  m_ibos[info.ibo.idx]->bind();
-  m_fns->glDrawElements(GL_TRIANGLES, info.ibo.size, GL_UNSIGNED_INT, (void*)nullptr);
-  m_vbos[info.vboIdx]->release();
-  m_ibos[info.ibo.idx]->release();
 }
 
 QImage RenderSystem::grabFramebuffer() const
@@ -367,23 +372,35 @@ void RenderSystem::_physics_system_debug_draw(Camera* camera)
 
 void RenderSystem::_register_mesh_renderer(MeshRenderer* meshRenderer)
 {
+  RenderInfo info;
+
   auto* model = m_engine->assetManager()->getModel(meshRenderer->modelHandle());
   auto meshes = model->meshes();
 
-  auto* mesh = m_engine->assetManager()->getMesh(meshes[0]);
+  info.meshes.resize(meshes.size());
 
-  int vbo_idx = createBufferObject(OglBuffer::Type::VertexBuffer);
-  int ibo_idx = createBufferObject(OglBuffer::Type::IndexBuffer);
-  m_render_graph.insert(meshRenderer->gameObject(), {vbo_idx, {ibo_idx, mesh->indices().size()}, {0}});
+  for (auto i = 0; i < info.meshes.size(); ++i){
+    auto* mesh = m_engine->assetManager()->getMesh(meshes[i]);
 
-  m_vbos[vbo_idx]->bind();
-  m_vbos[vbo_idx]->setUsagePattern(OglBuffer::StaticDraw);
-  m_vbos[vbo_idx]->allocate(mesh->constData(), mesh->count() * sizeof(float));
+    int vbo_idx = createBufferObject(OglBuffer::Type::VertexBuffer);
+    int ibo_idx = createBufferObject(OglBuffer::Type::IndexBuffer);
 
-  m_ibos[ibo_idx]->bind();
-  m_ibos[ibo_idx]->setUsagePattern(OglBuffer::StaticDraw);
-  m_ibos[ibo_idx]->allocate(mesh->indices().constData(),mesh->vertexCount() * sizeof(UInt32));
+    info.meshes[i].vboIdx = vbo_idx;
+    info.meshes[i].ibo.idx = ibo_idx;
+    info.meshes[i].ibo.size = mesh->indices().size();
+    info.meshes[i].texIndices.push_back(0);
 
-  m_ibos[ibo_idx]->release();
-  m_vbos[vbo_idx]->release();
+    m_vbos[vbo_idx]->bind();
+    m_vbos[vbo_idx]->setUsagePattern(OglBuffer::StaticDraw);
+    m_vbos[vbo_idx]->allocate(&mesh->vertices()[0], mesh->dataCount() * sizeof(float));
+
+    m_ibos[ibo_idx]->bind();
+    m_ibos[ibo_idx]->setUsagePattern(OglBuffer::StaticDraw);
+    m_ibos[ibo_idx]->allocate(mesh->indices().constData(),mesh->vertexCount() * sizeof(UInt32));
+
+    m_ibos[ibo_idx]->release();
+    m_vbos[vbo_idx]->release();
+  }
+
+  m_render_graph.insert(meshRenderer->gameObject(), info);
 }

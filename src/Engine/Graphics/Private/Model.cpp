@@ -10,3 +10,8 @@ Array<MeshHandle> Model::meshes() const
 {
   return m_meshes;
 }
+
+Int32 Model::meshesNum() const
+{
+  return m_meshes.size();
+}

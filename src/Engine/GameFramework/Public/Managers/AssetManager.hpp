@@ -7,6 +7,7 @@
 #include <Graphics/Public/OpenGL/OglTypes.hpp>
 
 class Engine;
+class aiMesh;
 
 class AssetManager : public Object {
 public:
@@ -34,7 +35,8 @@ public:
   Mesh* getMesh(MeshHandle handle);
 
 private:
-  Mesh*  _load_mesh(const String& path);
+  Mesh* _load_mesh(const String& path);
+  Mesh* _load_assimp_mesh(const aiMesh* assimpMesh);
   Model* _load_model(const String& path);
 };
 

@@ -33,14 +33,17 @@ public:
 
 private:
   struct RenderInfo {
-    Int32 vboIdx {};
+    struct MeshRenderInfo {
+      Int32 vboIdx;
+      struct ibo_ {
+        Int32  idx {};
+        Int32 size {};
+      } ibo;
 
-    struct ibo_ {
-      Int32  idx {};
-      Int32 size {};
-    } ibo {};
+      Array<Int32> texIndices;
+    };
 
-    Array<Int32> texIds;
+    Array<MeshRenderInfo> meshes;
   };
 
   UniquePtr<OglOffscreenSurface>   m_surface;

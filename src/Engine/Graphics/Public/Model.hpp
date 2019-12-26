@@ -18,6 +18,9 @@ public:
 
   [[nodiscard]]
   Array<MeshHandle> meshes() const;
+
+  [[nodiscard]]
+  Int32 meshesNum() const;
 };
 
 

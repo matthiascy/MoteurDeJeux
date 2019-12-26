@@ -31,11 +31,22 @@ typedef QUuid Uuid;
 
 typedef QImage Image;
 
-struct VertexP {
+struct VertexLayoutPNT {
+  Vec3 position;
+  Vec3 normal;
+  Vec2 texCoord;
+};
+
+struct VertexLayoutP {
   Vec3 position;
 };
 
-struct VertexPT {
+struct VertexLayoutPC {
+  Vec3 position;
+  Vec3 color;
+};
+
+struct VertexLayoutPT {
   Vec3 position;
   Vec2 texCoord;
 };

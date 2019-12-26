@@ -85,7 +85,7 @@ void AssetPreviewer::initializeGL()
   _fn->glGenTextures(1, &_tex_texture);
 
   //-----------
-  VertexPT vertices[] = {
+  VertexLayoutPT vertices[] = {
     {{-0.2f,  0.2f, 0.0f}, {0.0f, 1.0f}},
     {{-0.2f, -0.2f, 0.0f}, {0.0f, 0.0f}},
     {{ 0.2f, -0.2f, 0.0f}, {1.0f, 0.0f}},
@@ -99,13 +99,13 @@ void AssetPreviewer::initializeGL()
 
   _fn->glBindVertexArray(vao);
   _fn->glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  _fn->glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(VertexPT), &vertices[0], GL_STATIC_DRAW);
+  _fn->glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(VertexLayoutPT), &vertices[0], GL_STATIC_DRAW);
   _fn->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   _fn->glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(uint), &indices[0], GL_STATIC_DRAW);
   _fn->glEnableVertexAttribArray(0);
-  _fn->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPT), nullptr);
+  _fn->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexLayoutPT), nullptr);
   _fn->glEnableVertexAttribArray(1);
-  _fn->glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPT), reinterpret_cast<void*>(offsetof(VertexPT, texCoord)));
+  _fn->glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexLayoutPT), reinterpret_cast<void*>(offsetof(VertexLayoutPT, texCoord)));
   _fn->glBindVertexArray(0);
 
   _fn->glEnable(GL_DEPTH_TEST);
@@ -268,14 +268,14 @@ void AssetPreviewer::preview_model(const QFileInfo &file)
       _fn->glBindVertexArray(_model_vaos[i]);
       _fn->glBindBuffer(GL_ARRAY_BUFFER, _model_vbos[i]);
       _fn->glBufferData(GL_ARRAY_BUFFER,
-                        model.Meshes()[i].vertices.size() * sizeof(VertexP),
+                        model.Meshes()[i].vertices.size() * sizeof(VertexLayoutP),
                         &model.Meshes()[i].vertices[0], GL_STATIC_DRAW);
       _fn->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _model_ebos[i]);
       _fn->glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                         model.Meshes()[i].indices.size() * sizeof(uint),
                         &model.Meshes()[i].indices[0], GL_STATIC_DRAW);
       _fn->glEnableVertexAttribArray(0);
-      _fn->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexP), nullptr);
+      _fn->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexLayoutP), nullptr);
       _fn->glBindVertexArray(0);
     }
 
@@ -318,7 +318,7 @@ void AssetPreviewer::preview_texture(const QFileInfo &file)
   // |    |
   // 1 -- 2
 
-  VertexPT vertices[] = {
+  VertexLayoutPT vertices[] = {
     {{-w/2.0f,  h/2.0f, 0.0f}, {0.0f, 1.0f}},
     {{-w/2.0f, -h/2.0f, 0.0f}, {0.0f, 0.0f}},
     {{ w/2.0f, -h/2.0f, 0.0f}, {1.0f, 0.0f}},
@@ -338,10 +338,10 @@ void AssetPreviewer::preview_texture(const QFileInfo &file)
   _fn->glBindVertexArray(vao);
 
   _fn->glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  _fn->glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(VertexPT), &vertices[0], GL_STATIC_DRAW);
+  _fn->glBufferData(GL_ARRAY_BUFFER, 4 * sizeof(VertexLayoutPT), &vertices[0], GL_STATIC_DRAW);
 
   _fn->glEnableVertexAttribArray(0);
-  _fn->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPT), nullptr);
+  _fn->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexLayoutPT), nullptr);
 
   _fn->glBindVertexArray(0);
   _asset_type = AssetType::Texture;

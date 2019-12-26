@@ -34,9 +34,10 @@ ModelHandle AssetManager::loadModel(const String& path)
 {
   auto mesh_idx = m_meshes->size();
   auto model_idx = m_models->size();
-  m_meshes->push_back(_load_mesh(path));
-  m_models->push_back(new Model());
-  m_models->at(model_idx)->addMesh({mesh_idx});
+  //m_meshes->push_back(_load_mesh(path));
+  //m_models->push_back(new Model());
+  //m_models->at(model_idx)->addMesh({mesh_idx});
+  m_models->push_back(_load_model(path));
   return {model_idx};
 }
 
@@ -71,10 +72,7 @@ Mesh* AssetManager::_load_mesh(const String& path)
 {
   Assimp::Importer importer;
   Array<UInt32> indices;
-  // [vertex] [normal] [tex coord]
-  //  0  1  2   3  4  5   6  7
-  // [x, y, z] [x, y, z] [u, v]
-  Array<float> compact_data;
+  Array<VertexLayoutPNT> compact_data;
 
   const aiScene* scene = importer.ReadFile(path.toStdString(),
                                            aiProcess_Triangulate
@@ -87,39 +85,34 @@ Mesh* AssetManager::_load_mesh(const String& path)
     return nullptr;
   }
 
+  //return _load_assimp_mesh(scene->mMeshes[0]);
+
   const aiMesh* ai_mesh = scene->mMeshes[0];
   compact_data.resize(ai_mesh->mNumVertices * 8);
 
   if (ai_mesh->mNumVertices > 0) {
-    for (unsigned i = 0; i < ai_mesh->mNumVertices; ++i) {
+    for (auto i = 0; i < ai_mesh->mNumVertices; ++i) {
       const aiVector3D & pos = ai_mesh->mVertices[i];
-      compact_data[i * 8 + 0] = pos.x;
-      compact_data[i * 8 + 1] = pos.y;
-      compact_data[i * 8 + 2] = pos.z;
+      compact_data[i].position = {pos.x, pos.y, pos.z};
     }
   }
 
   if (ai_mesh->HasNormals()) {
-    for (unsigned i = 0; i < ai_mesh->mNumVertices; ++i) {
+    for (auto i = 0; i < ai_mesh->mNumVertices; ++i) {
       const aiVector3D & n = ai_mesh->mNormals[i];
-      compact_data[i * 8 + 3] = n.x;
-      compact_data[i * 8 + 4] = n.y;
-      compact_data[i * 8 + 5] = n.z;
+      compact_data[i].normal = {n.x, n.y, n.z};
     }
   }
 
-  for (unsigned i = 0; i < ai_mesh->mNumVertices; ++i) {
+  for (auto i = 0; i < ai_mesh->mNumVertices; ++i) {
     if (ai_mesh->HasTextureCoords(i)) {
       const aiVector3D & uvw = ai_mesh->mTextureCoords[0][i];
-      compact_data[i * 8 + 6] = uvw.x;
-      compact_data[i * 8 + 7] = uvw.y;
+      compact_data[i].texCoord = { uvw.x, uvw.y };
     } else {
-      compact_data[i * 8 + 6] = 1.0f;
-      compact_data[i * 8 + 7] = 1.0f;
+      compact_data[i].texCoord = { 1.0f, 1.0f };
     }
   }
 
-  indices.reserve(ai_mesh->mNumFaces * 3);
   for (unsigned i = 0; i < ai_mesh->mNumFaces; ++i) {
     indices.push_back(ai_mesh->mFaces[i].mIndices[0]);
     indices.push_back(ai_mesh->mFaces[i].mIndices[1]);
@@ -129,61 +122,60 @@ Mesh* AssetManager::_load_mesh(const String& path)
   return new Mesh(ai_mesh->mNumVertices, compact_data, indices);
 }
 
+
 Model* AssetManager::_load_model(const String& path)
 {
-  /*
   Assimp::Importer importer;
-  Array<UInt32> indices;
+
   const aiScene* scene = importer.ReadFile(path.toStdString(),
                                            aiProcess_Triangulate
                                            | aiProcess_CalcTangentSpace
                                            | aiProcess_SortByPType
-                                           | aiProcess_GenNormals);
+                                           | aiProcess_GenNormals/*aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs*/);
 
-  if (!scene) {
-    qDebug() << "loadMesh error: " << importer.GetErrorString();
+  if (scene) {
+
+    auto* model = new Model();
+
+    Int32 meshes_num = scene->mNumMeshes;
+    Int32 textures_num = scene->mNumTextures;
+
+    for (auto i = 0; i < meshes_num; ++i) {
+      const aiMesh* assimpMesh = scene->mMeshes[i];
+      m_meshes->push_back(_load_assimp_mesh(assimpMesh));
+      model->addMesh({m_meshes->size() - 1});
+    }
+
+    return model;
+
+  } else {
+
+    qWarning() << "Cannot parse file: " + path;
     return nullptr;
+
+  }
+}
+
+Mesh* AssetManager::_load_assimp_mesh(const aiMesh* assimpMesh)
+{
+  Array<UInt32> indices;
+  Array<VertexLayoutPNT> vertices;
+
+  const aiVector3D zero(0.0f, 0.0f, 0.0f);
+  for (auto i = 0; i < assimpMesh->mNumVertices; ++i) {
+    const aiVector3D& p = assimpMesh->mVertices[i];
+    const aiVector3D& n = assimpMesh->mNormals[i];
+    const aiVector3D& t = assimpMesh->HasTextureCoords(0) ? assimpMesh->mTextureCoords[0][i] : zero;
+
+    vertices.push_back({{p.x, p.y, p.z}, {n.x, n.y, n.z}, {t.x, t.y}});
   }
 
-  const aiMesh* ai_mesh = scene->mMeshes[0];
-  compact_data.resize(ai_mesh->mNumVertices * 8);
-
-  if (ai_mesh->mNumVertices > 0) {
-    for (unsigned i = 0; i < ai_mesh->mNumVertices; ++i) {
-      const aiVector3D & pos = ai_mesh->mVertices[i];
-      compact_data[i * 8 + 0] = pos.x;
-      compact_data[i * 8 + 1] = pos.y;
-      compact_data[i * 8 + 2] = pos.z;
-    }
+  for (unsigned i = 0; i < assimpMesh->mNumFaces; ++i) {
+    const aiFace& face = assimpMesh->mFaces[i];
+    indices.push_back(face.mIndices[0]);
+    indices.push_back(face.mIndices[1]);
+    indices.push_back(face.mIndices[2]);
   }
 
-  if (ai_mesh->HasNormals()) {
-    for (unsigned i = 0; i < ai_mesh->mNumVertices; ++i) {
-      const aiVector3D & n = ai_mesh->mNormals[i];
-      compact_data[i * 8 + 3] = n.x;
-      compact_data[i * 8 + 4] = n.y;
-      compact_data[i * 8 + 5] = n.z;
-    }
-  }
-
-  for (unsigned i = 0; i < ai_mesh->mNumVertices; ++i) {
-    if (ai_mesh->HasTextureCoords(i)) {
-      const aiVector3D & uvw = ai_mesh->mTextureCoords[0][i];
-      compact_data[i * 8 + 6] = uvw.x;
-      compact_data[i * 8 + 7] = uvw.y;
-    } else {
-      compact_data[i * 8 + 6] = 1.0f;
-      compact_data[i * 8 + 7] = 1.0f;
-    }
-  }
-
-  indices.reserve(ai_mesh->mNumFaces * 3);
-  for (unsigned i = 0; i < ai_mesh->mNumFaces; ++i) {
-    indices.push_back(ai_mesh->mFaces[i].mIndices[0]);
-    indices.push_back(ai_mesh->mFaces[i].mIndices[1]);
-    indices.push_back(ai_mesh->mFaces[i].mIndices[2]);
-  }
-
-  return new Mesh(ai_mesh->mNumVertices, compact_data, indices);
-   */
+  return new Mesh(assimpMesh->mNumVertices, vertices, indices);
 }

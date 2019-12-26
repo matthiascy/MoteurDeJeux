@@ -10,34 +10,39 @@
  */
 class Mesh {
 protected:
+  String m_name;
+  UInt32 m_data_count;
   UInt32 m_vertex_count;
   Array<UInt32> m_indices;
-  Array<float> m_data;
-  UInt32 m_count;
-  String m_name;
-
-  MaterialHandle m_material;
+  Array<VertexLayoutPNT> m_vertices;
+  //Array<float> m_data;
+  MaterialHandle m_material{};
 
 public:
   Mesh();
-  Mesh(UInt32 vertexCount, const Array<float>& data, const Array<UInt32>& indices);
+  Mesh(UInt32 vertexCount, const Array<VertexLayoutPNT>& data, const Array<UInt32>& indices);
   ~Mesh() = default;
 
   [[nodiscard]]
-  UInt32 count() const { return m_count; }
+  UInt32 dataCount() const { return m_data_count; }
 
   [[nodiscard]]
   UInt32 vertexCount() const { return m_vertex_count; }
 
   [[nodiscard]]
+  const Array<VertexLayoutPNT>& vertices() const;
+
+  Array<VertexLayoutPNT>& vertices();
+
+  [[nodiscard]]
   const Array<UInt32>& indices() const;
 
-  Array<UInt32>& indices() { return m_indices; }
+  Array<UInt32>& indices();
 
   void calculateSphericalUV();
 
   [[nodiscard]]
-  Array<Vec3> vertices() const;
+  Array<Vec3> positions() const;
 
   [[nodiscard]]
   Array<Vec3> normals() const;
@@ -45,19 +50,7 @@ public:
   [[nodiscard]]
   Array<Vec2> texCoords() const;
 
-  [[nodiscard]]
-  const Array<float>& constDataArray() const { return m_data; }
-
-  Array<float>& dataArray() { return m_data; }
-
-  [[nodiscard]]
-  const float* constData() const { return m_data.constData(); }
-
-  void setData(UInt32 vertexCount, const Array<float>& data, const Array<UInt32>& indices);
-
-  void addVertex(const Vec3& v, const Vec3& n, const Vec2& t);
-  void addQuad(const Vec3& p1, const Vec3& p2, const Vec3& p3, const Vec3& p4,
-               const Vec2& uv1, const Vec2& uv2, const Vec2& uv3, const Vec2& uv4);
+  void setVertices(UInt32 vertexCount, const Array<VertexLayoutPNT>& data, const Array<UInt32>& indices);
 
   const String& name() { return m_name; }
 };
