@@ -3,6 +3,7 @@
 const int kMaxPointLights = 16;
 const int kMaxSpotLights = 16;
 const int kMaxDirectionalLights = 2;
+const int kMaxTextures = 4;
 
 struct Material {
     vec3 ambient;
@@ -57,9 +58,32 @@ struct Lighting {
     PointLight[kMaxPointLights]             pointLights;
 };
 
+struct _textures {
+    int num;
+    sampler2D[kMaxTextures] textures;
+};
+
+struct LightColor {
+    vec3 diffuse;
+    vec3 specular;
+};
+
+struct Textures {
+    _textures diffuse;
+    _textures specular;
+    _textures ambient;
+    _textures emissive;
+    _textures height;
+    _textures normals;
+    _textures shininess;
+    _textures opacity;
+    _textures lightmap;
+    _textures reflection;
+};
 
 uniform Material material;
 uniform Lighting lighting;
+uniform Textures textures;
 
 uniform int spotLightsNum;
 uniform int pointLightsNum;
@@ -72,16 +96,6 @@ in vec2 aTexCoord;
 
 out vec4 pixelColor;
 
-uniform sampler2D texture0;
-uniform sampler2D texture1;
-uniform sampler2D texture2;
-uniform sampler2D texture3;
-
-struct LightColor {
-    vec3 diffuse;
-    vec3 specular;
-};
-
 LightColor calcPointLight(PointLight light, vec3 normal, vec3 position, vec3 eye);
 
 LightColor calcDirectionalLight(DirectionalLight light, vec3 normal, vec3 position, vec3 eye);
@@ -93,7 +107,7 @@ vec3 calcSpecular(vec3 color, vec3 direction, float intensity, vec3 normal, vec3
 
 void main()
 {
-    vec4 baseColor = texture2D(texture0, aTexCoord.st);
+    vec4 baseColor = texture2D(textures.diffuse.textures[0], aTexCoord.st);
 
     // Ambient
     vec3 ambientColor = lighting.ambient.intensity * lighting.ambient.color;

@@ -13,6 +13,8 @@
 #include <Graphics/Public/SpotLight.hpp>
 #include <Graphics/Public/PointLight.hpp>
 #include <Graphics/Public/Model.hpp>
+#include <Graphics/Public/Texture.hpp>
+#include <Graphics/Public/Material.hpp>
 
 
 RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
@@ -50,8 +52,8 @@ void RenderSystem::init()
   m_fns = m_surface->fns();
   m_fns4_0 = m_surface->fnsCore40();
 
-  m_textures.insert(0, new OglTexture(Image(":/Textures/Checker000").mirrored()));
-  m_textures[0]->setMinMagFilters(OglTexture::Filter::LinearMipMapLinear, OglTexture::Filter::LinearMipMapLinear);
+  //m_textures.insert(0, new OglTexture(Image(":/Textures/Checker000").mirrored()));
+  //m_textures[0]->setMinMagFilters(OglTexture::Filter::LinearMipMapLinear, OglTexture::Filter::LinearMipMapLinear);
   //m_textures.insert(0, new OglTexture(Image(":/Textures/moon").mirrored()));
   //m_textures.insert(2, new OglTexture(Image(":/Textures/mercury").mirrored()));
   //m_textures.insert(3, new OglTexture(Image(":/Textures/venus").mirrored()));
@@ -77,6 +79,8 @@ void RenderSystem::init()
   m_fns->glClearColor(0.2, 0.2, 0.2, 1.0);
 
   m_surface->doneCurrent();
+
+  m_engine->assetManager()->loadTexture(":/Textures/Checker000");
 }
 
 void RenderSystem::_render_scene(Scene* scene)
@@ -190,17 +194,26 @@ void RenderSystem::_render(const GameObject* gameObject, const RenderInfo& info,
   program->setUniformValue("normalMatrix", transform->worldMatrix().normalMatrix());
 
   for (auto i = 0; i < info.meshes.size(); ++i) {
+    /*
     for (auto j = 0, k = 0; j < info.meshes[i].texIndices.size(); ++j, ++k) {
-      m_textures[j]->bind(k);
+      m_engine->assetManager()->getTexture(info.meshes[i].texIndices[j])->oglTexture()->bind(k);
+      //m_textures[j]->bind(k);
     }
+     */
+    if (!info.meshes[i].texIndices.empty())
+      m_engine->assetManager()->getTexture(info.meshes[i].texIndices[0])->oglTexture()->bind(0);
 
     m_vbos[info.meshes[i].vboIdx]->bind();
     m_fns->glEnableVertexAttribArray(0);
     m_fns->glEnableVertexAttribArray(1);
     m_fns->glEnableVertexAttribArray(2);
-    m_fns->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
-    m_fns->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),reinterpret_cast<void*>(3 * sizeof(float)));
-    m_fns->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),reinterpret_cast<void*>(6 * sizeof(float)));
+    m_fns->glEnableVertexAttribArray(3);
+    m_fns->glEnableVertexAttribArray(4);
+    m_fns->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), nullptr);
+    m_fns->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(3 * sizeof(float)));
+    m_fns->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(6 * sizeof(float)));
+    m_fns->glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(8 * sizeof(float)));
+    m_fns->glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(11 * sizeof(float)));
 
     m_ibos[info.meshes[i].ibo.idx]->bind();
     m_fns->glDrawElements(GL_TRIANGLES, info.meshes[i].ibo.size, GL_UNSIGNED_INT, (void*) nullptr);
@@ -372,7 +385,7 @@ void RenderSystem::_physics_system_debug_draw(Camera* camera)
 
 void RenderSystem::_register_mesh_renderer(MeshRenderer* meshRenderer)
 {
-  RenderInfo info;
+  RenderInfo info{};
 
   auto* model = m_engine->assetManager()->getModel(meshRenderer->modelHandle());
   auto meshes = model->meshes();
@@ -388,7 +401,11 @@ void RenderSystem::_register_mesh_renderer(MeshRenderer* meshRenderer)
     info.meshes[i].vboIdx = vbo_idx;
     info.meshes[i].ibo.idx = ibo_idx;
     info.meshes[i].ibo.size = mesh->indices().size();
-    info.meshes[i].texIndices.push_back(0);
+
+    auto* material = m_engine->assetManager()->getMaterial(mesh->material());
+    auto textures = material->textures();
+    for (auto texture : textures)
+      info.meshes[i].texIndices.push_back(texture);
 
     m_vbos[vbo_idx]->bind();
     m_vbos[vbo_idx]->setUsagePattern(OglBuffer::StaticDraw);

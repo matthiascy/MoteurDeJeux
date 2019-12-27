@@ -8,19 +8,21 @@
 
 class Engine;
 class aiMesh;
+class aiScene;
+class aiMaterial;
+class aiNode;
 
 class AssetManager : public Object {
-public:
-
 protected:
   UniquePtr<Array<Mesh*>> m_meshes;
   UniquePtr<Array<Model*>> m_models;
   UniquePtr<Array<Material*>> m_materials;
-  Array<OglTexture*> m_textures;
+  UniquePtr<Array<Texture*>>  m_textures;
+  Engine* m_engine;
 
 public:
   AssetManager() = delete;
-  explicit AssetManager(const String& name, Object* parent = nullptr);
+  AssetManager(const String& name, Engine* engine, Object* parent = nullptr);
   AssetManager(const AssetManager& other) = delete;
   ~AssetManager() override;
 
@@ -28,15 +30,16 @@ public:
 
   TextureHandle loadTexture(const String& path);
 
-  // TODO
-  //Asset* getAsset(AssetHandle handle);
-  OglTexture* getTexture(TextureHandle handle);
+  Texture* getTexture(TextureHandle handle);
+  Material* getMaterial(MaterialHandle handle);
   Model* getModel(ModelHandle handle);
   Mesh* getMesh(MeshHandle handle);
 
 private:
-  Mesh* _load_mesh(const String& path);
-  Mesh* _load_assimp_mesh(const aiMesh* assimpMesh);
+  //void _process_node(const aiNode* node, const aiScene* scene);
+  Mesh* _load_mesh(const aiMesh* assimpMesh, const aiScene* scene, const String& path);
+  Material* _load_material(const aiMaterial* assimpMaterial, const String& path);
+  Array<TextureHandle> _load_material_textures(const aiMaterial* assimpMaterial, ETextureType type, const String& path);
   Model* _load_model(const String& path);
 };
 

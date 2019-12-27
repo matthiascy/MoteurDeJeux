@@ -4,14 +4,14 @@ Mesh::Mesh()
   : m_vertex_count{0}, m_indices{}, m_vertices{}, m_data_count{0}, m_material{0}
 { }
 
-Mesh::Mesh(UInt32 vcount, const Array<VertexLayoutPNT>& data, const Array<UInt32>& indices)
+Mesh::Mesh(UInt32 vcount, const Array<VertexLayoutPNTTB>& data, const Array<UInt32>& indices)
   : m_vertex_count{vcount}, m_material{0}
 {
   m_vertices.clear();
   m_vertices = data;
   m_indices.clear();
   m_indices = indices;
-  m_data_count = m_vertex_count * 8;
+  m_data_count = m_vertex_count * 14;
 }
 
 const Array<UInt32>& Mesh::indices() const
@@ -62,23 +62,51 @@ void Mesh::calculateSphericalUV()
   }
 }
 
-Array <VertexLayoutPNT>& Mesh::vertices() 
+Array <VertexLayoutPNTTB>& Mesh::vertices() 
 {
   return m_vertices;
 }
 
-const Array<VertexLayoutPNT>& Mesh::vertices() const
+const Array<VertexLayoutPNTTB>& Mesh::vertices() const
 {
   return m_vertices;
 }
 
-void Mesh::setVertices(UInt32 vertexCount, const Array<VertexLayoutPNT>& data, const Array<UInt32>& indices)
+void Mesh::setVertices(UInt32 vertexCount, const Array<VertexLayoutPNTTB>& data, const Array<UInt32>& indices)
 {
   m_vertex_count = vertexCount;
   m_vertices.clear();
   m_vertices = data;
   m_indices.clear();
   m_indices = indices;
-  m_data_count = m_vertices.size() * 8;
+  m_data_count = m_vertices.size() * 14;
+}
+
+Array<Vec3> Mesh::tangents() const
+{
+  Array<Vec3> ts;
+  for (auto i = 0; i < m_vertex_count; ++i) {
+    ts << m_vertices[i].tangent;
+  }
+  return ts;
+}
+
+Array<Vec3> Mesh::biTangents() const
+{
+  Array<Vec3> bs;
+  for (auto i = 0; i < m_vertex_count; ++i) {
+    bs << m_vertices[i].biTangent;
+  }
+  return bs;
+}
+
+void Mesh::setMaterial(MaterialHandle handle)
+{
+  m_material = handle;
+}
+
+MaterialHandle Mesh::material() const
+{
+  return m_material;
 }
 

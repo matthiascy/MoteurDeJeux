@@ -11,14 +11,15 @@ Engine::Engine(GameApp* app)
   : m_app{app}
 {
   qInfo() << "Instance creation.";
-  m_component_manager = makeUnique<ComponentManager>(m_app->name() + "ComponentManager", this);
-  m_asset_manager     = makeUnique<AssetManager>(m_app->name() + "AssetManager");
-  m_scene_manager     = makeUnique<SceneManager>(m_app->name() + "SceneManager", this);
-
   m_render_sys   = makeUnique<RenderSystem>(m_app->name() + "RenderSystem", this);
   m_physics_sys  = makeUnique<PhysicsSystem>(m_app->name() + "PhysicsSystem", this);
   m_input_sys    = makeUnique<InputSystem>(m_app->name() + "InputSystem", this);
   m_behavior_sys = makeUnique<BehaviorSystem>(m_app->name() + "BehaviorSystem", this);
+
+  m_component_manager = makeUnique<ComponentManager>(m_app->name() + "ComponentManager", this);
+  m_asset_manager     = makeUnique<AssetManager>(m_app->name() + "AssetManager", this);
+  m_scene_manager     = makeUnique<SceneManager>(m_app->name() + "SceneManager", this);
+
   qInfo() << "Instance creation[Finished]";
 }
 

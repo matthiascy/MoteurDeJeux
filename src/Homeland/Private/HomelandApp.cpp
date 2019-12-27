@@ -29,18 +29,20 @@ void HomelandApp::init()
 
 void HomelandApp::_load_game_asset()
 {
-  auto sphereHandle = m_engine->assetManager()->loadModel("./assets/models/sphere.obj");
-  m_assets.insert("Sphere", sphereHandle);
-  m_assets.insert("Klingon", m_engine->assetManager()->loadModel("./assets/models/klingon.off"));
+  //auto sphereHandle = m_engine->assetManager()->loadModel("./assets/models/sphere.obj");
+  //m_assets.insert("Sphere", sphereHandle);
+  //m_assets.insert("Klingon", m_engine->assetManager()->loadModel("./assets/models/klingon.off"));
   //m_assets.insert("Tree000", m_engine->assetManager()->loadModel("./assets/models/tree.fbx"));
-  m_assets.insert("TreeType001", m_engine->assetManager()->loadModel("./assets/models/TreeType001.dae"));
-  m_assets.insert("Cube", m_engine->assetManager()->loadModel("./assets/models/cube.obj"));
-  m_assets.insert("Plane", m_engine->assetManager()->loadModel("./assets/models/plane.obj"));
-  m_assets.insert("Terrain000", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/island.obj"));
+  //m_assets.insert("TreeType001", m_engine->assetManager()->loadModel("./assets/models/TreeType001.dae"));
+  //m_assets.insert("Cube", m_engine->assetManager()->loadModel("./assets/models/cube.obj"));
+  //m_assets.insert("Plane", m_engine->assetManager()->loadModel("./assets/models/plane.obj"));
+  //m_assets.insert("Terrain000", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/island.obj"));
+  m_assets.insert("Helico", m_engine->assetManager()->loadModel("./assets/models/helicopter.obj"));
+  m_assets.insert("Bunny", m_engine->assetManager()->loadModel("./assets/models/bunny.obj"));
   //m_assets.insert("Terrain001", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground.obj"));
   //m_assets.insert("Terrain002", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground2.obj"));
   //m_assets.insert("Terrain003", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/cube1.fbx"));
-  m_engine->assetManager()->getMesh(m_engine->assetManager()->getModel(m_assets["Sphere"])->meshes()[0])->calculateSphericalUV();
+  //m_engine->assetManager()->getMesh(m_engine->assetManager()->getModel(m_assets["Sphere"])->meshes()[0])->calculateSphericalUV();
 }
 
 bool HomelandApp::_init_main_scene()
@@ -49,9 +51,10 @@ bool HomelandApp::_init_main_scene()
   m_main_scene->setActive(true);
 
   _init_camera();
-  _init_terrain();
+  //_init_terrain();
   _init_lights();
 
+  /*
   auto* plane = m_main_scene->createGameObject("Plane", "default");
   auto* planeMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-plane", plane, m_assets["Cube"]);
   plane->transform()->setLocalScale({20, 20, 1});
@@ -112,6 +115,12 @@ bool HomelandApp::_init_main_scene()
     }
 
   });
+  */
+
+  auto* helico = m_main_scene->createGameObject("Helico", "default");
+  auto* helicoMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-plane", helico, m_assets["Bunny"]);
+  //helico->transform()->setLocalScale({20, 20, 1});
+  helico->transform()->setPosition({0, 0, -10}, ESpace::World);
 }
 
 void HomelandApp::_init_camera()
@@ -160,16 +169,15 @@ void HomelandApp::_init_lights()
   // Directional
   auto* light000 = m_main_scene->createGameObject("light000", "default");
   light000->transform()->setPosition({0, 0, 10}, ESpace::World);
-  m_engine->componentManager()->addComponent<MeshRenderer>("m", light000, m_assets["Cube"]);
+  //m_engine->componentManager()->addComponent<MeshRenderer>("m", light000, m_assets["Cube"]);
   light000->transform()->setParent(orbit->transform());
   auto* lightComp000 = m_engine->componentManager()->addComponent<DirectionalLight>("DirectionalLight", light000, Vec3{1.0f, 0.01f, 0.01f}, 1.0f);
-  qDebug() << light000->transform()->forward();
 
   // Spot
   auto* light001 = m_main_scene->createGameObject("light001", "default");
   light001->transform()->setPosition({5, 5, 10}, ESpace::World);
   //light000->transform()->setParent(orbit->transform());
-  m_engine->componentManager()->addComponent<MeshRenderer>("mm", light001, m_assets["Cube"]);
+  //m_engine->componentManager()->addComponent<MeshRenderer>("mm", light001, m_assets["Cube"]);
   auto* lightComp001 = m_engine->componentManager()->addComponent<SpotLight>("SpotLight", light001, Vec3{0.11f, 1.0f, 0.01f},
       1.0f, 10, 45, Attenuation{0.1, 0.1, 0.1});
   m_engine->componentManager()->addComponent<Behavior>("behavior", light001)->setUpdateFn(HomelandBehaviors::exampleBehavior000);
@@ -178,7 +186,7 @@ void HomelandApp::_init_lights()
   auto* light002 = m_main_scene->createGameObject("light002", "default");
   light002->transform()->setPosition({-5, 5, 0}, ESpace::World);
   //light000->transform()->setParent(orbit->transform());
-  m_engine->componentManager()->addComponent<MeshRenderer>("m", light002, m_assets["Cube"]);
+  //m_engine->componentManager()->addComponent<MeshRenderer>("m", light002, m_assets["Cube"]);
   auto* lightComp002 = m_engine->componentManager()->addComponent<PointLight>("PointLight", light002, Vec3{0.11f, 0.12f, 1.0f},
       1.0f, 10, Attenuation{0.1, 0.1, 0.1});
   m_engine->componentManager()->addComponent<Behavior>("behavior", light002)->setUpdateFn(HomelandBehaviors::exampleBehavior001);
@@ -187,7 +195,7 @@ void HomelandApp::_init_lights()
   auto* light003 = m_main_scene->createGameObject("light003", "default");
   light003->transform()->setPosition({-5, 5, -15}, ESpace::World);
   //light000->transform()->setParent(orbit->transform());
-  m_engine->componentManager()->addComponent<MeshRenderer>("m", light003, m_assets["Cube"]);
+  //m_engine->componentManager()->addComponent<MeshRenderer>("m", light003, m_assets["Cube"]);
   auto* lightComp003 = m_engine->componentManager()->addComponent<PointLight>("PointLight", light003, Vec3{0.11f, 0.12f, 1.0f},
                                                                               1.0f, 10, Attenuation{0.1, 0.1, 0.1});
   //m_engine->componentManager()->addComponent<Behavior>("behavior", light002)->setUpdateFn(HomelandBehaviors::exampleBehavior001);

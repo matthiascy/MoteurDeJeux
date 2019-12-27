@@ -5,8 +5,7 @@
 #include <Graphics/Public/Forward.hpp>
 
 /*
- * Compact layout { position | normal | texCoord }
- *                  0  1  2    3  4  5   6  7
+ * Layout { position | normal | texCoord | tangent | biTangent }
  */
 class Mesh {
 protected:
@@ -14,13 +13,12 @@ protected:
   UInt32 m_data_count;
   UInt32 m_vertex_count;
   Array<UInt32> m_indices;
-  Array<VertexLayoutPNT> m_vertices;
-  //Array<float> m_data;
+  Array<VertexLayoutPNTTB> m_vertices;
   MaterialHandle m_material{};
 
 public:
   Mesh();
-  Mesh(UInt32 vertexCount, const Array<VertexLayoutPNT>& data, const Array<UInt32>& indices);
+  Mesh(UInt32 vertexCount, const Array<VertexLayoutPNTTB>& data, const Array<UInt32>& indices);
   ~Mesh() = default;
 
   [[nodiscard]]
@@ -30,9 +28,9 @@ public:
   UInt32 vertexCount() const { return m_vertex_count; }
 
   [[nodiscard]]
-  const Array<VertexLayoutPNT>& vertices() const;
+  const Array<VertexLayoutPNTTB>& vertices() const;
 
-  Array<VertexLayoutPNT>& vertices();
+  Array<VertexLayoutPNTTB>& vertices();
 
   [[nodiscard]]
   const Array<UInt32>& indices() const;
@@ -50,7 +48,18 @@ public:
   [[nodiscard]]
   Array<Vec2> texCoords() const;
 
-  void setVertices(UInt32 vertexCount, const Array<VertexLayoutPNT>& data, const Array<UInt32>& indices);
+  [[nodiscard]]
+  Array<Vec3> tangents() const;
+
+  [[nodiscard]]
+  Array<Vec3> biTangents() const;
+
+  void setVertices(UInt32 vertexCount, const Array<VertexLayoutPNTTB>& data, const Array<UInt32>& indices);
+
+  [[nodiscard]]
+  MaterialHandle material() const;
+
+  void setMaterial(MaterialHandle handle);
 
   const String& name() { return m_name; }
 };

@@ -40,7 +40,7 @@ private:
         Int32 size {};
       } ibo;
 
-      Array<Int32> texIndices;
+      Array<TextureHandle> texIndices;
     };
 
     Array<MeshRenderInfo> meshes;
@@ -56,7 +56,7 @@ private:
   Array<OglBuffer*>  m_ibos;
   Array<OglShader*>  m_shaders;
   Array<OglProgram*> m_programs;
-  Array<OglTexture*> m_textures;
+  //Array<OglTexture*> m_textures;
 
   Mat4 m_view_matrix;
   Mat4 m_model_matrix;

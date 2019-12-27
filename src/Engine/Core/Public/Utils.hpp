@@ -30,5 +30,45 @@ inline bool isInstanceOf(const T* ptr) {
   return dynamic_cast<const Base*>(ptr) != nullptr;
 }
 
+template<typename T, T _first, T _last>
+class EnumRange
+{
+public:
+  class Iterator {
+  public:
+    explicit Iterator(int value)
+      : m_value{value}
+    { }
+
+    T operator*() const {
+      return (T)m_value;
+    }
+
+    void operator++() {
+      ++m_value;
+    }
+
+    bool operator!=(Iterator rhs) {
+      return m_value != rhs.m_value;
+    }
+
+  private:
+    int m_value;
+  };
+
+};
+
+template <typename T, T _first, T _last>
+typename EnumRange<T, _first, _last>::Iterator begin(EnumRange<T, _first, _last>)
+{
+  return typename EnumRange<T, _first, _last>::Iterator((int)_first);
+}
+
+template <typename T, T _first, T _last>
+typename EnumRange<T, _first, _last>::Iterator end(EnumRange<T, _first, _last>)
+{
+  return typename EnumRange<T, _first, _last>::Iterator(((int)_last) + 1);
+}
+
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_CORE_UTILS_HPP */

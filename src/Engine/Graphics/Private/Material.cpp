@@ -1,8 +1,13 @@
 #include "Graphics/Public/Material.hpp"
 
+UInt32 qHash(ETextureType key, uint seed)
+{
+  return ::qHash(static_cast<UInt32>(key), seed);
+}
+
 void Material::setColor(Vec3 color)
 {
-  m_color = color;
+  m_base_color = color;
 }
 
 void Material::setAmbient(Real ambient)
@@ -25,24 +30,9 @@ void Material::setShininess(Real shininess)
   m_shininess = shininess;
 }
 
-void Material::setDiffuseTexture(TextureHandle texture)
-{
-  m_diffuse_texture = texture;
-}
-
-void Material::setSpecularTexture(TextureHandle texture)
-{
-  m_specular_texture = texture;
-}
-
-void Material::setBumpTexture(TextureHandle texture)
-{
-  m_bump_texture = texture;
-}
-
 Vec3 Material::color() const
 {
-  return m_color;
+  return m_base_color;
 }
 
 Real Material::ambient() const
@@ -65,17 +55,52 @@ Real Material::shininess() const
   return m_shininess;
 }
 
-TextureHandle Material::diffuseTexture() const
+Array<TextureHandle> Material::texturesOfType(ETextureType type) const
 {
-  return m_diffuse_texture;
+  if (m_textures.contains(type)) {
+
+    return m_textures.value(type);
+
+  } else {
+
+    return {};
+
+  }
 }
 
-TextureHandle Material::specularTexture() const
+void Material::addTextureOfType(ETextureType type, TextureHandle handle)
 {
-  return m_specular_texture;
+  if (m_textures.contains(type)) {
+
+    if (!m_textures.value(type).contains(handle)) {
+      m_textures[type].push_back(handle);
+    }
+
+  } else {
+
+    m_textures.insert(type, {});
+    m_textures[type].push_back(handle);
+
+  }
 }
 
-TextureHandle Material::bumpTexture() const
+Array<TextureHandle> Material::textures() const
 {
-  return m_bump_texture;
+  Array<TextureHandle> ts;
+
+  for (const auto& textures : m_textures) {
+    for (auto t : textures)
+      ts.push_back(t);
+  }
+
+  return ts;
+}
+
+void Material::addTexturesOfType(ETextureType type, Array<TextureHandle>& textures)
+{
+  if (!textures.isEmpty()) {
+    for (auto& t : textures) {
+      addTextureOfType(type, t);
+    }
+  }
 }

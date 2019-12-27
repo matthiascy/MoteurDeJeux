@@ -31,6 +31,14 @@ typedef QUuid Uuid;
 
 typedef QImage Image;
 
+struct VertexLayoutPNTTB {
+  Vec3 position;
+  Vec3 normal;
+  Vec2 texCoord;
+  Vec3 tangent;
+  Vec3 biTangent;
+};
+
 struct VertexLayoutPNT {
   Vec3 position;
   Vec3 normal;

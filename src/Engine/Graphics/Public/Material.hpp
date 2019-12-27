@@ -25,16 +25,14 @@
 
 class Material {
 private:
-  Vec3 m_color { };
+  Vec3 m_base_color { };
 
   Real m_ambient   { 0.0f };
   Real m_diffuse   { 0.0f };
   Real m_specular  { 0.0f };
   Real m_shininess { 0.0f };
 
-  TextureHandle m_diffuse_texture  { -1 };
-  TextureHandle m_specular_texture { -1 };
-  TextureHandle m_bump_texture     { -1 };
+  HashMap<ETextureType, Array<TextureHandle>> m_textures;
 
 public:
   [[nodiscard]]
@@ -63,19 +61,14 @@ public:
   void setShininess(Real shininess);
 
   [[nodiscard]]
-  TextureHandle diffuseTexture() const;
-
-  void setDiffuseTexture(TextureHandle texture);
+  Array<TextureHandle> texturesOfType(ETextureType type) const;
 
   [[nodiscard]]
-  TextureHandle specularTexture() const;
+  Array<TextureHandle> textures() const;
 
-  void setSpecularTexture(TextureHandle texture);
+  void addTextureOfType(ETextureType type, TextureHandle handle);
 
-  [[nodiscard]]
-  TextureHandle bumpTexture() const;
-
-  void setBumpTexture(TextureHandle texture);
+  void addTexturesOfType(ETextureType type, Array<TextureHandle>& textures);
 
 public:
   Material() = default;
