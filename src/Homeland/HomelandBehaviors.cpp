@@ -84,3 +84,22 @@ void HomelandBehaviors::exampleBehavior001(GameObject* self, Engine* engine, Rea
     self->transform()->translate({0, 0, dt*10}, ESpace::World);
   }
 }
+
+void HomelandBehaviors::canonicalBehavior(GameObject* self, Engine* engine, Real dt)
+{
+    if (engine->inputSystem()->isKeyPressed(Qt::Key_W)) {
+      self->transform()->translate(self->transform()->forward() * -40 * dt, ESpace::World);
+    }
+
+    if (engine->inputSystem()->isKeyPressed(Qt::Key_S)) {
+      self->transform()->translate(self->transform()->forward() * 40 * dt, ESpace::World);
+    }
+
+    if (engine->inputSystem()->isKeyPressed(Qt::Key_A)) {
+      self->transform()->translate(self->transform()->right() * -40 * dt, ESpace::World);
+    }
+
+    if (engine->inputSystem()->isKeyPressed(Qt::Key_D)) {
+      self->transform()->translate(self->transform()->right() * 40 * dt, ESpace::World);
+    }
+}

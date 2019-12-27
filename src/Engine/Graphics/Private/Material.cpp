@@ -5,24 +5,24 @@ UInt32 qHash(ETextureType key, uint seed)
   return ::qHash(static_cast<UInt32>(key), seed);
 }
 
-void Material::setColor(Vec3 color)
+void Material::setBaseColor(const Vec3& color)
 {
   m_base_color = color;
 }
 
-void Material::setAmbient(Real ambient)
+void Material::setAmbient(const Vec3& ambient)
 {
-  m_ambient = ambient;
+  m_ambient_color = ambient;
 }
 
-void Material::setDiffuse(Real diffuse)
+void Material::setDiffuse(const Vec3& diffuse)
 {
-  m_diffuse = diffuse;
+  m_diffuse_color = diffuse;
 }
 
-void Material::setSpecular(Real specular)
+void Material::setSpecular(const Vec3& specular)
 {
-  m_specular = specular;
+  m_specular_color = specular;
 }
 
 void Material::setShininess(Real shininess)
@@ -30,24 +30,24 @@ void Material::setShininess(Real shininess)
   m_shininess = shininess;
 }
 
-Vec3 Material::color() const
+Vec3 Material::baseColor() const
 {
   return m_base_color;
 }
 
-Real Material::ambient() const
+Vec3 Material::ambient() const
 {
-  return m_ambient;
+  return m_ambient_color;
 }
 
-Real Material::diffuse() const
+Vec3 Material::diffuse() const
 {
-  return m_diffuse;
+  return m_diffuse_color;
 }
 
-Real Material::specular() const
+Vec3 Material::specular() const
 {
-  return m_specular;
+  return m_specular_color;
 }
 
 Real Material::shininess() const
@@ -103,4 +103,14 @@ void Material::addTexturesOfType(ETextureType type, Array<TextureHandle>& textur
       addTextureOfType(type, t);
     }
   }
+}
+
+String Material::namePath() const
+{
+  return m_name_path;
+}
+
+void Material::setNamePath(const String& namePath)
+{
+  m_name_path = namePath;
 }

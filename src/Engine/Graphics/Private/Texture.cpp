@@ -2,8 +2,9 @@
 
 Texture::Texture(const String& path, ETextureType type)
 {
-  m_path = path;
+  m_name_path = path;
   m_type = type;
+  qDebug() << "Create Texture : " << path;
   m_ogl_texture = makeUnique<OglTexture>(Image(path).mirrored());
 }
 
@@ -14,7 +15,7 @@ Texture::~Texture()
 
 bool Texture::isSamePathWith(const Texture& other)
 {
-  return m_path == other.m_path;
+  return m_name_path == other.m_name_path;
 }
 
 OglTexture* Texture::oglTexture() const
@@ -27,7 +28,7 @@ ETextureType Texture::type() const
   return m_type;
 }
 
-String Texture::path() const
+String Texture::namePath() const
 {
-  return m_path;
+  return m_name_path;
 }

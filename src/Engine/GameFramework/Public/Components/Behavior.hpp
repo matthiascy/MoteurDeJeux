@@ -20,36 +20,40 @@ public:
   }
 
   template <typename T>
-  void setUpdateFn(T* object, void(T::*fn)(GameObject*, Engine*, Real));
+  void addUpdateFunction(T* object, void(T::*fn)(GameObject*, Engine*, Real));
 
-  void setUpdateFn(void(*fn)(GameObject*, Engine*, Real));
+  void addUpdateFunction(void(*fn)(GameObject*, Engine*, Real));
 
   template <typename T>
-  void setFixedUpdateFn(T* object, void(T::*fn)(GameObject*, Engine*, Real));
+  void addFixedUpdateFunction(T* object, void(T::*fn)(GameObject*, Engine*, Real));
 
-  void setFixedUpdateFn(void(*fn)(GameObject*, Engine*, Real));
+  void addFixedUpdateFunction(void(*fn)(GameObject*, Engine*, Real));
 
-  void invokeFixedUpdate(GameObject* self, Engine* engine, Real dt);
+  void invokeFixedUpdates(GameObject* self, Engine* engine, Real dt);
 
-  void invokeUpdate(GameObject* self, Engine* engine, Real dt);
+  void invokeUpdates(GameObject* self, Engine* engine, Real dt);
 
 private:
-  BehaviorFunction m_update_fn;
-  BehaviorFunction m_fixed_update_fn;
+  Array<BehaviorFunction> m_update_fns;
+  Array<BehaviorFunction> m_fixed_update_fns;
 };
 
 template<typename T>
-void Behavior::setUpdateFn(T *object, void (T::*fn)(GameObject *, Engine *, Real))
+void Behavior::addUpdateFunction(T *object, void (T::*fn)(GameObject *, Engine *, Real))
 {
   using namespace std::placeholders;
-  m_update_fn = std::bind(fn, object, _1, _2, _3);
+  if (fn) {
+    m_update_fns.push_back(std::bind(fn, object, _1, _2, _3));
+  }
 }
 
 template <typename T>
-void Behavior::setFixedUpdateFn(T* object, void(T::*fn)(GameObject*, Engine*, Real))
+void Behavior::addFixedUpdateFunction(T* object, void(T::*fn)(GameObject*, Engine*, Real))
 {
   using namespace std::placeholders;
-  m_fixed_update_fn = std::bind(fn, object, _1, _2, _3);
+  if (fn) {
+    m_fixed_update_fns.push_back(std::bind(fn, object, _1, _2, _3));
+  }
 }
 
 

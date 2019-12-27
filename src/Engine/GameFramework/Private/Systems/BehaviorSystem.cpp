@@ -23,7 +23,7 @@ void BehaviorSystem::fixedUpdate(Real dt)
       if (!gameObject->isStatic()) {
         if (gameObject->hasComponent<Behavior>()) {
           auto *behavior = gameObject->getComponent<Behavior>();
-          behavior->invokeFixedUpdate(gameObject, m_engine, dt);
+          behavior->invokeFixedUpdates(gameObject, m_engine, dt);
         }
       }
     }
@@ -40,7 +40,7 @@ void BehaviorSystem::update(Real dt)
     for (GameObject* gameObject : scene->gameObjects()) {
       if (gameObject->hasComponent<Behavior>()) {
         auto* behavior = gameObject->getComponent<Behavior>();
-        behavior->invokeUpdate(gameObject, m_engine, dt);
+        behavior->invokeUpdates(gameObject, m_engine, dt);
       }
     }
   }

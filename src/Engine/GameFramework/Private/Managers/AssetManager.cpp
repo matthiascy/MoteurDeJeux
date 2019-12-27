@@ -8,6 +8,8 @@
 #include <Graphics/Public/Texture.hpp>
 #include <QtCore/QDir>
 
+// TODO: remove replicated materials
+
 AssetManager::AssetManager(const String& name, Engine* engine, Object* parent)
   : Object(name, parent), m_engine{engine}
 {
@@ -94,7 +96,10 @@ Model* AssetManager::_load_model(const String& path)
                                            aiProcess_Triangulate
                                            | aiProcess_CalcTangentSpace
                                            | aiProcess_SortByPType
-                                           | aiProcess_GenNormals/*aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs*/);
+                                           | aiProcess_GenSmoothNormals);
+  /**
+   * FlipUVs causes the uv problem over helicopter.obj, sponza.obj
+   */
 
   if (scene) {
 
@@ -145,7 +150,6 @@ Mesh* AssetManager::_load_mesh(const aiMesh* assimpMesh, const aiScene* scene, c
 
   auto* mesh = new Mesh(assimpMesh->mNumVertices, vertices, indices);
 
-  //qDebug() << assimpMesh->mMaterialIndex;
   m_materials->push_back(_load_material(scene->mMaterials[assimpMesh->mMaterialIndex], path));
 
   mesh->setMaterial({m_materials->size() - 1});
@@ -163,10 +167,31 @@ Material* AssetManager::_load_material(const aiMaterial* assimpMaterial, const S
     Real value;
     aiString materialName;
 
+    String filepath = QFileInfo(path).absolutePath() + "/";
+
     // Lighting parameters :
     if (AI_SUCCESS == assimpMaterial->Get(AI_MATKEY_NAME, materialName)) {
-      //qDebug() << "Diffuse color " << color.a << " " << color.b << " " << color.r;
-      //qDebug() << materialName.C_Str();
+      qDebug() << materialName.C_Str();
+      filepath += String(materialName.C_Str());
+    } else {
+      filepath += "Untitled";
+    }
+
+    if (AI_SUCCESS == assimpMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color)) {
+      material->setAmbient({color.r, color.g, color.b});
+    }
+
+    if (AI_SUCCESS == assimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color)) {
+      material->setDiffuse({color.r, color.g, color.b});
+      material->setBaseColor({color.r, color.g, color.b});
+    }
+
+    if (AI_SUCCESS == assimpMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color)) {
+      material->setSpecular({color.r, color.g, color.b});
+    }
+
+    if (AI_SUCCESS == assimpMaterial->Get(AI_MATKEY_SHININESS, value)) {
+      material->setShininess(value);
     }
 
     // Lighting maps : textures;
@@ -174,13 +199,14 @@ Material* AssetManager::_load_material(const aiMaterial* assimpMaterial, const S
       Array<TextureHandle> textures = _load_material_textures(assimpMaterial, type, path);
       material->addTexturesOfType(type, textures);
     };
-
   }
 
+  /*
   if (material->texturesOfType(ETextureType::Diffuse).isEmpty()) {
     // TODO: default value
     material->addTextureOfType(ETextureType::Diffuse, {0});
   }
+   */
 
   return material;
 }
@@ -286,7 +312,7 @@ Array<TextureHandle> AssetManager::_load_material_textures(const aiMaterial* ass
     // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
     bool isSkip = false;
     for (auto j = 0; j < m_textures->size(); ++j) {
-      if (std::strcmp(m_textures->at(j)->path().toStdString().c_str(), str.C_Str()) == 0) {
+      if (m_textures->at(j)->namePath() == filepath) {
         textures.push_back({j});
         isSkip = true;
         break;

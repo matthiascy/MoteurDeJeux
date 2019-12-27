@@ -35,12 +35,14 @@ private:
   struct RenderInfo {
     struct MeshRenderInfo {
       Int32 vboIdx;
+
       struct ibo_ {
         Int32  idx {};
         Int32 size {};
       } ibo;
 
       Array<TextureHandle> texIndices;
+      MaterialHandle materialIdx;
     };
 
     Array<MeshRenderInfo> meshes;
@@ -56,7 +58,6 @@ private:
   Array<OglBuffer*>  m_ibos;
   Array<OglShader*>  m_shaders;
   Array<OglProgram*> m_programs;
-  //Array<OglTexture*> m_textures;
 
   Mat4 m_view_matrix;
   Mat4 m_model_matrix;

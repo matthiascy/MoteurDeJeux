@@ -5,13 +5,6 @@ const int kMaxSpotLights = 16;
 const int kMaxDirectionalLights = 2;
 const int kMaxTextures = 4;
 
-struct Material {
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-    float shininess;
-};
-
 struct DirectionalLight {
     vec3 direction;
     vec3 color;
@@ -58,32 +51,34 @@ struct Lighting {
     PointLight[kMaxPointLights]             pointLights;
 };
 
-struct _textures {
-    int num;
-    sampler2D[kMaxTextures] textures;
-};
-
 struct LightColor {
     vec3 diffuse;
     vec3 specular;
 };
 
 struct Textures {
-    _textures diffuse;
-    _textures specular;
-    _textures ambient;
-    _textures emissive;
-    _textures height;
-    _textures normals;
-    _textures shininess;
-    _textures opacity;
-    _textures lightmap;
-    _textures reflection;
+    sampler2D diffuse;
+    sampler2D specular;
+    sampler2D ambient;
+    sampler2D emissive;
+    sampler2D height;
+    sampler2D normals;
+    sampler2D shininess;
+    sampler2D opacity;
+    sampler2D lightmap;
+    sampler2D reflection;
+};
+
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+    Textures textures;
 };
 
 uniform Material material;
 uniform Lighting lighting;
-uniform Textures textures;
 
 uniform int spotLightsNum;
 uniform int pointLightsNum;
@@ -107,7 +102,12 @@ vec3 calcSpecular(vec3 color, vec3 direction, float intensity, vec3 normal, vec3
 
 void main()
 {
-    vec4 baseColor = texture2D(textures.diffuse.textures[0], aTexCoord.st);
+    vec4 baseColor = vec4(0, 0, 0, 0);
+    if (textureSize(material.textures.specular, 0).x > 0) {
+        baseColor = texture2D(material.textures.diffuse, aTexCoord.st);
+    } else {
+        baseColor = vec4(1.0, 1.0, 1.0, 1.0);
+    }
 
     // Ambient
     vec3 ambientColor = lighting.ambient.intensity * lighting.ambient.color;
@@ -115,7 +115,7 @@ void main()
     // Diffuse and Specular
     LightColor spot = LightColor(vec3(0, 0, 0), vec3(0, 0, 0));
     for (int i = 0; i < min(spotLightsNum, kMaxSpotLights); ++i) {
-        LightColor tmp = calcSpotLight(lighting.spotLights[i], aNormal, aPosition, eyePosition);
+           LightColor tmp = calcSpotLight(lighting.spotLights[i], aNormal, aPosition, eyePosition);
         spot.diffuse += tmp.diffuse;
         spot.specular += tmp.specular;
     }
@@ -196,6 +196,6 @@ vec3 calcSpecular(vec3 color, vec3 direction, float intensity, vec3 normal, vec3
 {
     vec3 view_direction = normalize(eye - position);
     vec3 reflect_direction = reflect(direction, normal);
-    float specular_factor = pow(max(dot(view_direction, reflect_direction), 0), 32);
-    return specular_factor * color * intensity;
+    float specular_factor = pow(max(dot(view_direction, reflect_direction), 0), 16);
+    return color * intensity * (specular_factor);
 }

@@ -1,27 +1,31 @@
 #include "GameFramework/Public/Components/Behavior.hpp"
 
 Behavior::Behavior(const String& name, GameObject* gameObject)
-  : Component(name, gameObject)
+  : Component(name, gameObject), m_update_fns{}, m_fixed_update_fns{}
 { }
 
-void Behavior::setUpdateFn(void(*fn)(GameObject*, Engine*, Real))
+void Behavior::addUpdateFunction(void(*fn)(GameObject*, Engine*, Real))
 {
-  m_update_fn = fn;
+  if (fn) {
+    m_update_fns.push_back(fn);
+  }
 }
 
-void Behavior::setFixedUpdateFn(void(*fn)(GameObject*, Engine*, Real))
+void Behavior::addFixedUpdateFunction(void(*fn)(GameObject*, Engine*, Real))
 {
-  m_fixed_update_fn = fn;
+  if (fn) {
+    m_fixed_update_fns.push_back(fn);
+  }
 }
 
-void Behavior::invokeUpdate(GameObject* self, Engine* engine, Real dt)
+void Behavior::invokeUpdates(GameObject* self, Engine* engine, Real dt)
 {
-  if (m_update_fn)
-    m_update_fn(self, engine, dt);
+  for (auto& fn : m_update_fns)
+    fn(self, engine, dt);
 }
 
-void Behavior::invokeFixedUpdate(GameObject* self, Engine* engine, Real dt)
+void Behavior::invokeFixedUpdates(GameObject* self, Engine* engine, Real dt)
 {
-  if (m_fixed_update_fn)
-    m_fixed_update_fn(self, engine, dt);
+  for (auto& fn : m_fixed_update_fns)
+    fn(self, engine, dt);
 }

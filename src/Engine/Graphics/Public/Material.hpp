@@ -25,35 +25,37 @@
 
 class Material {
 private:
-  Vec3 m_base_color { };
+  Vec3 m_base_color { 1, 1, 1 };
 
-  Real m_ambient   { 0.0f };
-  Real m_diffuse   { 0.0f };
-  Real m_specular  { 0.0f };
-  Real m_shininess { 0.0f };
+  Vec3 m_ambient_color   { 1, 1, 1 };
+  Vec3 m_diffuse_color   { 1, 1, 1 };
+  Vec3 m_specular_color  { Math::Zero };
+  Real m_shininess { 4 };
 
   HashMap<ETextureType, Array<TextureHandle>> m_textures;
 
+  String m_name_path;
+
 public:
   [[nodiscard]]
-  Vec3 color() const;
+  Vec3 baseColor() const;
 
-  void setColor(Vec3 color);
-
-  [[nodiscard]]
-  Real ambient() const;
-
-  void setAmbient(Real ambient);
+  void setBaseColor(const Vec3& color);
 
   [[nodiscard]]
-  Real diffuse() const;
+  Vec3 ambient() const;
 
-  void setDiffuse(Real diffuse);
+  void setAmbient(const Vec3& ambient);
 
   [[nodiscard]]
-  Real specular() const;
+  Vec3 diffuse() const;
 
-  void setSpecular(Real specular);
+  void setDiffuse(const Vec3& diffuse);
+
+  [[nodiscard]]
+  Vec3 specular() const;
+
+  void setSpecular(const Vec3& specular);
 
   [[nodiscard]]
   Real shininess() const;
@@ -69,6 +71,11 @@ public:
   void addTextureOfType(ETextureType type, TextureHandle handle);
 
   void addTexturesOfType(ETextureType type, Array<TextureHandle>& textures);
+
+  [[nodiscard]]
+  String namePath() const;
+
+  void setNamePath(const String& namePath);
 
 public:
   Material() = default;

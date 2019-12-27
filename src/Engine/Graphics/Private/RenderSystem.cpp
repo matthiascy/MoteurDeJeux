@@ -16,6 +16,46 @@
 #include <Graphics/Public/Texture.hpp>
 #include <Graphics/Public/Material.hpp>
 
+String toString(ETextureType type) {
+  switch (type) {
+    case ETextureType::Diffuse:
+      return "diffuse";
+
+    case ETextureType::Specular:
+      return "specular";
+
+    case ETextureType::Ambient:
+      return "ambient";
+
+    case ETextureType::Emissive:
+      return "emissive";
+
+    case ETextureType::Height:
+      return "height";
+
+    case ETextureType::Normals:
+      return "normals";
+
+    case ETextureType::Shininess:
+      return "shininess";
+
+    case ETextureType::Opacity:
+      return "opacity";
+
+    case ETextureType::Displacement:
+      return "displacement";
+
+    case ETextureType::LightMap:
+      return "lightmap";
+
+    case ETextureType::Reflection:
+      return "reflection";
+
+    default:
+      return "none";
+  }
+}
+
 
 RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
   : System(name, engine, parent),
@@ -52,13 +92,6 @@ void RenderSystem::init()
   m_fns = m_surface->fns();
   m_fns4_0 = m_surface->fnsCore40();
 
-  //m_textures.insert(0, new OglTexture(Image(":/Textures/Checker000").mirrored()));
-  //m_textures[0]->setMinMagFilters(OglTexture::Filter::LinearMipMapLinear, OglTexture::Filter::LinearMipMapLinear);
-  //m_textures.insert(0, new OglTexture(Image(":/Textures/moon").mirrored()));
-  //m_textures.insert(2, new OglTexture(Image(":/Textures/mercury").mirrored()));
-  //m_textures.insert(3, new OglTexture(Image(":/Textures/venus").mirrored()));
-  //m_textures.insert(4, new OglTexture(Image(":/Textures/earth").mirrored()));
-
   m_programs.insert(0,new OglProgram);
   m_programs[0]->create();
   m_programs[0]->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/StandardVert");
@@ -73,10 +106,13 @@ void RenderSystem::init()
   m_fns->glEnable(GL_DEPTH_TEST);
   m_fns->glDepthFunc(GL_LESS);
   m_fns->glEnable(GL_CULL_FACE);
+  //m_fns4_0->glDisable(GL_CULL_FACE);
   m_fns->glCullFace(GL_BACK);
   m_fns->glFrontFace(GL_CCW);
+  m_fns4_0->glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
   m_fns->glViewport(0, 0, m_surface->size().width(), m_surface->size().height());
-  m_fns->glClearColor(0.2, 0.2, 0.2, 1.0);
+  //m_fns->glClearColor(0.2, 0.2, 0.2, 1.0);
+  m_fns->glClearColor(0.4, 0.4, 0.4, 1.0);
 
   m_surface->doneCurrent();
 
@@ -115,11 +151,23 @@ void RenderSystem::_render_scene(Scene* scene)
     m_programs[0]->setUniformValue("eyePosition", camera->gameObject()->transform()->worldPosition());
 
     // Ambient color
-    m_programs[0]->setUniformValue("lighting.ambient.color", Vec3{0.7, 0.7, 0.7});
-    m_programs[0]->setUniformValue("lighting.ambient.intensity", 0.4f);
+    m_programs[0]->setUniformValue("lighting.ambient.color", Vec3{0.8, 0.8, 0.8});
+    m_programs[0]->setUniformValue("lighting.ambient.intensity", 0.9f);
     m_programs[0]->setUniformValue("lighting.ambientCoeff", 1.0f);
     m_programs[0]->setUniformValue("lighting.diffuseCoeff", 1.0f);
     m_programs[0]->setUniformValue("lighting.specularCoeff", 1.0f);
+
+    m_programs[0]->setUniformValue("material.textures.diffuse", 0);
+    m_programs[0]->setUniformValue("material.textures.specular", 1);
+    m_programs[0]->setUniformValue("material.textures.ambient", 2);
+    m_programs[0]->setUniformValue("material.textures.emissive", 3);
+    m_programs[0]->setUniformValue("material.textures.height", 4);
+    m_programs[0]->setUniformValue("material.textures.normals", 5);
+    m_programs[0]->setUniformValue("material.textures.shininess", 6);
+    m_programs[0]->setUniformValue("material.textures.opacity", 7);
+    m_programs[0]->setUniformValue("material.textures.lightmap", 8);
+    m_programs[0]->setUniformValue("material.textures.reflection", 9);
+
 
     if (!lights.isEmpty()) {
       int idx_directional = 0, idx_spot = 0, idx_point = 0;
@@ -195,13 +243,33 @@ void RenderSystem::_render(const GameObject* gameObject, const RenderInfo& info,
 
   for (auto i = 0; i < info.meshes.size(); ++i) {
     /*
-    for (auto j = 0, k = 0; j < info.meshes[i].texIndices.size(); ++j, ++k) {
-      m_engine->assetManager()->getTexture(info.meshes[i].texIndices[j])->oglTexture()->bind(k);
-      //m_textures[j]->bind(k);
-    }
+    program->setUniformValue("hasTexture", false);
+    m_engine->assetManager()->getTexture(material->textures()[0])->oglTexture()->bind(0);
      */
-    if (!info.meshes[i].texIndices.empty())
-      m_engine->assetManager()->getTexture(info.meshes[i].texIndices[0])->oglTexture()->bind(0);
+    auto* material = m_engine->assetManager()->getMaterial(info.meshes[i].materialIdx);
+    Array<OglTexture*> boundTextures;
+    //qDebug() << material->namePath() << " -- " << material->textures().size();
+    if (!material->textures().isEmpty()) {
+      program->setUniformValue("hasTexture", true);
+      int textureUnit = 0;
+      for (const auto& type : EnumRange<ETextureType, ETextureType::Diffuse, ETextureType::Reflection>()) {
+        String uniform = "material.textures." + toString(type);
+        auto textures = material->texturesOfType(type);
+        if (!textures.isEmpty()) {
+          program->setUniformValue(uniform.toStdString().c_str(), textureUnit);
+          auto* texture = m_engine->assetManager()->getTexture(textures[0]);
+          texture->oglTexture()->bind(textureUnit);
+          boundTextures.push_back(texture->oglTexture());
+          //qDebug() << texture->namePath() << " ===> bind ==> " << textureUnit;
+        }
+        textureUnit++;
+      }
+    }
+
+    program->setUniformValue("material.ambient", material->ambient());
+    program->setUniformValue("material.diffuse", material->diffuse());
+    program->setUniformValue("material.specular", material->specular());
+    program->setUniformValue("material.shininess", material->shininess());
 
     m_vbos[info.meshes[i].vboIdx]->bind();
     m_fns->glEnableVertexAttribArray(0);
@@ -217,6 +285,9 @@ void RenderSystem::_render(const GameObject* gameObject, const RenderInfo& info,
 
     m_ibos[info.meshes[i].ibo.idx]->bind();
     m_fns->glDrawElements(GL_TRIANGLES, info.meshes[i].ibo.size, GL_UNSIGNED_INT, (void*) nullptr);
+
+    for (auto* texture : boundTextures)
+      texture->release();
 
     m_vbos[info.meshes[i].vboIdx]->release();
     m_ibos[info.meshes[i].ibo.idx]->release();
@@ -402,6 +473,7 @@ void RenderSystem::_register_mesh_renderer(MeshRenderer* meshRenderer)
     info.meshes[i].ibo.idx = ibo_idx;
     info.meshes[i].ibo.size = mesh->indices().size();
 
+    info.meshes[i].materialIdx = mesh->material();
     auto* material = m_engine->assetManager()->getMaterial(mesh->material());
     auto textures = material->textures();
     for (auto texture : textures)

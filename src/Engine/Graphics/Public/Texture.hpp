@@ -8,7 +8,7 @@
 
 class Texture {
 private:
-  String m_path;
+  String m_name_path;
   ETextureType m_type;
   UniquePtr<OglTexture> m_ogl_texture;
 
@@ -23,7 +23,7 @@ public:
   ETextureType type() const;
 
   [[nodiscard]]
-  String path() const;
+  String namePath() const;
 
   bool isSamePathWith(const Texture& other);
 };
