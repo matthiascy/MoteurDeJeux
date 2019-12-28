@@ -35,16 +35,37 @@ struct Math {
     return {v.x(), v.y(), v.z()};
   }
 
-  inline static Vec3 fromBtVec3(const btVector3 &v) {
+  inline static aiVector3D toAiVector3D(const Vec3& v) {
     return {v.x(), v.y(), v.z()};
+  }
+
+  inline static Vec3 fromBtVec3(const btVector3& v) {
+    return {v.x(), v.y(), v.z()};
+  }
+
+  inline static Vec3 fromAiVec3(const aiVector3D& v) {
+    return {v.x, v.y, v.z};
   }
 
   inline static btQuaternion toBtQuat(const Quat& q) {
     return {q.x(), q.y(), q.z(), q.scalar()};
   }
 
+  inline static Mat4 fromAiMat4(const aiMatrix4x4& m) {
+    // Qt Matrix4x4 takes values as row-major order.
+    Mat4 out{m.a1, m.a2, m.a3, m.a4,
+             m.b1, m.b2, m.b3, m.b4,
+             m.c1, m.c2, m.c3, m.c4,
+             m.d1, m.d2, m.d3, m.d4};
+    return out.transposed();
+  }
+
   inline static Quat fromBtQuat(const btQuaternion& q) {
     return {q.w(), q.x(), q.y(), q.z()};
+  }
+
+  inline static Quat fromAiQuat(const aiQuaternion& q) {
+    return {q.w, q.x, q.y, q.z};
   }
 
   static const Mat4 Mat4Identity;

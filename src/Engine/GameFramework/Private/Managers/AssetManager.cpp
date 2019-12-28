@@ -118,7 +118,7 @@ Model* AssetManager::_load_model(const String& path)
 
   } else {
 
-    qWarning() << "Cannot parse file: " + path;
+    qWarning() << "Cannot parse file: " << path << importer.GetErrorString();
     return nullptr;
 
   }
@@ -128,6 +128,7 @@ Mesh* AssetManager::_load_mesh(const aiMesh* assimpMesh, const aiScene* scene, c
 {
   Array<UInt32> indices;
   Array<VertexLayoutPNTTB> vertices;
+  Array<VertexBoneData> bones;
 
   const aiVector3D zero(0.0f, 0.0f, 0.0f);
   for (auto i = 0; i < assimpMesh->mNumVertices; ++i) {
@@ -141,6 +142,8 @@ Mesh* AssetManager::_load_mesh(const aiMesh* assimpMesh, const aiScene* scene, c
     vertices.push_back({{p.x, p.y, p.z}, {n.x, n.y, n.z}, {tex.x, tex.y}, {tan.x, tan.y, tan.z}, {bt.x, bt.y, bt.z}});
   }
 
+  bones = _load_bones(assimpMesh);
+
   for (unsigned i = 0; i < assimpMesh->mNumFaces; ++i) {
     const aiFace& face = assimpMesh->mFaces[i];
     indices.push_back(face.mIndices[0]);
@@ -150,18 +153,28 @@ Mesh* AssetManager::_load_mesh(const aiMesh* assimpMesh, const aiScene* scene, c
 
   auto* mesh = new Mesh(assimpMesh->mNumVertices, vertices, indices);
 
-  m_materials->push_back(_load_material(scene->mMaterials[assimpMesh->mMaterialIndex], path));
+  //qDebug() << " loading " << path << " " << scene->mNumMaterials;
+  //qDebug() << scene->mMaterials[assimpMesh->mMaterialIndex]->GetName().C_Str();
 
-  mesh->setMaterial({m_materials->size() - 1});
+  auto* material = _load_material(scene->mMaterials[assimpMesh->mMaterialIndex], path);
+
+  if (material) {
+    m_materials->push_back(material);
+    mesh->setMaterial({m_materials->size() - 1});
+  } else {
+    // TODO:
+    mesh->setMaterial({0});
+    qDebug() << "Not material";
+  }
 
   return mesh;
 }
 
-Material* AssetManager::_load_material(const aiMaterial* assimpMaterial, const String& path)
+Material* AssetManager::_load_material(aiMaterial* assimpMaterial, const String& path)
 {
   auto* material = new Material();
 
-  if (assimpMaterial) {
+  if (std::strcmp(assimpMaterial->GetName().C_Str(), AI_DEFAULT_MATERIAL_NAME) != 0) {
 
     aiColor4D color;
     Real value;
@@ -203,6 +216,9 @@ Material* AssetManager::_load_material(const aiMaterial* assimpMaterial, const S
       Array<TextureHandle> textures = _load_material_textures(assimpMaterial, type, path);
       material->addTexturesOfType(type, textures);
     };
+    return material;
+  } else {
+    return nullptr;
   }
 
   /*
@@ -211,8 +227,6 @@ Material* AssetManager::_load_material(const aiMaterial* assimpMaterial, const S
     material->addTextureOfType(ETextureType::Diffuse, {0});
   }
    */
-
-  return material;
 }
 
 ETextureType fromAssimpTextureType(aiTextureType type)
@@ -336,4 +350,178 @@ Array<TextureHandle> AssetManager::_load_material_textures(const aiMaterial* ass
   m_engine->renderSystem()->doneCurrent();
 
   return textures;
+}
+
+Array<VertexBoneData> AssetManager::_load_bones(const aiMesh* assimpMesh)
+{
+  Array<VertexBoneData> out;
+  HashMap<String, UInt32> bone_mapping; // bone name -- bone index
+  UInt32 numBones = 0;
+
+  for (auto i = 0; i < assimpMesh->mNumBones; ++i) {
+    UInt32 boneIdx = 0;
+    String boneName(assimpMesh->mBones[i]->mName.data);
+    if (!bone_mapping.contains(boneName)) {
+      // Allocate an index for a new bone
+      boneIdx = numBones++;
+      BoneInfo bi;
+      bi.boneOffset = assimpMesh->mBones[i]->mOffsetMatrix;
+      bi.
+    } else {
+      boneIdx = bone_mapping[boneName];
+    }
+
+    for (auto j = 0; j < assimpMesh->mBones[i]->mNumWeights; ++j) {
+      UInt32 vertexIdx =;
+    }
+  }
+
+  return out;
+}
+
+const aiNodeAnim* AssetManager::_find_anim_node(const aiAnimation* anim, const String& nodeName) {
+  return nullptr;
+}
+
+void AssetManager::_read_node_hierarchy(Real animTime, const aiNode* node, const Mat4& parentTransform) {
+
+}
+
+UInt32 AnimationLoader::findScaling(Real animTime, const aiNodeAnim* nodeAnim)
+{
+  assert(nodeAnim->mNumScalingKeys > 0);
+
+  for (UInt32 i = 0; i < nodeAnim->mNumScalingKeys - 1; ++i) {
+    if (animTime < (Real)nodeAnim->mScalingKeys[i + 1].mTime) {
+      return i;
+    }
+  }
+  return 0;
+}
+
+UInt32 AnimationLoader::findRotation(Real animTime, const aiNodeAnim* nodeAnim)
+{
+  assert(nodeAnim->mNumRotationKeys > 0);
+
+  for (UInt32 i = 0; i < nodeAnim->mNumRotationKeys - 1; ++i) {
+    if (animTime < (Real)nodeAnim->mRotationKeys[i + 1].mTime) {
+      return i;
+    }
+  }
+  return 0;
+}
+
+UInt32 AnimationLoader::findPosition(Real animTime, const aiNodeAnim* nodeAnim)
+{
+  for (UInt32 i = 0; i < nodeAnim->mNumPositionKeys - 1; ++i) {
+    if (animTime < (Real)nodeAnim->mPositionKeys[i + 1].mTime) {
+      return i;
+    }
+  }
+  return 0;
+}
+
+Vec3 AnimationLoader::calcInterpolatedScaling(Real animTime, const aiNodeAnim* nodeAnim) {
+  if (nodeAnim->mNumScalingKeys == 1) {
+    return Math::fromAiVec3(nodeAnim->mScalingKeys[0].mValue);
+  }
+
+  UInt32 currKey = findScaling(animTime, nodeAnim);
+  UInt32 nextKey = currKey + 1;
+  assert(nextKey < nodeAnim->mNumScalingKeys);
+
+  Real deltaTime = (Real)(nodeAnim->mScalingKeys[nextKey].mTime - nodeAnim->mScalingKeys[currKey].mTime);
+  Real factor = (animTime - (Real)nodeAnim->mScalingKeys[currKey].mTime) / deltaTime;
+  assert(factor >= 0.0f && factor <= 1.0f);
+
+  const aiVector3D& start = nodeAnim->mScalingKeys[currKey].mValue;
+  const aiVector3D& end   = nodeAnim->mScalingKeys[nextKey].mValue;
+  aiVector3D delta = end - start;
+  return Math::fromAiVec3(start + factor * delta);
+}
+
+Quat AnimationLoader::calcInterpolatedRotation(Real animTime, const aiNodeAnim* nodeAnim)
+{
+  if (nodeAnim->mNumRotationKeys == 1)
+    return Math::fromAiQuat(nodeAnim->mRotationKeys[0].mValue);
+
+  UInt32 currKey = findRotation(animTime, nodeAnim);
+  UInt32 nextKey = currKey + 1;
+  assert(nextKey < nodeAnim->mNumRotationKeys);
+
+  Real deltaTime = (Real)(nodeAnim->mRotationKeys[nextKey].mTime - nodeAnim->mRotationKeys[currKey].mTime);
+  Real factor = (animTime - (Real)nodeAnim->mRotationKeys[currKey].mTime) / deltaTime;
+  assert(factor >= 0.0f && factor <= 1.0f);
+
+  const aiQuaternion& start = nodeAnim->mRotationKeys[currKey].mValue;
+  const aiQuaternion& end   = nodeAnim->mRotationKeys[nextKey].mValue;
+
+  aiQuaternion out;
+
+  aiQuaternion::Interpolate(out, start, end, factor);
+
+  return Math::fromAiQuat(out.Normalize());
+}
+
+Vec3 AnimationLoader::calcInterpolatedPosition(Real animTime, const aiNodeAnim* nodeAnim)
+{
+  if (nodeAnim->mNumPositionKeys == 1) {
+    return Math::fromAiVec3(nodeAnim->mPositionKeys[0].mValue);
+  }
+
+  UInt32 currKey = findPosition(animTime, nodeAnim);
+  UInt32 nextKey = currKey + 1;
+
+  assert(nextKey < nodeAnim->mNumPositionKeys);
+
+  Real deltaTime = (float)(nodeAnim->mPositionKeys[nextKey].mTime - nodeAnim->mPositionKeys[currKey].mTime);
+  Real factor = (animTime - (float)nodeAnim->mPositionKeys[currKey].mTime) / deltaTime;
+
+  assert(factor >= 0.0f && factor <= 1.0f);
+
+  const aiVector3D& start = nodeAnim->mPositionKeys[currKey].mValue;
+  const aiVector3D& end   = nodeAnim->mPositionKeys[nextKey].mValue;
+  aiVector3D delta = end - start;
+  return Math::fromAiVec3(start + factor * delta);
+}
+
+const aiNodeAnim* AnimationLoader::findAnimNode(const aiAnimation* anim, const String& nodeName)
+{
+  for (UInt32 i = 0; i < anim->mNumChannels; ++i) {
+    const aiNodeAnim* nodeAnim = anim->mChannels[i];
+    if (String(nodeAnim->mNodeName.data) == nodeName) {
+      return nodeAnim;
+    }
+  }
+
+  return nullptr;
+}
+
+void AnimationLoader::readNodeHierarchy(Real animTime, const aiScene* scene, const aiNode* node, const Mat4& parentTransform)
+{
+  String nodeName(node->mName.data);
+
+  const aiAnimation* animation = scene->mAnimations[0];
+
+  Mat4 localTransformation(Math::fromAiMat4(node->mTransformation));
+
+  const aiNodeAnim* nodeAnim = findAnimNode(animation, nodeName);
+
+  if (nodeAnim) {
+    // Interpolate scaling
+    Vec3 scaling = calcInterpolatedScaling(animTime, nodeAnim);
+    // Interpolate rotation
+    Quat rotation = calcInterpolatedRotation(animTime, nodeAnim);
+    // Interpolate translation
+    Vec3 translation = calcInterpolatedPosition(animTime, nodeAnim);
+
+    localTransformation.setToIdentity();
+    localTransformation.scale(scaling);
+    localTransformation.rotate(rotation);
+    localTransformation.translate(translation);
+  }
+
+  Mat4 worldTransformation = parentTransform * localTransformation;
+
+  if (m_)
 }

@@ -3,7 +3,6 @@
 
 #include <Core/Public/Core.hpp>
 #include <Graphics/Public/Forward.hpp>
-#include <Graphics/Public/Mesh.hpp>
 #include <Graphics/Public/OpenGL/OglTypes.hpp>
 
 class Engine;
@@ -38,9 +37,22 @@ public:
 private:
   //void _process_node(const aiNode* node, const aiScene* scene);
   Mesh* _load_mesh(const aiMesh* assimpMesh, const aiScene* scene, const String& path);
-  Material* _load_material(const aiMaterial* assimpMaterial, const String& path);
+  Material* _load_material(aiMaterial* assimpMaterial, const String& path);
   Array<TextureHandle> _load_material_textures(const aiMaterial* assimpMaterial, ETextureType type, const String& path);
   Model* _load_model(const String& path);
+  Array<VertexBoneData> _load_bones(const aiMesh* assimpMesh);
+};
+
+class AnimationLoader {
+public:
+  static void readNodeHierarchy(Real animTime, const aiScene* scene, const aiNode* node, const Mat4& parentTransform);
+  static UInt32 findScaling(Real animTime, const aiNodeAnim* nodeAnim);
+  static UInt32 findRotation(Real animTime, const aiNodeAnim* nodeAnim);
+  static UInt32 findPosition(Real animTime, const aiNodeAnim* nodeAnim);
+  static Vec3 calcInterpolatedScaling(Real animTime, const aiNodeAnim* nodeAnim);
+  static Quat calcInterpolatedRotation(Real animTime, const aiNodeAnim* nodeAnim);
+  static Vec3 calcInterpolatedPosition(Real animTime, const aiNodeAnim* nodeAnim);
+  static const aiNodeAnim* findAnimNode(const aiAnimation* anim, const String& nodeName);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_ASSETS_ASSET_MANAGER_HPP */

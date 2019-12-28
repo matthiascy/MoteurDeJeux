@@ -12,6 +12,10 @@
 #include <QQuaternion>
 #include <LinearMath/btVector3.h>
 #include <LinearMath/btQuaternion.h>
+#include <assimp/vector3.h>
+#include <assimp/quaternion.h>
+#include <assimp/matrix3x3.h>
+#include <assimp/matrix4x4.h>
 
 typedef QVector2D  Vec2;
 typedef QVector3D  Vec3;
