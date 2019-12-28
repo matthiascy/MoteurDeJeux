@@ -25,12 +25,12 @@
 
 class Material {
 private:
-  Vec3 m_base_color { 1, 1, 1 };
+  Vec3 m_base_color { 1.0f, 1.0f, 1.0f };
 
-  Vec3 m_ambient_color   { 1, 1, 1 };
-  Vec3 m_diffuse_color   { 1, 1, 1 };
+  Vec3 m_ambient_color   { 1.0f, 1.0f, 1.0f };
+  Vec3 m_diffuse_color   { 1.0f, 1.0f, 1.0f };
   Vec3 m_specular_color  { Math::Zero };
-  Real m_shininess { 4 };
+  Real m_shininess { 0.0f };
 
   HashMap<ETextureType, Array<TextureHandle>> m_textures;
 

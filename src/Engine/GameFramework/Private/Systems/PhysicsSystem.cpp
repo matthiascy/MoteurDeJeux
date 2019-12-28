@@ -38,7 +38,8 @@ void PhysicsSystem::preUpdate(Real dt)
   auto* scene = m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->activatedScene());
   if (scene) {
     for (GameObject* object : scene->gameObjects()) {
-      if (object->isSimulated() && !object->isStatic()) {
+      //if (object->isSimulated() && !object->isStatic()) {
+      if (object->isSimulated()) {
         auto* rigid_body = object->getComponent<RigidBody>();
         if (rigid_body) {
           if (m_world->world()->getCollisionObjectArray().findLinearSearch(rigid_body->body()) == m_world->world()->getCollisionObjectArray().size()) {

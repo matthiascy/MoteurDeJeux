@@ -151,9 +151,9 @@ void RenderSystem::_render_scene(Scene* scene)
     m_programs[0]->setUniformValue("eyePosition", camera->gameObject()->transform()->worldPosition());
 
     // Ambient color
-    m_programs[0]->setUniformValue("lighting.ambient.color", Vec3{0.8, 0.8, 0.8});
-    m_programs[0]->setUniformValue("lighting.ambient.intensity", 0.9f);
-    m_programs[0]->setUniformValue("lighting.ambientCoeff", 1.0f);
+    m_programs[0]->setUniformValue("lighting.ambient.color", Vec3{0.5, 0.5, 0.5});
+    m_programs[0]->setUniformValue("lighting.ambient.intensity", 0.6f);
+    m_programs[0]->setUniformValue("lighting.ambientCoeff", 0.5f);
     m_programs[0]->setUniformValue("lighting.diffuseCoeff", 1.0f);
     m_programs[0]->setUniformValue("lighting.specularCoeff", 1.0f);
 
@@ -242,34 +242,33 @@ void RenderSystem::_render(const GameObject* gameObject, const RenderInfo& info,
   program->setUniformValue("normalMatrix", transform->worldMatrix().normalMatrix());
 
   for (auto i = 0; i < info.meshes.size(); ++i) {
-    /*
-    program->setUniformValue("hasTexture", false);
-    m_engine->assetManager()->getTexture(material->textures()[0])->oglTexture()->bind(0);
-     */
     auto* material = m_engine->assetManager()->getMaterial(info.meshes[i].materialIdx);
-    Array<OglTexture*> boundTextures;
-    //qDebug() << material->namePath() << " -- " << material->textures().size();
-    if (!material->textures().isEmpty()) {
-      program->setUniformValue("hasTexture", true);
-      int textureUnit = 0;
-      for (const auto& type : EnumRange<ETextureType, ETextureType::Diffuse, ETextureType::Reflection>()) {
-        String uniform = "material.textures." + toString(type);
-        auto textures = material->texturesOfType(type);
-        if (!textures.isEmpty()) {
-          program->setUniformValue(uniform.toStdString().c_str(), textureUnit);
-          auto* texture = m_engine->assetManager()->getTexture(textures[0]);
-          texture->oglTexture()->bind(textureUnit);
-          boundTextures.push_back(texture->oglTexture());
-          //qDebug() << texture->namePath() << " ===> bind ==> " << textureUnit;
-        }
-        textureUnit++;
-      }
-    }
-
     program->setUniformValue("material.ambient", material->ambient());
     program->setUniformValue("material.diffuse", material->diffuse());
     program->setUniformValue("material.specular", material->specular());
     program->setUniformValue("material.shininess", material->shininess());
+
+    Array<OglTexture*> boundTextures;
+    if (!material->textures().isEmpty()) {
+      program->setUniformValue("hasTexture", true);
+      int textureUnit = 0;
+      for (const auto& type : EnumRange<ETextureType, ETextureType::Diffuse, ETextureType::Reflection>()) {
+        String uniform = QStringLiteral("material.isTextureEnabled[%1]").arg(textureUnit);
+        auto textures = material->texturesOfType(type);
+        if (!textures.isEmpty()) {
+          program->setUniformValue(uniform.toStdString().c_str(), true);
+          //qDebug() << uniform << "true";
+          auto* texture = m_engine->assetManager()->getTexture(textures[0]);
+          texture->oglTexture()->bind(textureUnit);
+          boundTextures.push_back(texture->oglTexture());
+          //qDebug() << texture->namePath() << " ===> bind ==> " << textureUnit;
+        } else {
+          //qDebug() << uniform << "false";
+          program->setUniformValue(uniform.toStdString().c_str(), false);
+        }
+        textureUnit++;
+      }
+    }
 
     m_vbos[info.meshes[i].vboIdx]->bind();
     m_fns->glEnableVertexAttribArray(0);

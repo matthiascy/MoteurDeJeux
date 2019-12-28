@@ -171,7 +171,7 @@ Material* AssetManager::_load_material(const aiMaterial* assimpMaterial, const S
 
     // Lighting parameters :
     if (AI_SUCCESS == assimpMaterial->Get(AI_MATKEY_NAME, materialName)) {
-      qDebug() << materialName.C_Str();
+      //qDebug() << materialName.C_Str();
       filepath += String(materialName.C_Str());
     } else {
       filepath += "Untitled";
@@ -179,6 +179,8 @@ Material* AssetManager::_load_material(const aiMaterial* assimpMaterial, const S
 
     if (AI_SUCCESS == assimpMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color)) {
       material->setAmbient({color.r, color.g, color.b});
+    } else {
+      material->setAmbient({1.0f, 1.0f, 1.0f});
     }
 
     if (AI_SUCCESS == assimpMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, color)) {
@@ -192,6 +194,8 @@ Material* AssetManager::_load_material(const aiMaterial* assimpMaterial, const S
 
     if (AI_SUCCESS == assimpMaterial->Get(AI_MATKEY_SHININESS, value)) {
       material->setShininess(value);
+    } else {
+      material->setShininess(0.001f);
     }
 
     // Lighting maps : textures;
@@ -320,8 +324,13 @@ Array<TextureHandle> AssetManager::_load_material_textures(const aiMaterial* ass
     }
 
     if (!isSkip) {
-      m_textures->push_back(new Texture(filepath, type));
-      textures.push_back({m_textures->size() - 1});
+      auto* image = new Image;
+      if (image->load(filepath)) {
+        m_textures->push_back(new Texture(filepath, image, type));
+        textures.push_back({m_textures->size() - 1});
+      } else {
+        textures.push_back({0});
+      }
     }
   }
   m_engine->renderSystem()->doneCurrent();

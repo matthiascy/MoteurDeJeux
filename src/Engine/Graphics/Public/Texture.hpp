@@ -14,6 +14,7 @@ private:
 
 public:
   explicit Texture(const String& path, ETextureType type = ETextureType::None);
+  explicit Texture(const String& path, Image* image, ETextureType type = ETextureType::None);
   ~Texture();
 
   [[nodiscard]]

@@ -1,5 +1,13 @@
 #include <Graphics/Public/Texture.hpp>
 
+Texture::Texture(const String& path, Image* image, ETextureType type)
+{
+  m_name_path = path;
+  m_type = type;
+  qDebug() << "Create Texture : " << path;
+  m_ogl_texture = makeUnique<OglTexture>(image->mirrored());
+}
+
 Texture::Texture(const String& path, ETextureType type)
 {
   m_name_path = path;
