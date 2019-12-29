@@ -78,6 +78,8 @@ struct Math {
 
   static Mat4 lookAtMatrix(const Vec3& eye, const Vec3& center, const Vec3& up);
 
+  static Vec3 lerp(const Vec3& start, const Vec3& end, float t);
+
   static Mat4 mat4FromTRS(const Vec3& translation, const Quat& rotation, const Vec3& scale);
 
   static Mat4 mat4FromSRT(const Vec3& translation, const Quat& rotation, const Vec3& scale);
@@ -90,7 +92,9 @@ struct Math {
 
   static Vec3 extractScale(const Mat4& mat);
 
-  static Quat extractRotation(const Mat4& mat);
+  static Quat extractRotationQuat(const Mat4& mat);
+
+  static Mat3 extractRotationMat3(const Mat4& mat);
 
   static Vec3 extractAxisX(const Mat4& mat);
 

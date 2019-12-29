@@ -14,6 +14,9 @@ class PointLight;
 class SplashScreen;
 class Model;
 class Texture;
+class AnimatedModel;
+class AnimatedMesh;
+
 
 #define DECLARE_HANDLE(name)                     \
   struct name##Handle {                          \
@@ -28,6 +31,14 @@ DECLARE_HANDLE(Mesh)
 DECLARE_HANDLE(Material)
 DECLARE_HANDLE(Model)
 DECLARE_HANDLE(Audio)
+DECLARE_HANDLE(AnimatedMesh)
+DECLARE_HANDLE(AnimatedModel)
+DECLARE_HANDLE(Bone);
+DECLARE_HANDLE(Animation);
+DECLARE_HANDLE(Skeleton);
+DECLARE_HANDLE(Vao);
+DECLARE_HANDLE(Vbo);
+DECLARE_HANDLE(Ibo);
 
 enum class ETextureType {
   /** The texture is combined with the result of the diffuse lighting equation. */
@@ -57,5 +68,10 @@ enum class ETextureType {
 };
 
 UInt32 qHash(ETextureType key, uint seed);
+
+template <typename T>
+bool isValidHandle(T handle) {
+  return handle.idx != -1;
+}
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_PUBLIC_FORWARD_HPP */

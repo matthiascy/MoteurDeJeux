@@ -23,7 +23,7 @@ Vec3 Transform::localPosition() const
 
 Quat Transform::worldRotation() const
 {
-  return Math::extractRotation(m_world_matrix);
+  return Math::extractRotationQuat(m_world_matrix);
 }
 
 Quat Transform::localRotation() const
@@ -243,9 +243,9 @@ void Transform::lookAt(Transform* target, const Vec3 &worldUp)
 void Transform::lookAt(const Vec3& worldPos, const Vec3& worldUp)
 {
   Mat4 mat = Math::lookAtMatrix(worldPosition(), worldPos, worldUp);
-  m_local_rotation = Math::extractRotation(mat);
+  m_local_rotation = Math::extractRotationQuat(mat);
   if (m_parent) {
-    Quat q = Math::extractRotation(mat);
+    Quat q = Math::extractRotationQuat(mat);
     m_local_rotation = q.inverted() * m_local_rotation;
   }
   //setRotation(Math::lookAtQuaternion(worldPosition(), worldPos, worldUp), ESpace::World);

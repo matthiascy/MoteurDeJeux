@@ -109,7 +109,7 @@ void RenderSystem::init()
   //m_fns4_0->glDisable(GL_CULL_FACE);
   m_fns->glCullFace(GL_BACK);
   m_fns->glFrontFace(GL_CCW);
-  m_fns4_0->glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
+  //m_fns4_0->glPolygonMode(GL_FRONT_AND_BACK, GL_POLYGON);
   m_fns->glViewport(0, 0, m_surface->size().width(), m_surface->size().height());
   //m_fns->glClearColor(0.2, 0.2, 0.2, 1.0);
   m_fns->glClearColor(0.4, 0.4, 0.4, 1.0);

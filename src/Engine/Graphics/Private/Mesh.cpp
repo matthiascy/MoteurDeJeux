@@ -1,5 +1,6 @@
 #include "Graphics/Public/Mesh.hpp"
 
+/*
 void VertexBoneData::addBoneData(UInt32 boneId, Real weight)
 {
   for (auto i = 0; i < NUM_BONES_PER_VERTEX; ++i){
@@ -10,14 +11,14 @@ void VertexBoneData::addBoneData(UInt32 boneId, Real weight)
     }
   }
 }
+ */
 
 Mesh::Mesh()
-  : m_vertex_count{0}, m_indices{}, m_vertices{}, m_data_count{0}, m_material{0},
-    m_num_bones{0}
+  : m_vertex_count{0}, m_indices{}, m_vertices{}, m_data_count{0}, m_material{0}
 { }
 
 Mesh::Mesh(UInt32 vcount, const Array<VertexLayoutPNTTB>& data, const Array<UInt32>& indices)
-  : m_vertex_count{vcount}, m_material{0}, m_num_bones{0}
+  : m_vertex_count{vcount}, m_material{0}
 {
   m_vertices.clear();
   m_vertices = data;
@@ -122,7 +123,9 @@ MaterialHandle Mesh::material() const
   return m_material;
 }
 
+/*
 UInt32 Mesh::numBones() const
 {
   return m_num_bones;
 }
+ */

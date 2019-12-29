@@ -158,7 +158,7 @@ set(EngineSrc
     ${EditorSrcDir}/Viewport.hpp
     ${EditorSrcDir}/Viewport.cpp
     ${EditorSrcDir}/Vertex.hpp
-    ${EditorSrcDir}/Vertex.cpp Core/Private/Math/BoundingBox.cpp Core/Public/Math/BoundingBox.hpp Physics/Public/BulletTypes.hpp GameFramework/Public/ECS/Family.hpp Core/Public/NameGenerator.cpp Core/Public/NameGenerator.hpp Graphics/Private/Model.cpp Graphics/Public/Model.hpp Graphics/Private/PointLight.cpp Graphics/Public/PointLight.hpp Graphics/Private/SpotLight.cpp Graphics/Public/SpotLight.hpp Graphics/Public/Forward.hpp Graphics/Public/Texture.hpp Graphics/Private/Texture.cpp Graphics/Public/Texture.hpp)
+    ${EditorSrcDir}/Vertex.cpp Core/Private/Math/BoundingBox.cpp Core/Public/Math/BoundingBox.hpp Physics/Public/BulletTypes.hpp GameFramework/Public/ECS/Family.hpp Core/Public/NameGenerator.cpp Core/Public/NameGenerator.hpp Graphics/Private/Model.cpp Graphics/Public/Model.hpp Graphics/Private/PointLight.cpp Graphics/Public/PointLight.hpp Graphics/Private/SpotLight.cpp Graphics/Public/SpotLight.hpp Graphics/Public/Forward.hpp Graphics/Public/Texture.hpp Graphics/Private/Texture.cpp Graphics/Public/Texture.hpp Graphics/Private/AnimatedMeshRenderer.cpp Graphics/Public/AnimatedMeshRenderer.hpp Graphics/Public/Animation.hpp Graphics/Private/AnimatedModel.cpp Graphics/Public/AnimatedModel.hpp Graphics/Private/Animator.cpp Graphics/Public/Animator.hpp Graphics/Private/AnimatedMesh.cpp Graphics/Public/AnimatedMesh.hpp)
 
 qt5_add_resources(EngineSrc ${EngineSrcDir}/rscs.qrc ${EngineSrcDir}/Resources/Resources.qrc)
 

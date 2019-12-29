@@ -3,11 +3,19 @@
 
 #include <GameFramework/Public/ECS/Component.hpp>
 
+class RenderSystem;
+
 class Renderer : public Component {
-private:
+protected:
+  bool m_is_initialized { false };
+
 public:
   Renderer(const String& name, GameObject* gameObject);
   ~Renderer() override = default;
+
+  virtual void init(RenderSystem* renderSystem) = 0;
+
+  virtual void draw(RenderSystem* renderSystem, OglProgram* program, AssetManager* assetManager, Real dt) = 0;
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_RENDERER_HPP */

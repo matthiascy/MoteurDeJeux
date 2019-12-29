@@ -6,9 +6,23 @@
 #include <Graphics/Public/Material.hpp>
 #include <GameFramework/Public/Managers/AssetManager.hpp>
 #include <Graphics/Public/Texture.hpp>
+#include <Graphics/Public/AnimatedModel.hpp>
 #include <QtCore/QDir>
 
 // TODO: remove replicated materials
+
+namespace internal {
+
+  static UInt32 addNodesToSkeleton(aiNode* node, Skeleton& skeleton)
+  {
+    UInt32 boneIdx = skeleton.bones.size();
+    {
+      Bone bone;
+      bone.name = node->mName.C_Str();
+    }
+  }
+
+}
 
 AssetManager::AssetManager(const String& name, Engine* engine, Object* parent)
   : Object(name, parent), m_engine{engine}
@@ -97,6 +111,7 @@ Model* AssetManager::_load_model(const String& path)
                                            | aiProcess_CalcTangentSpace
                                            | aiProcess_SortByPType
                                            | aiProcess_GenSmoothNormals);
+  //| aiProcess_FixInfacingNormals
   /**
    * FlipUVs causes the uv problem over helicopter.obj, sponza.obj
    */
@@ -107,6 +122,8 @@ Model* AssetManager::_load_model(const String& path)
 
     Int32 meshes_num = scene->mNumMeshes;
     Int32 textures_num = scene->mNumTextures;
+
+    qDebug() << "Has materials ? " << scene->HasMaterials();
 
     for (auto i = 0; i < meshes_num; ++i) {
       const aiMesh* assimpMesh = scene->mMeshes[i];
@@ -142,7 +159,7 @@ Mesh* AssetManager::_load_mesh(const aiMesh* assimpMesh, const aiScene* scene, c
     vertices.push_back({{p.x, p.y, p.z}, {n.x, n.y, n.z}, {tex.x, tex.y}, {tan.x, tan.y, tan.z}, {bt.x, bt.y, bt.z}});
   }
 
-  bones = _load_bones(assimpMesh);
+  //bones = _load_bones(assimpMesh);
 
   for (unsigned i = 0; i < assimpMesh->mNumFaces; ++i) {
     const aiFace& face = assimpMesh->mFaces[i];
@@ -352,6 +369,27 @@ Array<TextureHandle> AssetManager::_load_material_textures(const aiMaterial* ass
   return textures;
 }
 
+AnimatedModelHandle AssetManager::loadAnimatedModel(const String& path)
+{
+  auto* model = AnimatedModelLoader::load(path);
+  if (model) {
+    m_animated_models->push_back(model);
+    return { m_animated_models->size() - 1 };
+  } else {
+    qWarning() << "Failed to load animated model" << path;
+    return { -1 };
+  }
+}
+
+AnimatedModel* AssetManager::getAnimatedModel(AnimatedModelHandle handle)
+{
+  if (isValidHandle(handle) && handle.idx < m_animated_models->size())
+    return m_animated_models->at(handle.idx);
+  else
+    return nullptr;
+}
+
+/*
 Array<VertexBoneData> AssetManager::_load_bones(const aiMesh* assimpMesh)
 {
   Array<VertexBoneData> out;
@@ -524,4 +562,9 @@ void AnimationLoader::readNodeHierarchy(Real animTime, const aiScene* scene, con
   Mat4 worldTransformation = parentTransform * localTransformation;
 
   if (m_)
+}
+ */
+AnimatedModel* AnimatedModelLoader::load(const String& path)
+{
+  return nullptr;
 }

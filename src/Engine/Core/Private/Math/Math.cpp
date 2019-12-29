@@ -73,12 +73,20 @@ Vec3 Math::extractScale(const Mat4& mat)
   return {extractAxisX(mat).length(), extractAxisY(mat).length(), extractAxisZ(mat).length()};
 }
 
-Quat Math::extractRotation(const Mat4& mat)
+Quat Math::extractRotationQuat(const Mat4& mat)
 {
   float data[] = {mat.row(0)[0], mat.row(0)[1], mat.row(0)[2],
                   mat.row(1)[0], mat.row(1)[1], mat.row(1)[2],
                   mat.row(2)[0], mat.row(2)[1], mat.row(2)[2]};
   return Quat::fromRotationMatrix(Mat3(data));
+}
+
+Mat3 Math::extractRotationMat3(const Mat4& mat)
+{
+  float data[] = {mat.row(0)[0], mat.row(0)[1], mat.row(0)[2],
+                  mat.row(1)[0], mat.row(1)[1], mat.row(1)[2],
+                  mat.row(2)[0], mat.row(2)[1], mat.row(2)[2]};
+  return Mat3(data);
 }
 
 Vec3 Math::extractAxisX(const Mat4& mat)
@@ -102,4 +110,9 @@ Vec3 Math::extractAxisZ(const Mat4& mat)
 Real Math::clamp(Real value, Real low, Real high)
 {
   return value < low ? low : (value > high ? high : value);
+}
+
+Vec3 Math::lerp(const Vec3& start, const Vec3& end, float t)
+{
+  return start + t * (end - start);
 }

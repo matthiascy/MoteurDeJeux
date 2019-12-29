@@ -26,6 +26,12 @@ struct VertexBoneData {
   void addBoneData(UInt32 boneId, Real weight);
 };
 
+struct MeshData {
+  Array<UInt32> indices;
+  Array<VertexLayoutPNTTB> vertices;
+  MaterialHandle material;
+};
+
 /*
  * Layout { position | normal | texCoord | tangent | biTangent }
  */
@@ -38,10 +44,12 @@ private:
   Array<VertexLayoutPNTTB> m_vertices;
   MaterialHandle m_material{};
 
+  /*
   UInt32 m_num_bones;
   Mat4   m_world_inverse_transform;
   HashMap<String, UInt32> m_bone_mapping; // bone name <--> index
   Array<BoneInfo> m_bone_info;
+   */
 
 public:
   Mesh();
