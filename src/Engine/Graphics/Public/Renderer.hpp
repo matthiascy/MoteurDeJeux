@@ -13,7 +13,7 @@ public:
   Renderer(const String& name, GameObject* gameObject);
   ~Renderer() override = default;
 
-  virtual void init(RenderSystem* renderSystem) = 0;
+  virtual void init(RenderSystem* renderSystem, AssetManager* assetManager) = 0;
 
   virtual void draw(RenderSystem* renderSystem, OglProgram* program, AssetManager* assetManager, Real dt) = 0;
 };

@@ -59,12 +59,13 @@ String toString(ETextureType type) {
 
 RenderSystem::RenderSystem(const String& name, Engine* engine, Object* parent)
   : System(name, engine, parent),
-    m_surface{nullptr}, m_render_graph{},
+    m_surface{nullptr},
     m_projection_matrix{Math::Mat4Identity},
     m_model_matrix{Math::Mat4Identity},
     m_view_matrix{Math::Mat4Identity},
     m_fns{nullptr}, m_fns4_0{nullptr},
-    m_is_physics_debug_draw_enabled{true}
+    m_is_physics_debug_draw_enabled{true},
+    m_is_initialized{false}
 {
   qInfo() << "Creation =>" << objectName();
 }
@@ -117,9 +118,11 @@ void RenderSystem::init()
   m_surface->doneCurrent();
 
   m_engine->assetManager()->loadTexture(":/Textures/Checker000");
+
+  m_is_initialized = true;
 }
 
-void RenderSystem::_render_scene(Scene* scene)
+void RenderSystem::_render_scene(Scene* scene, Real dt)
 {
   m_surface->makeCurrent();
 
@@ -129,17 +132,8 @@ void RenderSystem::_render_scene(Scene* scene)
     Array<Light*> lights;
 
     for (GameObject* gameObject : scene->gameObjects()) {
-      // TODO: multiple lights
       if (gameObject->hasComponent<Light>())
         lights.push_back(gameObject->getComponent<Light>());
-
-      if (gameObject->isVisible()) {
-        if (gameObject->hasComponent<MeshRenderer>()) {
-          if (!m_render_graph.contains(gameObject)) {
-            _register_mesh_renderer(gameObject->getComponent<MeshRenderer>());
-          }
-        }
-      }
     }
 
     m_surface->framebufferObject()->bind();
@@ -217,8 +211,13 @@ void RenderSystem::_render_scene(Scene* scene)
     }
 
     m_fns->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (auto i = m_render_graph.begin(); i != m_render_graph.end(); ++i) {
-      _render(i.key(), i.value(), m_programs[0]);
+
+    for (auto& gameObject : scene->gameObjects()) {
+      if (gameObject->isVisible()) {
+        if (gameObject->hasComponent<MeshRenderer>()) {
+          _render(gameObject, m_programs[0], dt);
+        }
+      }
     }
 
     m_programs[0]->release();
@@ -235,62 +234,12 @@ void RenderSystem::_render_scene(Scene* scene)
   m_surface->swapBuffers();
 }
 
-void RenderSystem::_render(const GameObject* gameObject, const RenderInfo& info, OglProgram* program)
+void RenderSystem::_render(const GameObject* gameObject, OglProgram* program, Real dt)
 {
   auto* transform = gameObject->transform();
   program->setUniformValue("modelMatrix", transform->worldMatrix());
   program->setUniformValue("normalMatrix", transform->worldMatrix().normalMatrix());
-
-  for (auto i = 0; i < info.meshes.size(); ++i) {
-    auto* material = m_engine->assetManager()->getMaterial(info.meshes[i].materialIdx);
-    program->setUniformValue("material.ambient", material->ambient());
-    program->setUniformValue("material.diffuse", material->diffuse());
-    program->setUniformValue("material.specular", material->specular());
-    program->setUniformValue("material.shininess", material->shininess());
-
-    Array<OglTexture*> boundTextures;
-    if (!material->textures().isEmpty()) {
-      program->setUniformValue("hasTexture", true);
-      int textureUnit = 0;
-      for (const auto& type : EnumRange<ETextureType, ETextureType::Diffuse, ETextureType::Reflection>()) {
-        String uniform = QStringLiteral("material.isTextureEnabled[%1]").arg(textureUnit);
-        auto textures = material->texturesOfType(type);
-        if (!textures.isEmpty()) {
-          program->setUniformValue(uniform.toStdString().c_str(), true);
-          //qDebug() << uniform << "true";
-          auto* texture = m_engine->assetManager()->getTexture(textures[0]);
-          texture->oglTexture()->bind(textureUnit);
-          boundTextures.push_back(texture->oglTexture());
-          //qDebug() << texture->namePath() << " ===> bind ==> " << textureUnit;
-        } else {
-          //qDebug() << uniform << "false";
-          program->setUniformValue(uniform.toStdString().c_str(), false);
-        }
-        textureUnit++;
-      }
-    }
-
-    m_vbos[info.meshes[i].vboIdx]->bind();
-    m_fns->glEnableVertexAttribArray(0);
-    m_fns->glEnableVertexAttribArray(1);
-    m_fns->glEnableVertexAttribArray(2);
-    m_fns->glEnableVertexAttribArray(3);
-    m_fns->glEnableVertexAttribArray(4);
-    m_fns->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), nullptr);
-    m_fns->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(3 * sizeof(float)));
-    m_fns->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(6 * sizeof(float)));
-    m_fns->glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(8 * sizeof(float)));
-    m_fns->glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(11 * sizeof(float)));
-
-    m_ibos[info.meshes[i].ibo.idx]->bind();
-    m_fns->glDrawElements(GL_TRIANGLES, info.meshes[i].ibo.size, GL_UNSIGNED_INT, (void*) nullptr);
-
-    for (auto* texture : boundTextures)
-      texture->release();
-
-    m_vbos[info.meshes[i].vboIdx]->release();
-    m_ibos[info.meshes[i].ibo.idx]->release();
-  }
+  gameObject->getComponent<MeshRenderer>()->draw(this, program, m_engine->assetManager(), dt);
 }
 
 QImage RenderSystem::grabFramebuffer() const
@@ -305,7 +254,7 @@ void RenderSystem::resize(const QSize& size)
 
 void RenderSystem::update(Real dt)
 {
-  _render_scene(m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->activatedScene()));
+  _render_scene(m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->activatedScene()), 0);
 }
 
 Int32 RenderSystem::createBufferObject(OglBuffer::Type type)
@@ -453,42 +402,20 @@ void RenderSystem::_physics_system_debug_draw(Camera* camera)
   m_programs[m_physics_debug_draw_info.programIdx]->release();
 }
 
-void RenderSystem::_register_mesh_renderer(MeshRenderer* meshRenderer)
+VboHandle RenderSystem::createVertexBufferObject()
 {
-  RenderInfo info{};
+  return { createBufferObject(OglBuffer::Type::VertexBuffer) };
+}
 
-  auto* model = m_engine->assetManager()->getModel(meshRenderer->modelHandle());
-  auto meshes = model->meshes();
+IboHandle RenderSystem::createIndexBufferObject() {
+  return { createBufferObject(OglBuffer::Type::IndexBuffer) };
+}
 
-  info.meshes.resize(meshes.size());
-
-  for (auto i = 0; i < info.meshes.size(); ++i){
-    auto* mesh = m_engine->assetManager()->getMesh(meshes[i]);
-
-    int vbo_idx = createBufferObject(OglBuffer::Type::VertexBuffer);
-    int ibo_idx = createBufferObject(OglBuffer::Type::IndexBuffer);
-
-    info.meshes[i].vboIdx = vbo_idx;
-    info.meshes[i].ibo.idx = ibo_idx;
-    info.meshes[i].ibo.size = mesh->indices().size();
-
-    info.meshes[i].materialIdx = mesh->material();
-    auto* material = m_engine->assetManager()->getMaterial(mesh->material());
-    auto textures = material->textures();
-    for (auto texture : textures)
-      info.meshes[i].texIndices.push_back(texture);
-
-    m_vbos[vbo_idx]->bind();
-    m_vbos[vbo_idx]->setUsagePattern(OglBuffer::StaticDraw);
-    m_vbos[vbo_idx]->allocate(&mesh->vertices()[0], mesh->dataCount() * sizeof(float));
-
-    m_ibos[ibo_idx]->bind();
-    m_ibos[ibo_idx]->setUsagePattern(OglBuffer::StaticDraw);
-    m_ibos[ibo_idx]->allocate(mesh->indices().constData(),mesh->vertexCount() * sizeof(UInt32));
-
-    m_ibos[ibo_idx]->release();
-    m_vbos[vbo_idx]->release();
+OglFnsCore4_0* RenderSystem::fns()
+{
+  if (!m_is_initialized) {
+    init();
   }
 
-  m_render_graph.insert(meshRenderer->gameObject(), info);
+  return m_surface->fnsCore40();
 }

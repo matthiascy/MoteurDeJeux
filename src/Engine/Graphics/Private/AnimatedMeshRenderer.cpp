@@ -17,7 +17,7 @@ AnimatedModelHandle AnimatedMeshRenderer::modelHandle() const
   return m_model_handle;
 }
 
-void AnimatedMeshRenderer::init(RenderSystem* renderSystem)
+void AnimatedMeshRenderer::init(RenderSystem* renderSystem, AssetManager* assetManager)
 {
 }
 

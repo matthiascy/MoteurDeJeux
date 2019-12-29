@@ -19,7 +19,7 @@ public:
   [[nodiscard]]
   AnimatedModelHandle modelHandle() const;
 
-  void init(RenderSystem* renderSystem) override;
+  void init(RenderSystem* renderSystem, AssetManager* assetManager) override;
 
   void draw(RenderSystem* renderSystem, OglProgram* program, AssetManager* assetManager, Real dt) override;
 };

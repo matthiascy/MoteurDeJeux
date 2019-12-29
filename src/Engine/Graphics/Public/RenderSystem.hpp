@@ -32,25 +32,7 @@ public:
   };
 
 private:
-  struct RenderInfo {
-    struct MeshRenderInfo {
-      Int32 vboIdx;
-
-      struct ibo_ {
-        Int32  idx {};
-        Int32 size {};
-      } ibo;
-
-      Array<TextureHandle> texIndices;
-      MaterialHandle materialIdx;
-    };
-
-    Array<MeshRenderInfo> meshes;
-  };
-
   UniquePtr<OglOffscreenSurface>   m_surface;
-
-  HashMap<GameObject*, RenderInfo> m_render_graph;
 
   /** Arrays own the memory. */
   Array<OglVAO*>     m_vaos;
@@ -65,6 +47,7 @@ private:
 
   OglFns*       m_fns;
   OglFnsCore4_0* m_fns4_0;
+  bool m_is_initialized;
 
   physics_debug_draw_info_t m_physics_debug_draw_info { };
 
@@ -99,6 +82,10 @@ public:
 
   Int32 createBufferObject(OglBuffer::Type type);
 
+  VboHandle createVertexBufferObject();
+
+  IboHandle createIndexBufferObject();
+
   Int32 createVertexArrayObject();
 
   Int32 createShaderProgram();
@@ -119,20 +106,17 @@ public:
 
   OglProgram* programAt(Int32 idx);
 
+  [[nodiscard]]
+  OglFnsCore4_0* fns();
+
 private:
-  /**
-   * Render the game object with the corresponding render info and shader program.
-   * @param gameObject [in] GameObject to be rendered.
-   * @param info       [in] gameObject's RenderInfo.
-   * @param program    [in] shader program used to render gameObject.
-   */
-  void _render(const GameObject* gameObject, const RenderInfo& info, OglProgram* program);
+  void _render(const GameObject* gameObject, OglProgram* program, Real dt);
 
   /***
    * Render the game scene.
    * @param scene [in] Scene to be rendered.
    */
-  void _render_scene(Scene* scene);
+  void _render_scene(Scene* scene, Real dt);
 
   /* Used only for destroy render system arrays. */
   template <typename T>
@@ -141,8 +125,6 @@ private:
   void _init_physics_system_debug_draw();
 
   void _physics_system_debug_draw(Camera* camera);
-
-  void _register_mesh_renderer(MeshRenderer* meshRenderer);
 
 public slots:
   void resize(const QSize& size);
