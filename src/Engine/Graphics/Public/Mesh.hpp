@@ -9,40 +9,18 @@ class aiNode;
 class aiNodeAnim;
 class aiAnimation;
 
-#define NUM_BONES_PER_VERTEX 4
-
-struct BoneInfo {
-  Mat4 boneOffset     { Math::Mat4Identity };
-  Mat4 finalTransform { Math::Mat4Identity };
-};
-
-struct VertexBoneData {
-  UInt32 bonesIdx[NUM_BONES_PER_VERTEX];
-  Real   weights[NUM_BONES_PER_VERTEX];
-
-  VertexBoneData() : bonesIdx{}, weights{}
-  { }
-
-  void addBoneData(UInt32 boneId, Real weight);
-};
-
-struct MeshData {
-  Array<UInt32> indices;
-  Array<VertexLayoutPNTTB> vertices;
-  MaterialHandle material;
-};
-
 /*
  * Layout { position | normal | texCoord | tangent | biTangent }
  */
 class Mesh {
 private:
   String m_name;
-  UInt32 m_data_count;
   UInt32 m_vertex_count;
   Array<UInt32> m_indices;
   Array<VertexLayoutPNTTB> m_vertices;
   MaterialHandle m_material{};
+
+  Array<VertexLayoutPNTTB_B_W> m_vertices_with_bone_info;
 
 public:
   Mesh();
@@ -50,7 +28,10 @@ public:
   ~Mesh() = default;
 
   [[nodiscard]]
-  UInt32 dataCount() const { return m_data_count; }
+  UInt32 dataCount() const { return m_vertices.size() * 14; }
+
+  [[nodiscard]]
+  UInt32 dataCountWithBoneInfo() const { return m_vertices_with_bone_info.size() * 30; }
 
   [[nodiscard]]
   UInt32 vertexCount() const { return m_vertex_count; }
@@ -59,6 +40,10 @@ public:
   const Array<VertexLayoutPNTTB>& vertices() const;
 
   Array<VertexLayoutPNTTB>& vertices();
+
+  [[nodiscard]]
+  const Array<VertexLayoutPNTTB_B_W>& verticesWithBoneInfo() const;
+  Array<VertexLayoutPNTTB_B_W>& verticesWithBoneInfo();
 
   [[nodiscard]]
   const Array<UInt32>& indices() const;
@@ -90,6 +75,8 @@ public:
   void setMaterial(MaterialHandle handle);
 
   const String& name() { return m_name; }
+
+  void addBone(UInt32 vertexId, UInt32 boneId, Real boneWeight);
 };
 
 #endif // MESH_HPP

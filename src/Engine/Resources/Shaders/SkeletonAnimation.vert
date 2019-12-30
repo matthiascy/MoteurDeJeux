@@ -1,13 +1,16 @@
 #version 330 core
 
-const int MAX_BONES = 50;
-const int MAX_WEIGHTS = 4;
+const int MAX_BONES = 256;
 
 layout (location = 0) in vec3 inPosition;
 layout (location = 1) in vec3 inNormal;
 layout (location = 2) in vec2 inTexCoord;
 layout (location = 3) in vec3 inTangent;
 layout (location = 4) in vec3 inBiTangent;
+layout (location = 5) in ivec4 inBoneIds0;
+layout (location = 6) in ivec4 inBoneIds1;
+layout (location = 7) in vec4 inBoneWeights0;
+layout (location = 8) in vec4 inBoneWeights1;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
@@ -15,8 +18,6 @@ uniform mat4 projectionMatrix;
 uniform mat3 normalMatrix;
 
 uniform mat4 uBoneTransforms[MAX_JOINTS];
-uniform uint uBoneIndices[MAX_BONES];
-uniform float uBoneWeights[MAX_WEIGHTS];
 
 out vec3 aPosition;
 out vec3 aNormal;
@@ -24,8 +25,9 @@ out vec2 aTexCoord;
 
 mat4 calcBoneTransformMatrix() {
     mat4 mat = mat4(0);
-    for (int i = 0; i < MAX_BONES; ++i) {
-        mat += uBoneTransforms[uBoneIndices[i]] * uBoneWeights[i];
+    for (int i = 0; i < 4; ++i) {
+        mat += uBoneTransforms[aBoneIds0[i]] * inBoneWeights0[i];
+        mat += uBoneTransforms[aBoneIds1[i]] * inBoneWeights1[i];
     }
     return mat;
 }

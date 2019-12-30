@@ -13,21 +13,6 @@
 
 // TODO: remove replicated materials
 
-namespace internal {
-
-  /*
-  static UInt32 addNodesToSkeleton(aiNode* node, Skeleton& skeleton)
-  {
-    UInt32 boneIdx = skeleton.bones.size();
-    {
-      Bone bone;
-      bone.name = node->mName.C_Str();
-    }
-  }
-   */
-
-}
-
 AssetManager::AssetManager(const String& name, Engine* engine, Object* parent)
   : Object(name, parent), m_engine{engine}
 {
@@ -155,7 +140,6 @@ Mesh* AssetManager::_load_mesh(const aiMesh* assimpMesh, const aiScene* scene, c
 {
   Array<UInt32> indices;
   Array<VertexLayoutPNTTB> vertices;
-  Array<VertexBoneData> bones;
 
   const aiVector3D zero(0.0f, 0.0f, 0.0f);
   for (auto i = 0; i < assimpMesh->mNumVertices; ++i) {
@@ -168,8 +152,6 @@ Mesh* AssetManager::_load_mesh(const aiMesh* assimpMesh, const aiScene* scene, c
 
     vertices.push_back({{p.x, p.y, p.z}, {n.x, n.y, n.z}, {tex.x, tex.y}, {tan.x, tan.y, tan.z}, {bt.x, bt.y, bt.z}});
   }
-
-  //bones = _recursively_load_skeleton(assimpMesh);
 
   for (unsigned i = 0; i < assimpMesh->mNumFaces; ++i) {
     const aiFace& face = assimpMesh->mFaces[i];
@@ -423,19 +405,18 @@ AnimatedModel* AssetManager::_load_animated_model(const String& path)
 
     //qDebug() << "Has materials ? " << aScene->HasMaterials();
 
+    auto* skeleton = new Skeleton();
+    _recursively_load_skeleton(aScene->mRootNode, skeleton);
+
     // TODO: recursively load model
     for (auto i = 0; i < meshes_num; ++i) {
       const aiMesh* assimpMesh = aScene->mMeshes[i];
-      model->addMesh(_add_mesh(_load_mesh(assimpMesh, aScene, path)));
+      MeshHandle mesh = _add_mesh(_load_mesh(assimpMesh, aScene, path));
+      model->addMesh(mesh);
+      _load_bones(mesh, assimpMesh->mBones, assimpMesh->mNumBones, skeleton);
     }
 
     animatedModel->setSkin(_add_model(model));
-
-    auto* skeleton = new Skeleton();
-
-    _recursively_load_skeleton(aScene->mRootNode, skeleton);
-    _load_bones(aScene, skeleton);
-
     animatedModel->setSkeleton(_add_skeleton(skeleton));
 
     for (int i = 0; i < aScene->mNumAnimations; ++i) {
@@ -467,6 +448,7 @@ Int32 AssetManager::_recursively_load_skeleton(const aiNode* aNode, Skeleton* sk
       bone->children.push_back(-1);
     }
     skeleton->bones().push_back(bone);
+    bone->id = boneId;
   }
 
   for (auto i = 0; i < aNode->mNumChildren; ++i) {
@@ -477,21 +459,21 @@ Int32 AssetManager::_recursively_load_skeleton(const aiNode* aNode, Skeleton* sk
   return boneId;
 }
 
-void AssetManager::_load_bones(const aiScene* aScene, Skeleton* skeleton)
+void AssetManager::_load_bones(MeshHandle owner, aiBone** meshBones, Int32 num, Skeleton* skeleton)
 {
-  for (auto i = 0; i < aScene->mNumMeshes; ++i) {
-    auto* aMesh = aScene->mMeshes[i];
+  auto* mesh = m_meshes->at(owner.idx);
 
-    for (UInt32 j = 0; j < aMesh->mNumBones; ++j) {
-      auto* aBone = aMesh->mBones[j];
+  for (auto j = 0; j < num; ++j) {
+    auto* aBone = meshBones[j];
 
-      auto* bone = skeleton->bone(aBone->mName.C_Str());
+    auto* bone = skeleton->bone(aBone->mName.C_Str());
 
-      bone->offSetMatrix = Math::fromAiMat4(aBone->mOffsetMatrix);
+    bone->ownerMesh = owner;
+    bone->offSetMatrix = Math::fromAiMat4(aBone->mOffsetMatrix);
 
-      for (int k = 0; k < aBone->mNumWeights; ++k) {
-        bone->weights.append({aBone->mWeights[k].mVertexId, aBone->mWeights[k].mWeight});
-      }
+    for (auto k = 0; k < aBone->mNumWeights; ++k) {
+      bone->weights.append({aBone->mWeights[k].mVertexId, aBone->mWeights[k].mWeight});
+      mesh->addBone(aBone->mWeights[k].mVertexId, bone->id, aBone->mWeights[k].mWeight);
     }
   }
 }
@@ -597,154 +579,6 @@ Skeleton* AssetManager::getSkeleton(SkeletonHandle handle)
   }
 }
 
-/*
-const aiNodeAnim* AssetManager::_find_anim_node(const aiAnimation* anim, const String& nodeName) {
-  return nullptr;
-}
-
-void AssetManager::_read_node_hierarchy(Real animTime, const aiNode* node, const Mat4& parentTransform) {
-
-}
-
-UInt32 AnimationLoader::findScaling(Real animTime, const aiNodeAnim* nodeAnim)
-{
-  assert(nodeAnim->mNumScalingKeys > 0);
-
-  for (UInt32 i = 0; i < nodeAnim->mNumScalingKeys - 1; ++i) {
-    if (animTime < (Real)nodeAnim->mScalingKeys[i + 1].mTime) {
-      return i;
-    }
-  }
-  return 0;
-}
-
-UInt32 AnimationLoader::findRotation(Real animTime, const aiNodeAnim* nodeAnim)
-{
-  assert(nodeAnim->mNumRotationKeys > 0);
-
-  for (UInt32 i = 0; i < nodeAnim->mNumRotationKeys - 1; ++i) {
-    if (animTime < (Real)nodeAnim->mRotationKeys[i + 1].mTime) {
-      return i;
-    }
-  }
-  return 0;
-}
-
-UInt32 AnimationLoader::findPosition(Real animTime, const aiNodeAnim* nodeAnim)
-{
-  for (UInt32 i = 0; i < nodeAnim->mNumPositionKeys - 1; ++i) {
-    if (animTime < (Real)nodeAnim->mPositionKeys[i + 1].mTime) {
-      return i;
-    }
-  }
-  return 0;
-}
-
-Vec3 AnimationLoader::calcInterpolatedScaling(Real animTime, const aiNodeAnim* nodeAnim) {
-  if (nodeAnim->mNumScalingKeys == 1) {
-    return Math::fromAiVec3(nodeAnim->mScalingKeys[0].mValue);
-  }
-
-  UInt32 currKey = findScaling(animTime, nodeAnim);
-  UInt32 nextKey = currKey + 1;
-  assert(nextKey < nodeAnim->mNumScalingKeys);
-
-  Real deltaTime = (Real)(nodeAnim->mScalingKeys[nextKey].mTime - nodeAnim->mScalingKeys[currKey].mTime);
-  Real factor = (animTime - (Real)nodeAnim->mScalingKeys[currKey].mTime) / deltaTime;
-  assert(factor >= 0.0f && factor <= 1.0f);
-
-  const aiVector3D& start = nodeAnim->mScalingKeys[currKey].mValue;
-  const aiVector3D& end   = nodeAnim->mScalingKeys[nextKey].mValue;
-  aiVector3D delta = end - start;
-  return Math::fromAiVec3(start + factor * delta);
-}
-
-Quat AnimationLoader::calcInterpolatedRotation(Real animTime, const aiNodeAnim* nodeAnim)
-{
-  if (nodeAnim->mNumRotationKeys == 1)
-    return Math::fromAiQuat(nodeAnim->mRotationKeys[0].mValue);
-
-  UInt32 currKey = findRotation(animTime, nodeAnim);
-  UInt32 nextKey = currKey + 1;
-  assert(nextKey < nodeAnim->mNumRotationKeys);
-
-  Real deltaTime = (Real)(nodeAnim->mRotationKeys[nextKey].mTime - nodeAnim->mRotationKeys[currKey].mTime);
-  Real factor = (animTime - (Real)nodeAnim->mRotationKeys[currKey].mTime) / deltaTime;
-  assert(factor >= 0.0f && factor <= 1.0f);
-
-  const aiQuaternion& start = nodeAnim->mRotationKeys[currKey].mValue;
-  const aiQuaternion& end   = nodeAnim->mRotationKeys[nextKey].mValue;
-
-  aiQuaternion out;
-
-  aiQuaternion::Interpolate(out, start, end, factor);
-
-  return Math::fromAiQuat(out.Normalize());
-}
-
-Vec3 AnimationLoader::calcInterpolatedPosition(Real animTime, const aiNodeAnim* nodeAnim)
-{
-  if (nodeAnim->mNumPositionKeys == 1) {
-    return Math::fromAiVec3(nodeAnim->mPositionKeys[0].mValue);
-  }
-
-  UInt32 currKey = findPosition(animTime, nodeAnim);
-  UInt32 nextKey = currKey + 1;
-
-  assert(nextKey < nodeAnim->mNumPositionKeys);
-
-  Real deltaTime = (float)(nodeAnim->mPositionKeys[nextKey].mTime - nodeAnim->mPositionKeys[currKey].mTime);
-  Real factor = (animTime - (float)nodeAnim->mPositionKeys[currKey].mTime) / deltaTime;
-
-  assert(factor >= 0.0f && factor <= 1.0f);
-
-  const aiVector3D& start = nodeAnim->mPositionKeys[currKey].mValue;
-  const aiVector3D& end   = nodeAnim->mPositionKeys[nextKey].mValue;
-  aiVector3D delta = end - start;
-  return Math::fromAiVec3(start + factor * delta);
-}
-
-const aiNodeAnim* AnimationLoader::findAnimNode(const aiAnimation* anim, const String& nodeName)
-{
-  for (UInt32 i = 0; i < anim->mNumChannels; ++i) {
-    const aiNodeAnim* nodeAnim = anim->mChannels[i];
-    if (String(nodeAnim->mNodeName.data) == nodeName) {
-      return nodeAnim;
-    }
-  }
-
-  return nullptr;
-}
-
-void AnimationLoader::readNodeHierarchy(Real animTime, const aiScene* scene, const aiNode* node, const Mat4& parentTransform)
-{
-  String nodeName(node->mName.data);
-
-  const aiAnimation* animation = scene->mAnimations[0];
-
-  Mat4 localTransformation(Math::fromAiMat4(node->mTransformation));
-
-  const aiNodeAnim* nodeAnim = findAnimNode(animation, nodeName);
-
-  if (nodeAnim) {
-    // Interpolate scaling
-    Vec3 scaling = calcInterpolatedScaling(animTime, nodeAnim);
-    // Interpolate rotation
-    Quat rotation = calcInterpolatedRotation(animTime, nodeAnim);
-    // Interpolate translation
-    Vec3 translation = calcInterpolatedPosition(animTime, nodeAnim);
-
-    localTransformation.setToIdentity();
-    localTransformation.scale(scaling);
-    localTransformation.rotate(rotation);
-    localTransformation.translate(translation);
-  }
-
-  Mat4 worldTransformation = parentTransform * localTransformation;
-
-  if (m_)
-}
- */
 AnimatedModel* AnimatedModelLoader::load(const String& path)
 {
 

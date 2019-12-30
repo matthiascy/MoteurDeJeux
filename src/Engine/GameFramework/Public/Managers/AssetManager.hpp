@@ -13,6 +13,7 @@ class aiMaterial;
 class aiNode;
 class aiNodeAnim;
 class aiAnimation;
+class aiBone;
 
 // TODO: try to reuse model loading code while loading AnimatedModel
 // TODO: AnimationLoader, ModelLoader
@@ -71,7 +72,7 @@ private:
   AnimatedModel* _load_animated_model(const String& path);
 
   Int32 _recursively_load_skeleton(const aiNode* aNode, Skeleton* skeleton);
-  void  _load_bones(const aiScene* aScene, Skeleton* skeleton);
+  void  _load_bones(MeshHandle owner, aiBone** meshBones, Int32 num, Skeleton* skeleton);
   Animation* _load_animation(const aiAnimation* aAnimation);
 };
 

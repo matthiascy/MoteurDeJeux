@@ -2,6 +2,7 @@
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_ANIMATION_HPP
 
 #include <Core/Public/Core.hpp>
+#include "Forward.hpp"
 
 struct VertexWeight {
   UInt32 vertexIdx;
@@ -9,6 +10,10 @@ struct VertexWeight {
 };
 
 struct Bone {
+  MeshHandle ownerMesh;
+
+  UInt32 id;
+
   String name;
 
   Mat4 nodeTransform;

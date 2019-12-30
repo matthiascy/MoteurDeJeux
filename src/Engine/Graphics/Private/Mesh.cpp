@@ -1,20 +1,7 @@
 #include "Graphics/Public/Mesh.hpp"
 
-/*
-void VertexBoneData::addBoneData(UInt32 boneId, Real weight)
-{
-  for (auto i = 0; i < NUM_BONES_PER_VERTEX; ++i){
-    if (weights[i] == 0.0f) {
-      bonesId[i] = boneId;
-      weights[i] = weight;
-      return;
-    }
-  }
-}
- */
-
 Mesh::Mesh()
-  : m_vertex_count{0}, m_indices{}, m_vertices{}, m_data_count{0}, m_material{0}
+  : m_vertex_count{0}, m_indices{}, m_vertices{}, m_material{0}
 { }
 
 Mesh::Mesh(UInt32 vcount, const Array<VertexLayoutPNTTB>& data, const Array<UInt32>& indices)
@@ -24,7 +11,14 @@ Mesh::Mesh(UInt32 vcount, const Array<VertexLayoutPNTTB>& data, const Array<UInt
   m_vertices = data;
   m_indices.clear();
   m_indices = indices;
-  m_data_count = m_vertex_count * 14;
+  m_vertices_with_bone_info.resize(m_vertices.size());
+  for (auto i = 0; i < m_vertices.size(); ++i) {
+    m_vertices_with_bone_info[i].pnttb = m_vertices[i];
+    for (auto j = 0; j < 8; ++j) {
+      m_vertices_with_bone_info[i].boneIds[j] = -1;
+      m_vertices_with_bone_info[i].boneWeights[j] = 0.0f;
+    }
+  }
 }
 
 const Array<UInt32>& Mesh::indices() const
@@ -92,7 +86,6 @@ void Mesh::setVertices(UInt32 vertexCount, const Array<VertexLayoutPNTTB>& data,
   m_vertices = data;
   m_indices.clear();
   m_indices = indices;
-  m_data_count = m_vertices.size() * 14;
 }
 
 Array<Vec3> Mesh::tangents() const
@@ -123,9 +116,22 @@ MaterialHandle Mesh::material() const
   return m_material;
 }
 
-/*
-UInt32 Mesh::numBones() const
-{
-  return m_num_bones;
+Array<VertexLayoutPNTTB_B_W>& Mesh::verticesWithBoneInfo() {
+  return m_vertices_with_bone_info;
 }
- */
+
+const Array<VertexLayoutPNTTB_B_W>& Mesh::verticesWithBoneInfo() const
+{
+  return m_vertices_with_bone_info;
+}
+
+void Mesh::addBone(UInt32 vertexId, UInt32 boneId, Real boneWeight)
+{
+  VertexLayoutPNTTB_B_W& vertex = m_vertices_with_bone_info[vertexId];
+  for (auto i = 0; i < 8; ++i) {
+    if (vertex.boneWeights[i] != 0.0f) {
+      vertex.boneIds[i] = boneId;
+      vertex.boneWeights[i] = boneWeight;
+    }
+  }
+}

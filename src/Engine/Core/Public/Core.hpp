@@ -32,11 +32,17 @@ typedef QUuid Uuid;
 typedef QImage Image;
 
 struct VertexLayoutPNTTB {
-  Vec3 position;
-  Vec3 normal;
-  Vec2 texCoord;
-  Vec3 tangent;
-  Vec3 biTangent;
+  Vec3 position  { };
+  Vec3 normal    { };
+  Vec2 texCoord  { };
+  Vec3 tangent   { };
+  Vec3 biTangent { };
+};
+
+struct VertexLayoutPNTTB_B_W {
+  VertexLayoutPNTTB pnttb { };
+  Int32 boneIds[8] {};
+  Real  boneWeights[8] {};
 };
 
 struct VertexLayoutPNT {
