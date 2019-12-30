@@ -4,14 +4,18 @@
 #include "Renderer.hpp"
 
 /**
- * Contains the animated model.
+ * Contains the animated model. Render the animation
  */
 class AnimatedMeshRenderer : public Renderer {
 private:
   AnimatedModelHandle m_model_handle;
 
+  Array<VboHandle> m_vbos { };
+  Array<IboHandle> m_ibos { };
+  Array<Mesh*> m_meshes_to_rendered { };
+
 public:
-  AnimatedMeshRenderer(const String& name, GameObject* gameObject, const AnimatedModelHandle& handle);
+  AnimatedMeshRenderer(const String& name, GameObject* gameObject, AnimatedModelHandle handle);
 
   [[nodiscard]]
   UInt64 typeID() const override;

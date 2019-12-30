@@ -8,11 +8,14 @@
 #include <Graphics/Public/Texture.hpp>
 #include <Graphics/Public/AnimatedModel.hpp>
 #include <QtCore/QDir>
+#include <Graphics/Public/Animation.hpp>
+#include <QtGui/QImageReader>
 
 // TODO: remove replicated materials
 
 namespace internal {
 
+  /*
   static UInt32 addNodesToSkeleton(aiNode* node, Skeleton& skeleton)
   {
     UInt32 boneIdx = skeleton.bones.size();
@@ -21,17 +24,21 @@ namespace internal {
       bone.name = node->mName.C_Str();
     }
   }
+   */
 
 }
 
 AssetManager::AssetManager(const String& name, Engine* engine, Object* parent)
   : Object(name, parent), m_engine{engine}
 {
-  m_meshes = makeUnique<Array<Mesh*>>();
-  m_models = makeUnique<Array<Model*>>();
-  m_textures = makeUnique<Array<Texture*>>();
-  m_materials = makeUnique<Array<Material*>>();
   qInfo() << "Creation =>" << objectName();
+  m_meshes          = makeUnique<Array<Mesh*>>();
+  m_models          = makeUnique<Array<Model*>>();
+  m_textures        = makeUnique<Array<Texture*>>();
+  m_materials       = makeUnique<Array<Material*>>();
+  m_skeletons       = makeUnique<Array<Skeleton*>>();
+  m_animations      = makeUnique<Array<Animation*>>();
+  m_animated_models = makeUnique<Array<AnimatedModel*>>();
 }
 
 AssetManager::~AssetManager()
@@ -55,6 +62,7 @@ AssetManager::~AssetManager()
 ModelHandle AssetManager::loadModel(const String& path)
 {
   auto model_idx = m_models->size();
+  // No animation loaded
   m_models->push_back(_load_model(path));
   return {model_idx};
 }
@@ -102,6 +110,11 @@ Mesh* AssetManager::getMesh(MeshHandle handle) {
     return nullptr;
 }
 
+/**
+ * aiProcess_FixInfacingNormals will affect plants in sponza.obj
+ *
+ * FlipUVs causes the uv problem over helicopter.obj, sponza.obj
+ */
 Model* AssetManager::_load_model(const String& path)
 {
   Assimp::Importer importer;
@@ -111,10 +124,6 @@ Model* AssetManager::_load_model(const String& path)
                                            | aiProcess_CalcTangentSpace
                                            | aiProcess_SortByPType
                                            | aiProcess_GenSmoothNormals);
-  //| aiProcess_FixInfacingNormals
-  /**
-   * FlipUVs causes the uv problem over helicopter.obj, sponza.obj
-   */
 
   if (scene) {
 
@@ -127,8 +136,9 @@ Model* AssetManager::_load_model(const String& path)
 
     for (auto i = 0; i < meshes_num; ++i) {
       const aiMesh* assimpMesh = scene->mMeshes[i];
-      m_meshes->push_back(_load_mesh(assimpMesh, scene, path));
-      model->addMesh({m_meshes->size() - 1});
+      //m_meshes->push_back(_load_mesh(assimpMesh, scene, path));
+      //model->addMesh({m_meshes->size() - 1});
+      model->addMesh(_add_mesh(_load_mesh(assimpMesh, scene, path)));
     }
 
     return model;
@@ -159,7 +169,7 @@ Mesh* AssetManager::_load_mesh(const aiMesh* assimpMesh, const aiScene* scene, c
     vertices.push_back({{p.x, p.y, p.z}, {n.x, n.y, n.z}, {tex.x, tex.y}, {tan.x, tan.y, tan.z}, {bt.x, bt.y, bt.z}});
   }
 
-  //bones = _load_bones(assimpMesh);
+  //bones = _recursively_load_skeleton(assimpMesh);
 
   for (unsigned i = 0; i < assimpMesh->mNumFaces; ++i) {
     const aiFace& face = assimpMesh->mFaces[i];
@@ -339,6 +349,10 @@ Array<TextureHandle> AssetManager::_load_material_textures(const aiMaterial* ass
   m_engine->renderSystem()->makeCurrent();
   Array<TextureHandle> textures;
   aiTextureType assimpTextureType = toAssimpTextureType(type);
+  QImageReader reader;
+  //reader.setAutoDetectImageFormat(true);
+  reader.setDecideFormatFromContent(true);
+
   for (unsigned i = 0; i < assimpMaterial->GetTextureCount(assimpTextureType); ++i) {
     aiString str;
     assimpMaterial->GetTexture(assimpTextureType, i, &str);
@@ -356,9 +370,10 @@ Array<TextureHandle> AssetManager::_load_material_textures(const aiMaterial* ass
 
     if (!isSkip) {
       auto* image = new Image;
-      if (image->load(filepath)) {
-        m_textures->push_back(new Texture(filepath, image, type));
-        textures.push_back({m_textures->size() - 1});
+      qDebug() << "Try to load image : " << filepath;
+      reader.setFileName(filepath);
+      if (reader.read(image)) {
+        textures.push_back(_add_texture(new Texture(filepath, image, type)));
       } else {
         textures.push_back({0});
       }
@@ -371,10 +386,9 @@ Array<TextureHandle> AssetManager::_load_material_textures(const aiMaterial* ass
 
 AnimatedModelHandle AssetManager::loadAnimatedModel(const String& path)
 {
-  auto* model = AnimatedModelLoader::load(path);
+  auto* model = _load_animated_model(path);
   if (model) {
-    m_animated_models->push_back(model);
-    return { m_animated_models->size() - 1 };
+    return _add_animated_model(model);
   } else {
     qWarning() << "Failed to load animated model" << path;
     return { -1 };
@@ -389,34 +403,201 @@ AnimatedModel* AssetManager::getAnimatedModel(AnimatedModelHandle handle)
     return nullptr;
 }
 
-/*
-Array<VertexBoneData> AssetManager::_load_bones(const aiMesh* assimpMesh)
+AnimatedModel* AssetManager::_load_animated_model(const String& path)
 {
-  Array<VertexBoneData> out;
-  HashMap<String, UInt32> bone_mapping; // bone name -- bone index
-  UInt32 numBones = 0;
+  qDebug() << "Load animated model " << path;
+  Assimp::Importer importer;
 
-  for (auto i = 0; i < assimpMesh->mNumBones; ++i) {
-    UInt32 boneIdx = 0;
-    String boneName(assimpMesh->mBones[i]->mName.data);
-    if (!bone_mapping.contains(boneName)) {
-      // Allocate an index for a new bone
-      boneIdx = numBones++;
-      BoneInfo bi;
-      bi.boneOffset = assimpMesh->mBones[i]->mOffsetMatrix;
-      bi.
-    } else {
-      boneIdx = bone_mapping[boneName];
+  const aiScene* aScene = importer.ReadFile(path.toStdString(),
+                                           aiProcess_Triangulate
+                                           | aiProcess_CalcTangentSpace
+                                           | aiProcess_SortByPType
+                                           | aiProcess_GenSmoothNormals);
+  if (aScene) {
+
+    auto* model = new Model();
+    auto* animatedModel = new AnimatedModel();
+
+    Int32 meshes_num = aScene->mNumMeshes;
+    Int32 textures_num = aScene->mNumTextures;
+
+    //qDebug() << "Has materials ? " << aScene->HasMaterials();
+
+    // TODO: recursively load model
+    for (auto i = 0; i < meshes_num; ++i) {
+      const aiMesh* assimpMesh = aScene->mMeshes[i];
+      model->addMesh(_add_mesh(_load_mesh(assimpMesh, aScene, path)));
     }
 
-    for (auto j = 0; j < assimpMesh->mBones[i]->mNumWeights; ++j) {
-      UInt32 vertexIdx =;
+    animatedModel->setSkin(_add_model(model));
+
+    auto* skeleton = new Skeleton();
+
+    _recursively_load_skeleton(aScene->mRootNode, skeleton);
+    _load_bones(aScene, skeleton);
+
+    animatedModel->setSkeleton(_add_skeleton(skeleton));
+
+    for (int i = 0; i < aScene->mNumAnimations; ++i) {
+      AnimationHandle animHandle = _add_animation(_load_animation(aScene->mAnimations[i]));
+      animatedModel->addAnimation(animHandle);
     }
+
+    animatedModel->setWorldInverseTransform(Math::fromAiMat4(aScene->mRootNode->mTransformation).inverted());
+
+    return animatedModel;
+
+  } else {
+
+    qWarning() << "Cannot parse file: " << path << importer.GetErrorString();
+    return nullptr;
+
   }
-
-  return out;
 }
 
+Int32 AssetManager::_recursively_load_skeleton(const aiNode* aNode, Skeleton* skeleton)
+{
+  Int32 boneId = skeleton->bones().size();
+
+  {
+    auto* bone = new Bone();
+    bone->name = aNode->mName.C_Str();
+    bone->nodeTransform = Math::fromAiMat4(aNode->mTransformation);
+    for (auto i = 0; i < aNode->mNumChildren; ++i){
+      bone->children.push_back(-1);
+    }
+    skeleton->bones().push_back(bone);
+  }
+
+  for (auto i = 0; i < aNode->mNumChildren; ++i) {
+    Int32 childBoneId = _recursively_load_skeleton(aNode->mChildren[i], skeleton);
+    skeleton->bones().at(boneId)->children[i] = childBoneId;
+  }
+
+  return boneId;
+}
+
+void AssetManager::_load_bones(const aiScene* aScene, Skeleton* skeleton)
+{
+  for (auto i = 0; i < aScene->mNumMeshes; ++i) {
+    auto* aMesh = aScene->mMeshes[i];
+
+    for (UInt32 j = 0; j < aMesh->mNumBones; ++j) {
+      auto* aBone = aMesh->mBones[j];
+
+      auto* bone = skeleton->bone(aBone->mName.C_Str());
+
+      bone->offSetMatrix = Math::fromAiMat4(aBone->mOffsetMatrix);
+
+      for (int k = 0; k < aBone->mNumWeights; ++k) {
+        bone->weights.append({aBone->mWeights[k].mVertexId, aBone->mWeights[k].mWeight});
+      }
+    }
+  }
+}
+
+Animation* AssetManager::_load_animation(const aiAnimation* aAnimation)
+{
+  auto* animation = new Animation();
+  animation->name = aAnimation->mName.C_Str();
+
+  for (auto i = 0; i < aAnimation->mNumChannels; ++i) {
+    aiNodeAnim* nodeAnim = aAnimation->mChannels[i];
+
+    NodeAnimation boneAnimation;
+    boneAnimation.name = nodeAnim->mNodeName.C_Str();
+
+    for (auto j = 0; j < nodeAnim->mNumRotationKeys; ++j) {
+      AnimKeyFrame<Vec3> key;
+      key.time = (Real)nodeAnim->mPositionKeys[i].mTime;
+      key.value = Math::fromAiVec3(nodeAnim->mPositionKeys[i].mValue);
+      boneAnimation.positionKeys.push_back(key);
+    }
+
+    for (auto j = 0; j < nodeAnim->mNumRotationKeys; ++j) {
+      AnimKeyFrame<Quat> key;
+      key.time = (Real)nodeAnim->mPositionKeys[i].mTime;
+      key.value = Math::fromAiQuat(nodeAnim->mRotationKeys[i].mValue);
+      boneAnimation.rotationKeys.push_back(key);
+    }
+
+    for (auto j = 0; j < nodeAnim->mNumRotationKeys; ++j) {
+      AnimKeyFrame<Vec3> key;
+      key.time = (Real)nodeAnim->mScalingKeys[i].mTime;
+      key.value = Math::fromAiVec3(nodeAnim->mScalingKeys[i].mValue);
+      boneAnimation.scalingKeys.push_back(key);
+    }
+
+    animation->nodeAnimations.push_back(boneAnimation);
+  }
+
+  animation->ticksPerSecond = (Real)aAnimation[0].mTicksPerSecond;
+  animation->duration       = (Real)aAnimation[0].mDuration;
+
+  return animation;
+}
+
+ModelHandle AssetManager::_add_model(Model* model)
+{
+  m_models->push_back(model);
+  return { m_models->size() - 1 };
+}
+
+MeshHandle AssetManager::_add_mesh(Mesh* mesh)
+{
+  m_meshes->push_back(mesh);
+  return { m_meshes->size() - 1 };
+}
+
+AnimatedModelHandle AssetManager::_add_animated_model(AnimatedModel* animatedModel)
+{
+  m_animated_models->push_back(animatedModel);
+  return { m_animated_models->size() - 1 };
+}
+
+TextureHandle AssetManager::_add_texture(Texture* texture)
+{
+  m_textures->push_back(texture);
+  return { m_textures->size() - 1 };
+}
+
+SkeletonHandle AssetManager::_add_skeleton(Skeleton* skeleton)
+{
+  m_skeletons->push_back(skeleton);
+  return { m_skeletons->size() - 1 };
+}
+
+MaterialHandle AssetManager::_add_material(Material* material)
+{
+  m_materials->push_back(material);
+  return { m_materials->size() - 1 };
+}
+
+AnimationHandle AssetManager::_add_animation(Animation* animation)
+{
+  m_animations->push_back(animation);
+  return { m_animations->size() - 1 };
+}
+
+Animation* AssetManager::getAnimation(AnimationHandle handle)
+{
+  if (isValidHandle(handle) && handle.idx < m_animations->size()) {
+    return m_animations->at(handle.idx);
+  } else {
+    return nullptr;
+  }
+}
+
+Skeleton* AssetManager::getSkeleton(SkeletonHandle handle)
+{
+  if (isValidHandle(handle) && handle.idx < m_skeletons->size()) {
+    return m_skeletons->at(handle.idx);
+  } else {
+    return nullptr;
+  }
+}
+
+/*
 const aiNodeAnim* AssetManager::_find_anim_node(const aiAnimation* anim, const String& nodeName) {
   return nullptr;
 }
@@ -565,6 +746,12 @@ void AnimationLoader::readNodeHierarchy(Real animTime, const aiScene* scene, con
 }
  */
 AnimatedModel* AnimatedModelLoader::load(const String& path)
+{
+
+}
+
+// TODO: implementation
+Model* ModelLoader::load(const String& path)
 {
   return nullptr;
 }

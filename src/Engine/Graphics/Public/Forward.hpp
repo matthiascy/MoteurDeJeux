@@ -1,6 +1,8 @@
 #ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_PUBLIC_FORWARD_HPP
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_PUBLIC_FORWARD_HPP
 
+class AssetManager;
+class AssetLoader;
 class Light;
 class Mesh;
 class Material;
@@ -15,7 +17,22 @@ class SplashScreen;
 class Model;
 class Texture;
 class AnimatedModel;
-class AnimatedMesh;
+
+enum class EAssetType {
+  Texture,
+  Mesh,
+  Material,
+  Model,
+  Audio,
+  AnimatedModel,
+  Animation,
+  Skeleton
+};
+
+struct AssetHandle {
+  Int32 idx;
+  EAssetType type;
+};
 
 
 #define DECLARE_HANDLE(name)                     \
@@ -31,7 +48,6 @@ DECLARE_HANDLE(Mesh)
 DECLARE_HANDLE(Material)
 DECLARE_HANDLE(Model)
 DECLARE_HANDLE(Audio)
-DECLARE_HANDLE(AnimatedMesh)
 DECLARE_HANDLE(AnimatedModel)
 DECLARE_HANDLE(Bone);
 DECLARE_HANDLE(Animation);

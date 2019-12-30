@@ -21,7 +21,7 @@ struct VertexBoneData {
   Real   weights[NUM_BONES_PER_VERTEX];
 
   VertexBoneData() : bonesIdx{}, weights{}
-  { };
+  { }
 
   void addBoneData(UInt32 boneId, Real weight);
 };
@@ -43,13 +43,6 @@ private:
   Array<UInt32> m_indices;
   Array<VertexLayoutPNTTB> m_vertices;
   MaterialHandle m_material{};
-
-  /*
-  UInt32 m_num_bones;
-  Mat4   m_world_inverse_transform;
-  HashMap<String, UInt32> m_bone_mapping; // bone name <--> index
-  Array<BoneInfo> m_bone_info;
-   */
 
 public:
   Mesh();
@@ -97,11 +90,6 @@ public:
   void setMaterial(MaterialHandle handle);
 
   const String& name() { return m_name; }
-
-  [[nodiscard]]
-  UInt32 numBones() const;
-
-  void boneTransform(Real dt, Array<Mat4>& transforms);
 };
 
 #endif // MESH_HPP

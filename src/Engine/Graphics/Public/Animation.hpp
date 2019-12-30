@@ -10,17 +10,39 @@ struct VertexWeight {
 
 struct Bone {
   String name;
+
   Mat4 nodeTransform;
-  Mat4 offsetMatrix;  // T-Pose to local bone space
-  Mat4 finalTransform;
+
+  Mat4 offSetMatrix;
+  //Mat4 inverseLocalTransform;
+
+  Mat4 animatedTransform;
+
   Array<VertexWeight> weights;
+
   Array<UInt32> children;
 };
 
 using Joint = Bone;
 
-struct Skeleton {
-  Array<Bone> bones;
+class Skeleton {
+private:
+  UniquePtr<Array<Bone*>> m_bones;
+
+public:
+  Skeleton();
+  ~Skeleton();
+
+  [[nodiscard]]
+  const Array<Bone*>& bones() const;
+
+  Array<Bone*>& bones();
+
+  [[nodiscard]]
+  Bone* boneAt(UInt32 idx) const;
+
+  [[nodiscard]]
+  Bone* bone(const String& name) const;
 };
 
 template <typename T>
@@ -29,7 +51,7 @@ struct AnimKeyFrame {
   float time;
 };
 
-struct BoneAnimation {
+struct NodeAnimation {
   String name;
   Array<AnimKeyFrame<Vec3>> positionKeys;
   Array<AnimKeyFrame<Quat>> rotationKeys;
@@ -37,7 +59,8 @@ struct BoneAnimation {
 };
 
 struct Animation {
-  Array<BoneAnimation> boneAnimations;
+  String name;
+  Array<NodeAnimation> nodeAnimations;
   Real ticksPerSecond;
   Real duration;
 };

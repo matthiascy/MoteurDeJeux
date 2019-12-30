@@ -7,6 +7,7 @@
 #include <Physics/Public/Colliders/BoxCollider.hpp>
 #include <Physics/Public/PhysicsWorld.hpp>
 #include <Graphics/Public/Model.hpp>
+#include <Graphics/Public/AnimatedMeshRenderer.hpp>
 
 #include <Graphics/Public/SpotLight.hpp>
 #include <Graphics/Public/PointLight.hpp>
@@ -36,20 +37,26 @@ void HomelandApp::_load_game_asset()
   //m_assets.insert("Klingon", m_engine->assetManager()->loadModel("./assets/models/klingon.off"));
   //m_assets.insert("Tree000", m_engine->assetManager()->loadModel("./assets/models/tree.fbx"));
   //m_assets.insert("TreeType001", m_engine->assetManager()->loadModel("./assets/models/TreeType001.dae"));
-  m_assets.insert("Cube", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/cube.obj"));
+  m_assets.insert("Cube", {m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/cube.obj").idx, EAssetType::Model});
   //m_assets.insert("Plane", m_engine->assetManager()->loadModel("./assets/models/plane.obj"));
   //m_assets.insert("Terrain000", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/island.obj"));
   //m_assets.insert("Knight", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/KnightCharacter-m.obj"));
   //m_assets.insert("DabrovicSponza", m_engine->assetManager()->loadModel("./assets/models/dabrovic-sponza/sponza.obj"));
   //m_assets.insert("CryptekSponza", m_engine->assetManager()->loadModel("./assets/models/crytek-sponza/sponza.obj"));
-  m_assets.insert("Helico", m_engine->assetManager()->loadModel("./assets/models/helicopter.obj"));
+  m_assets.insert("Helico", {m_engine->assetManager()->loadAnimatedModel("./assets/models/helicopter.obj").idx, EAssetType::AnimatedModel});
+  //m_assets.insert("Helico1", {m_engine->assetManager()->loadModel("./assets/models/helicopter.obj").idx, EAssetType::Model});
   //m_assets.insert("Bunny", m_engine->assetManager()->loadModel("./assets/models/bunny.obj"));
   //m_assets.insert("Sibenik", m_engine->assetManager()->loadModel("./assets/models/sibenik/sibenik.obj"));
-  m_assets.insert("Sponza", m_engine->assetManager()->loadModel("./assets/models/sponza/sponza-m.obj"));
+  m_assets.insert("Sponza", {m_engine->assetManager()->loadModel("./assets/models/sponza/sponza-m.obj").idx, EAssetType::Model});
   //m_assets.insert("Terrain001", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground.obj"));
   //m_assets.insert("Terrain002", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground2.obj"));
   //m_assets.insert("Terrain003", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/cube1.fbx"));
   //m_engine->assetManager()->getMesh(m_engine->assetManager()->getModel(m_assets["Sphere"])->meshes()[0])->calculateSphericalUV();
+  //m_assets.insert("M1", {m_engine->assetManager()->loadAnimatedModel("./assets/models/1.fbx").idx, EAssetType::AnimatedModel});
+  m_assets.insert("Sprite", {m_engine->assetManager()->loadAnimatedModel("./assets/models/sprite/cleared.fbx").idx, EAssetType::AnimatedModel});
+  m_assets.insert("FistFight", {m_engine->assetManager()->loadAnimatedModel("./assets/models/fist-fight-a/FistFightA.dae").idx, EAssetType::AnimatedModel});
+  //m_assets.insert("Fabienne", {m_engine->assetManager()->loadAnimatedModel("./assets/models/human/fabienne.fbx").idx, EAssetType::AnimatedModel});
+  //m_assets.insert("Sprite", {m_engine->assetManager()->loadModel("./assets/models/sprite/cleared.fbx").idx, EAssetType::Model});
 }
 
 bool HomelandApp::_init_main_scene()
@@ -115,7 +122,7 @@ bool HomelandApp::_init_main_scene()
   */
 
   auto* ball = m_main_scene->createGameObject("ball", "default");
-  auto* meshRendererBall = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", ball, m_assets["Cube"]);
+  auto* meshRendererBall = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", ball, ModelHandle{m_assets["Cube"].idx});
   //auto* behaviorSun = m_engine->componentManager()->addComponent<Behavior>("behavior", sun);
   //behaviorSun->addUpdateFunction(HomelandBehaviors::exampleBehavior);
   ball->transform()->setPosition({0, 200, 0}, ESpace::World);
@@ -151,7 +158,7 @@ bool HomelandApp::_init_main_scene()
 
 
   auto* sponza = m_main_scene->createGameObject("Sponza", "default");
-  auto* sponzaMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-sponza", sponza, m_assets["Sponza"]);
+  auto* sponzaMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-sponza", sponza, ModelHandle{m_assets["Sponza"].idx});
   sponza->transform()->setPosition({0, 0, 0}, ESpace::World);
 
   /*
@@ -165,9 +172,9 @@ bool HomelandApp::_init_main_scene()
   //knight->transform()->setPosition({20, 0, -20}, ESpace::World);
   //knight->transform()->setLocalScale({10, 10, 10});
 
-  //auto* helico = m_main_scene->createGameObject("Helico", "default");
-  //auto* helicoMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-helico", helico, m_assets["Helico"]);
-  //helico->transform()->setPosition({-20, 0, 20}, ESpace::World);
+  auto* helico = m_main_scene->createGameObject("Helico", "default");
+  auto* helicoAnimatedMeshRenderer = m_engine->componentManager()->addComponent<AnimatedMeshRenderer>("mesh-helico", helico, AnimatedModelHandle{m_assets["FistFight"].idx});
+  helico->transform()->setPosition({0, 0, 0}, ESpace::World);
 }
 
 void HomelandApp::_init_camera()

@@ -2,55 +2,45 @@
 #define MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_ANIMATED_MODEL_HPP
 
 #include "Animation.hpp"
-#include "AnimatedMesh.hpp"
+#include "Forward.hpp"
 
 class AnimatedModel {
 private:
-  Skeleton            m_skeleton;
-  Animation           m_animation;
-  Array<AnimatedMesh> m_meshes;
-  /*
-  Mat4                m_global_inverse_transform;
-  Real                m_animation_time;
-   */
+  SkeletonHandle          m_skeleton;
+  ModelHandle             m_skin;
+  Array<AnimationHandle>  m_animations;
+  Mat4                    m_world_inverse_transform;
 
 public:
+  AnimatedModel(SkeletonHandle skeleton, ModelHandle skin, Array<AnimationHandle> animations);
   AnimatedModel();
-  ~AnimatedModel();
 
-  //void update(float dt);
-
-  /*
-  [[nodiscard]]
-  UInt32 meshesNum() const { return m_meshes.size(); }
+  ~AnimatedModel() = default;
 
   [[nodiscard]]
-  const AnimatedMesh& animatedMesh(UInt32 i) const { return m_meshes[i]; }
-  void addAnimatedMesh(const AnimatedMesh& mesh) { m_meshes.push_back(mesh); }
+  SkeletonHandle skeleton() const;
 
-  void setGlobalInverseTransform(const Mat4& transform) { m_global_inverse_transform = transform; }
-  [[nodiscard]]
-  const Mat4& globalInverseTransform() const { return m_global_inverse_transform; }
+  void setSkeleton(SkeletonHandle skeleton);
 
   [[nodiscard]]
-  const Skeleton& skeleton() const { return m_skeleton; }
-  Skeleton& skeleton() { return m_skeleton; }
+  ModelHandle skin() const;
+
+  void setSkin(ModelHandle skin);
+
+  void addAnimation(AnimationHandle animation);
 
   [[nodiscard]]
-  const Animation& animation() const { return m_animation; }
+  const Array<AnimationHandle>& animations() const;
 
-  Animation& animation() { return m_animation; }
+  [[nodiscard]]
+  const Mat4& worldInverseTransform() const;
 
-  void clear();
-   */
-
-private:
-  void _read_node_hierarchy(Real animationTime, Animation& animation, Skeleton& skeleton, Bone& bone, const Mat4& parentTransform);
-  void _transform_vertices(const Skeleton& skeleton);
+  void setWorldInverseTransform(const Mat4& transform);
 };
 
-static Vec3 NodeAnimation_FindInterpolatedPosition(const BoneAnimation& nodeAnim, float animTime);
-static Quat NodeAnimation_FindInterpolatedRotation(const BoneAnimation& nodeAnim, float animTime);
+/*
+static Vec3 NodeAnimation_FindInterpolatedPosition(const NodeAnimation& nodeAnim, float animTime);
+static Quat NodeAnimation_FindInterpolatedRotation(const NodeAnimation& nodeAnim, float animTime);
 
 template <typename T>
 static T NodeAnimation_FindInterpolatedValue(const Array<AnimKeyFrame<T>>& keys, float animTime);
@@ -58,7 +48,7 @@ static T NodeAnimation_FindInterpolatedValue(const Array<AnimKeyFrame<T>>& keys,
 template <typename T>
 static UInt32 NodeAnimation_FindKeyIndex(const T& keys, float animTime);
 
-extern const BoneAnimation* FindNodeAnim(const Animation& anim, const String& nodeName);
+extern const NodeAnimation* FindNodeAnim(const Animation& anim, const String& nodeName);
 extern Vec3 InterpolateValue(const Vec3& start, const Vec3& end, float factor);
 extern Quat InterpolateValue(const Quat& start, const Quat& end, float factor);
 extern UInt32 Skeleton_FindBoneIndex(const Skeleton& skeleton, const String& name);
@@ -89,5 +79,6 @@ UInt32 NodeAnimation_FindKeyIndex(const T& keys, float animTime)
   }
   return -1;
 }
+ */
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_ANIMATED_MODEL_HPP */

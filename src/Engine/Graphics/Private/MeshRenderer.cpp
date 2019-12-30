@@ -31,6 +31,9 @@ void MeshRenderer::draw(RenderSystem* renderSystem, OglProgram* program, AssetMa
     program->setUniformValue("material.specular", material->specular());
     program->setUniformValue("material.shininess", material->shininess());
 
+    // TODO: deal with other type of texture
+    // Because of that not all textures are bound in shader, so we need to
+    // register texture information here and release after draw
     Array<OglTexture*> boundTextures;
     if (!material->textures().isEmpty()) {
       int textureUnit = 0;

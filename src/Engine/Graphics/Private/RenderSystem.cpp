@@ -15,6 +15,7 @@
 #include <Graphics/Public/Model.hpp>
 #include <Graphics/Public/Texture.hpp>
 #include <Graphics/Public/Material.hpp>
+#include <Graphics/Public/AnimatedMeshRenderer.hpp>
 
 String toString(ETextureType type) {
   switch (type) {
@@ -214,7 +215,7 @@ void RenderSystem::_render_scene(Scene* scene, Real dt)
 
     for (auto& gameObject : scene->gameObjects()) {
       if (gameObject->isVisible()) {
-        if (gameObject->hasComponent<MeshRenderer>()) {
+        if (gameObject->hasComponent<MeshRenderer>() || gameObject->hasComponent<AnimatedMeshRenderer>()) {
           _render(gameObject, m_programs[0], dt);
         }
       }
@@ -239,7 +240,11 @@ void RenderSystem::_render(const GameObject* gameObject, OglProgram* program, Re
   auto* transform = gameObject->transform();
   program->setUniformValue("modelMatrix", transform->worldMatrix());
   program->setUniformValue("normalMatrix", transform->worldMatrix().normalMatrix());
-  gameObject->getComponent<MeshRenderer>()->draw(this, program, m_engine->assetManager(), dt);
+  if (gameObject->hasComponent<AnimatedMeshRenderer>())
+    gameObject->getComponent<AnimatedMeshRenderer>()->draw(this, program, m_engine->assetManager(), dt);
+
+  if (gameObject->hasComponent<MeshRenderer>())
+    gameObject->getComponent<MeshRenderer>()->draw(this, program, m_engine->assetManager(), dt);
 }
 
 QImage RenderSystem::grabFramebuffer() const
