@@ -96,7 +96,8 @@ void RenderSystem::init()
 
   m_programs.insert(0,new OglProgram);
   m_programs[0]->create();
-  m_programs[0]->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/StandardVert");
+  //m_programs[0]->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/StandardVert");
+  m_programs[0]->addShaderFromSourceFile(OglShader::Vertex, ":/Shaders/SkeletonVert");
   m_programs[0]->addShaderFromSourceFile(OglShader::Fragment, ":/Shaders/StandardFrag");
   m_programs[0]->link();
 
@@ -240,11 +241,18 @@ void RenderSystem::_render(const GameObject* gameObject, OglProgram* program, Re
   auto* transform = gameObject->transform();
   program->setUniformValue("modelMatrix", transform->worldMatrix());
   program->setUniformValue("normalMatrix", transform->worldMatrix().normalMatrix());
-  if (gameObject->hasComponent<AnimatedMeshRenderer>())
+
+  if (gameObject->hasComponent<AnimatedMeshRenderer>()) {
+
+    program->setUniformValue("hasAnimation", true);
     gameObject->getComponent<AnimatedMeshRenderer>()->draw(this, program, m_engine->assetManager(), dt);
 
-  if (gameObject->hasComponent<MeshRenderer>())
+  } else if (gameObject->hasComponent<MeshRenderer>()) {
+
+    program->setUniformValue("hasAnimation", false);
     gameObject->getComponent<MeshRenderer>()->draw(this, program, m_engine->assetManager(), dt);
+
+  }
 }
 
 QImage RenderSystem::grabFramebuffer() const

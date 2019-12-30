@@ -8,7 +8,7 @@
 
 AnimatedMeshRenderer::AnimatedMeshRenderer(const String& name, GameObject* gameObject,
                                            AnimatedModelHandle handle)
-  : Renderer(name, gameObject), m_model_handle{handle}
+  : Renderer(name, gameObject), m_model_handle{handle}, m_animator{nullptr}
 { }
 
 UInt64 AnimatedMeshRenderer::typeID() const
@@ -44,7 +44,8 @@ void AnimatedMeshRenderer::init(RenderSystem* renderSystem, AssetManager* assetM
 
           vbo->bind();
           vbo->setUsagePattern(OglBuffer::StaticDraw);
-          vbo->allocate(&mesh->vertices()[0], mesh->dataCount() * sizeof(float));
+          //vbo->allocate(&mesh->vertices()[0], mesh->dataCount() * sizeof(float));
+          vbo->allocate(&mesh->verticesWithBoneInfo()[0], mesh->vertexCount() * sizeof(VertexLayoutPNTTB_B_W));
           vbo->release();
 
           ibo->bind();
@@ -57,7 +58,6 @@ void AnimatedMeshRenderer::init(RenderSystem* renderSystem, AssetManager* assetM
       }
     }
   }
-  m_is_initialized = true;
   m_is_initialized = true;
 }
 
@@ -75,6 +75,7 @@ void AnimatedMeshRenderer::draw(RenderSystem* renderSystem, OglProgram* program,
   auto* animator = m_game_object->getComponent<Animator>();
 
   if (animator) {
+    qDebug() << "Yes, we have animator" <<  animator->boneTransforms().size();
     program->setUniformValueArray("uBoneTransforms", animator->boneTransforms().constData(), animator->boneTransforms().size());
   }
 
@@ -110,16 +111,16 @@ void AnimatedMeshRenderer::draw(RenderSystem* renderSystem, OglProgram* program,
     }
 
     renderSystem->vboAt(m_vbos[i].idx)->bind();
-    renderSystem->fns()->glEnableVertexAttribArray(0);
-    renderSystem->fns()->glEnableVertexAttribArray(1);
-    renderSystem->fns()->glEnableVertexAttribArray(2);
-    renderSystem->fns()->glEnableVertexAttribArray(3);
-    renderSystem->fns()->glEnableVertexAttribArray(4);
-    renderSystem->fns()->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), nullptr);
-    renderSystem->fns()->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(3 * sizeof(float)));
-    renderSystem->fns()->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(6 * sizeof(float)));
-    renderSystem->fns()->glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(8 * sizeof(float)));
-    renderSystem->fns()->glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(11 * sizeof(float)));
+    enable_vertex_attrib_array(9, renderSystem->fns());
+    renderSystem->fns()->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 30 * sizeof(float), nullptr);
+    renderSystem->fns()->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 30 * sizeof(float),reinterpret_cast<void*>(3 * sizeof(float)));
+    renderSystem->fns()->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 30 * sizeof(float),reinterpret_cast<void*>(6 * sizeof(float)));
+    renderSystem->fns()->glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 30 * sizeof(float),reinterpret_cast<void*>(8 * sizeof(float)));
+    renderSystem->fns()->glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 30 * sizeof(float),reinterpret_cast<void*>(11 * sizeof(float)));
+    renderSystem->fns()->glVertexAttribPointer(5, 4, GL_INT, GL_FALSE, 30 * sizeof(int),reinterpret_cast<void*>(14 * sizeof(float)));
+    renderSystem->fns()->glVertexAttribPointer(6, 4, GL_INT, GL_FALSE, 30 * sizeof(int),reinterpret_cast<void*>(18 * sizeof(float)));
+    renderSystem->fns()->glVertexAttribPointer(7, 4, GL_FLOAT, GL_FALSE, 30 * sizeof(float),reinterpret_cast<void*>(22 * sizeof(float)));
+    renderSystem->fns()->glVertexAttribPointer(8, 4, GL_FLOAT, GL_FALSE, 30 * sizeof(float),reinterpret_cast<void*>(26 * sizeof(float)));
     renderSystem->iboAt(m_ibos[i].idx)->bind();
     renderSystem->fns()->glDrawElements(GL_TRIANGLES, m_meshes_to_rendered[i]->indices().size(), GL_UNSIGNED_INT, (void*)nullptr);
     renderSystem->vboAt(m_vbos[i].idx)->release();
@@ -128,4 +129,14 @@ void AnimatedMeshRenderer::draw(RenderSystem* renderSystem, OglProgram* program,
     for (auto* texture : boundTextures)
       texture->release();
   }
+}
+
+void AnimatedMeshRenderer::setAnimator(Animator* animator)
+{
+  m_animator = animator;
+}
+
+Animator* AnimatedMeshRenderer::animator()
+{
+  return m_animator;
 }

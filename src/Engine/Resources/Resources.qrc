@@ -2,6 +2,7 @@
     <qresource prefix="/Shaders">
         <file alias="StandardVert">./Shaders/Standard.vert</file>
         <file alias="StandardFrag">./Shaders/PhongLighting.frag</file>
+        <file alias="SkeletonVert">./Shaders/SkeletonAnimation.vert</file>
         <file alias="PhysicsDebugDrawVert">./Shaders/PhysicsDebugDraw.vert</file>
         <file alias="PhysicsDebugDrawFrag">./Shaders/PhysicsDebugDraw.frag</file>
         <file alias="BasicVert">./Shaders/Basic.vert</file>

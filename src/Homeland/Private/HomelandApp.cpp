@@ -8,7 +8,7 @@
 #include <Physics/Public/PhysicsWorld.hpp>
 #include <Graphics/Public/Model.hpp>
 #include <Graphics/Public/AnimatedMeshRenderer.hpp>
-
+#include <Graphics/Public/Animator.hpp>
 #include <Graphics/Public/SpotLight.hpp>
 #include <Graphics/Public/PointLight.hpp>
 #include <Graphics/Public/DirectionalLight.hpp>
@@ -121,6 +121,7 @@ bool HomelandApp::_init_main_scene()
   });
   */
 
+  /*
   auto* ball = m_main_scene->createGameObject("ball", "default");
   auto* meshRendererBall = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-renderer00", ball, ModelHandle{m_assets["Cube"].idx});
   //auto* behaviorSun = m_engine->componentManager()->addComponent<Behavior>("behavior", sun);
@@ -130,6 +131,7 @@ bool HomelandApp::_init_main_scene()
   ball->transform()->setLocalScale({10, 10, 10});
   auto* colliderball = m_engine->componentManager()->addComponent<SphereCollider>("sphere-collider", ball, 10);
   auto* rigidBody = m_engine->componentManager()->addComponent<RigidBody>("rigid-body", ball, 0.00000000000000000000001);
+   */
 
   /*
   auto* cube3 = m_main_scene->createGameObject("Cube3", "default");
@@ -174,6 +176,7 @@ bool HomelandApp::_init_main_scene()
 
   auto* helico = m_main_scene->createGameObject("Helico", "default");
   auto* helicoAnimatedMeshRenderer = m_engine->componentManager()->addComponent<AnimatedMeshRenderer>("mesh-helico", helico, AnimatedModelHandle{m_assets["FistFight"].idx});
+  auto* helicoAnimator = m_engine->componentManager()->addComponent<Animator>("animator", helico);
   helico->transform()->setPosition({0, 0, 0}, ESpace::World);
 }
 

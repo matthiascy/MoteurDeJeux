@@ -56,11 +56,7 @@ void MeshRenderer::draw(RenderSystem* renderSystem, OglProgram* program, AssetMa
     }
 
     renderSystem->vboAt(m_vbos[i].idx)->bind();
-    renderSystem->fns()->glEnableVertexAttribArray(0);
-    renderSystem->fns()->glEnableVertexAttribArray(1);
-    renderSystem->fns()->glEnableVertexAttribArray(2);
-    renderSystem->fns()->glEnableVertexAttribArray(3);
-    renderSystem->fns()->glEnableVertexAttribArray(4);
+    enable_vertex_attrib_array(5, renderSystem->fns());
     renderSystem->fns()->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), nullptr);
     renderSystem->fns()->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(3 * sizeof(float)));
     renderSystem->fns()->glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 14 * sizeof(float),reinterpret_cast<void*>(6 * sizeof(float)));

@@ -13,15 +13,20 @@ class AssetManager;
  * before setting the joint/bone transforms in the `AnimatedModel'
  * Interpolate animation.
  */
-class Animator : Component {
+class Animator : public Component {
 private:
-  UInt32     m_current_anim;
+  Int32     m_current_anim;
   Skeleton*  m_skeleton;
   Real       m_animation_time;
   Array<Animation*> m_animations;
   AnimatedModel* m_animated_model;
   bool m_is_initialized;
   Array<Mat4> m_bone_transforms;
+  AnimatedMeshRenderer* m_animated_mesh_renderer;
+
+public:
+  [[nodiscard]]
+  UInt64 typeID() const override;
 
 public:
   Animator(const String& name, GameObject* gameObject);
@@ -37,6 +42,9 @@ public:
 
   [[nodiscard]]
   const Array<Mat4>& boneTransforms() const;
+
+  [[nodiscard]]
+  bool isInitialized() const;
 
 private:
   void _update_skeleton_recursively(Real animTime, const Animation* animation, const Skeleton* skeleton, Bone* bone, const Mat4& parentTransform);

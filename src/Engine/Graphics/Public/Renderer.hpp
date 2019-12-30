@@ -16,6 +16,9 @@ public:
   virtual void init(RenderSystem* renderSystem, AssetManager* assetManager) = 0;
 
   virtual void draw(RenderSystem* renderSystem, OglProgram* program, AssetManager* assetManager, Real dt) = 0;
+
+protected:
+  void enable_vertex_attrib_array(UInt32 num, OglFnsCore4_0* fns);
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_GAME_FRAMEWORK_COMPONENTS_RENDERER_HPP */

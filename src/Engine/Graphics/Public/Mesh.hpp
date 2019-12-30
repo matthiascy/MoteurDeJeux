@@ -1,5 +1,5 @@
-#ifndef MESH_HPP
-#define MESH_HPP
+#ifndef MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_MESH_HPP
+#define MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_MESH_HPP
 
 #include <Core/Public/Core.hpp>
 #include <Graphics/Public/Forward.hpp>
@@ -10,7 +10,7 @@ class aiNodeAnim;
 class aiAnimation;
 
 /*
- * Layout { position | normal | texCoord | tangent | biTangent }
+ * Layout { position | normal | texCoord | tangent | biTangent | }
  */
 class Mesh {
 private:
@@ -79,4 +79,4 @@ public:
   void addBone(UInt32 vertexId, UInt32 boneId, Real boneWeight);
 };
 
-#endif // MESH_HPP
+#endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GRAPHICS_MESH_HPP */

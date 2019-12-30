@@ -5,6 +5,10 @@
 #include <Graphics/Public/Animator.hpp>
 #include <Graphics/Public/Animation.hpp>
 
+/**
+ * Add AnimatedMeshRenderer before Animator
+ */
+
 Animator::Animator(const String& name, GameObject* gameObject)
   : Component(name, gameObject),
     m_current_anim{0},
@@ -12,16 +16,23 @@ Animator::Animator(const String& name, GameObject* gameObject)
     m_animated_model{nullptr},
     m_animations{},
     m_skeleton{nullptr},
-    m_is_initialized{false}
-{ }
+    m_is_initialized{false},
+    m_animated_mesh_renderer{nullptr}
+{
+  auto* animatedMeshRenderer = m_game_object->getComponent<AnimatedMeshRenderer>();
+  if (animatedMeshRenderer) {
+    m_animated_mesh_renderer = animatedMeshRenderer;
+    animatedMeshRenderer->setAnimator(this);
+  }
+}
 
 void Animator::init(AssetManager* assetManager)
 {
   if (!m_is_initialized) {
-    auto* animatedModel = m_game_object->getComponent<AnimatedMeshRenderer>();
+    auto* animatedMeshRenderer = m_game_object->getComponent<AnimatedMeshRenderer>();
 
-    if (animatedModel) {
-      m_animated_model = assetManager->getAnimatedModel(animatedModel->modelHandle());
+    if (animatedMeshRenderer) {
+      m_animated_model = assetManager->getAnimatedModel(animatedMeshRenderer->modelHandle());
       for (auto anim : m_animated_model->animations()) {
         m_animations.push_back(assetManager->getAnimation(anim));
       }
@@ -37,12 +48,14 @@ void Animator::init(AssetManager* assetManager)
 
 void Animator::update(Real dt)
 {
-  Animation* currentAnim = m_animations[m_current_anim];
-  m_animation_time = fmodf(m_animation_time + dt * currentAnim->ticksPerSecond, currentAnim->duration);
-  _update_skeleton_recursively(m_animation_time, currentAnim, m_skeleton, m_skeleton->boneAt(0), Math::Mat4Identity);
+  if (m_current_anim != -1) {
+    Animation* currentAnim = m_animations[m_current_anim];
+    m_animation_time = fmodf(m_animation_time + dt * currentAnim->ticksPerSecond, currentAnim->duration);
+    _update_skeleton_recursively(m_animation_time, currentAnim, m_skeleton, m_skeleton->boneAt(0), Math::Mat4Identity);
 
-  for (auto i = 0; i < m_bone_transforms.size(); ++i) {
-    m_bone_transforms[i] = m_skeleton->boneAt(i)->animatedTransform;
+    for (auto i = 0; i < m_bone_transforms.size(); ++i) {
+      m_bone_transforms[i] = m_skeleton->boneAt(i)->animatedTransform;
+    }
   }
 }
 
@@ -138,4 +151,13 @@ Vec3 Animator::_interpolate_scaling(const Array<AnimKeyFrame<Vec3>>& keyFrames, 
 const Array<Mat4>& Animator::boneTransforms() const
 {
   return m_bone_transforms;
+}
+
+bool Animator::isInitialized() const
+{
+  return m_is_initialized;
+}
+
+UInt64 Animator::typeID() const {
+  return Component::family::type<Animator>;
 }

@@ -17,6 +17,8 @@ class SplashScreen;
 class Model;
 class Texture;
 class AnimatedModel;
+class AnimationSystem;
+class Animator;
 
 enum class EAssetType {
   Texture,

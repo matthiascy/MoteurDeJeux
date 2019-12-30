@@ -1,20 +1,22 @@
 #include <Core/Public/Core.hpp>
+#include <Editor/EditorMainWindow.hpp>
 #include <GameFramework/Public/Engine.hpp>
 #include <GameFramework/Public/GameApp.hpp>
-#include <Editor/EditorMainWindow.hpp>
 #include <GameFramework/Public/Managers/ComponentManager.hpp>
 #include <GameFramework/Public/Managers/SceneManager.hpp>
 #include <GameFramework/Public/Systems/BehaviorSystem.hpp>
 #include <GameFramework/Public/Systems.hpp>
+#include <Graphics/Public/AnimationSystem.hpp>
 
 Engine::Engine(GameApp* app)
   : m_app{app}
 {
   qInfo() << "Instance creation.";
-  m_render_sys   = makeUnique<RenderSystem>(m_app->name() + "RenderSystem", this);
-  m_physics_sys  = makeUnique<PhysicsSystem>(m_app->name() + "PhysicsSystem", this);
-  m_input_sys    = makeUnique<InputSystem>(m_app->name() + "InputSystem", this);
-  m_behavior_sys = makeUnique<BehaviorSystem>(m_app->name() + "BehaviorSystem", this);
+  m_render_sys    = makeUnique<RenderSystem>(m_app->name() + "RenderSystem", this);
+  m_physics_sys   = makeUnique<PhysicsSystem>(m_app->name() + "PhysicsSystem", this);
+  m_input_sys     = makeUnique<InputSystem>(m_app->name() + "InputSystem", this);
+  m_behavior_sys  = makeUnique<BehaviorSystem>(m_app->name() + "BehaviorSystem", this);
+  m_animation_sys = makeUnique<AnimationSystem>(m_app->name() + "AnimationSystem", this);
 
   m_component_manager = makeUnique<ComponentManager>(m_app->name() + "ComponentManager", this);
   m_asset_manager     = makeUnique<AssetManager>(m_app->name() + "AssetManager", this);
@@ -34,6 +36,7 @@ Engine::~Engine()
   m_physics_sys.reset(nullptr);
   m_input_sys.reset(nullptr);
   m_behavior_sys.reset(nullptr);
+  m_animation_sys.reset(nullptr);
   qDebug() << "Shutting down...[Finished]";
 }
 
@@ -78,6 +81,11 @@ ComponentManager* Engine::componentManager() const {
 BehaviorSystem* Engine::behaviorSystem() const
 {
   return m_behavior_sys.get();
+}
+
+AnimationSystem* Engine::animationSystem() const
+{
+  return m_animation_sys.get();
 }
 
 bool Engine::isKeyPressed(Qt::Key key) const

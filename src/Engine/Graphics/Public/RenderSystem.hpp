@@ -10,15 +10,8 @@
 #include <QtGui/QOpenGLFramebufferObject>
 #include <QtGui/QOpenGLVertexArrayObject>
 #include <Graphics/Public/OpenGL/OglOffscreenSurface.hpp>
-
-// TODO forward
-class GameObject;
-class Engine;
-class QOpenGLPaintDevice;
-class Scene;
-class PhysicsDebugDraw;
-class Camera;
-class MeshRenderer;
+#include <GameFramework/Public/Forward.hpp>
+#include <Graphics/Public/Forward.hpp>
 
 class RenderSystem : public System {
 public:
@@ -45,7 +38,7 @@ private:
   Mat4 m_model_matrix;
   Mat4 m_projection_matrix;
 
-  OglFns*       m_fns;
+  OglFns*        m_fns;
   OglFnsCore4_0* m_fns4_0;
   bool m_is_initialized;
 

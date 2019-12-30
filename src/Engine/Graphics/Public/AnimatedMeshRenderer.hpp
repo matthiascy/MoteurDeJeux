@@ -14,6 +14,8 @@ private:
   Array<IboHandle> m_ibos { };
   Array<Mesh*> m_meshes_to_rendered { };
 
+  Animator* m_animator;
+
 public:
   AnimatedMeshRenderer(const String& name, GameObject* gameObject, AnimatedModelHandle handle);
 
@@ -26,6 +28,10 @@ public:
   void init(RenderSystem* renderSystem, AssetManager* assetManager) override;
 
   void draw(RenderSystem* renderSystem, OglProgram* program, AssetManager* assetManager, Real dt) override;
+
+  void setAnimator(Animator* animator);
+
+  Animator* animator();
 };
 
 

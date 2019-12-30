@@ -14,6 +14,7 @@ private:
   UniquePtr<PhysicsSystem>    m_physics_sys;
   UniquePtr<InputSystem>      m_input_sys;
   UniquePtr<BehaviorSystem>   m_behavior_sys;
+  UniquePtr<AnimationSystem>  m_animation_sys;
   GameApp*                    m_app;
 
 public:
@@ -50,6 +51,9 @@ public:
 
   [[nodiscard]]
   BehaviorSystem* behaviorSystem() const;
+
+  [[nodiscard]]
+  AnimationSystem* animationSystem() const;
 };
 
 #endif  /* !MOTEUR_DE_JEUX_SRC_ENGINE_GAME_FRAMEWORK_ENGINE_HPP */
