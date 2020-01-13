@@ -391,10 +391,12 @@ AnimatedModel* AssetManager::_load_animated_model(const String& path)
   Assimp::Importer importer;
 
   const aiScene* aScene = importer.ReadFile(path.toStdString(),
-                                           aiProcess_Triangulate
+                                           aiProcess_Triangulate);
+  /*
                                            | aiProcess_CalcTangentSpace
                                            | aiProcess_SortByPType
                                            | aiProcess_GenSmoothNormals);
+                                           */
   if (aScene) {
 
     auto* model = new Model();
@@ -403,8 +405,7 @@ AnimatedModel* AssetManager::_load_animated_model(const String& path)
     Int32 meshes_num = aScene->mNumMeshes;
     Int32 textures_num = aScene->mNumTextures;
 
-    //qDebug() << "Has materials ? " << aScene->HasMaterials();
-
+    // Load skeleton : all joints/bones
     auto* skeleton = new Skeleton();
     _recursively_load_skeleton(aScene->mRootNode, skeleton);
 
@@ -420,7 +421,7 @@ AnimatedModel* AssetManager::_load_animated_model(const String& path)
     animatedModel->setSkeleton(_add_skeleton(skeleton));
 
     for (int i = 0; i < aScene->mNumAnimations; ++i) {
-      AnimationHandle animHandle = _add_animation(_load_animation(aScene->mAnimations[i]));
+      auto animHandle = _add_animation(_load_animation(aScene->mAnimations[i]));
       animatedModel->addAnimation(animHandle);
     }
 
@@ -482,6 +483,7 @@ Animation* AssetManager::_load_animation(const aiAnimation* aAnimation)
 {
   auto* animation = new Animation();
   animation->name = aAnimation->mName.C_Str();
+  qDebug() << "Load animation : " << animation->name;
 
   for (auto i = 0; i < aAnimation->mNumChannels; ++i) {
     aiNodeAnim* nodeAnim = aAnimation->mChannels[i];

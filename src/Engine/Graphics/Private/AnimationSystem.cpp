@@ -18,7 +18,7 @@ AnimationSystem::~AnimationSystem()
 
 void AnimationSystem::init()
 {
-
+  qDebug() << "Initialization";
 }
 
 void AnimationSystem::fixedUpdate(Real dt)
@@ -28,15 +28,16 @@ void AnimationSystem::fixedUpdate(Real dt)
 
 void AnimationSystem::preUpdate(Real dt)
 {
-  qDebug() << "Prepare data";
   auto* scene = m_engine->sceneManager()->sceneAt(m_engine->sceneManager()->activatedScene());
   for (auto* gameObject : scene->gameObjects()) {
     auto* animatedMeshRenderer = gameObject->getComponent<AnimatedMeshRenderer>();
     if (animatedMeshRenderer) {
       auto* animator = animatedMeshRenderer->animator();
-      if (!m_enabled_animators.contains(animator)) {
+      if (animator && !animator->isRegisteredInAnimationSystem() && !m_enabled_animators.contains(animator)) {
+        qDebug() << "register animator " << gameObject->name();
         m_enabled_animators.push_back(animatedMeshRenderer->animator());
-        //animatedMeshRenderer->init(m_engine->renderSystem(), m_engine->assetManager());
+        animator->init(m_engine->assetManager());
+        animator->registerInAnimationSystem();
       }
     }
   }

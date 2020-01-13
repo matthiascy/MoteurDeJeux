@@ -73,10 +73,22 @@ void AnimatedMeshRenderer::draw(RenderSystem* renderSystem, OglProgram* program,
   //      bones transforms  => program
   // render
   auto* animator = m_game_object->getComponent<Animator>();
-
   if (animator) {
-    qDebug() << "Yes, we have animator" <<  animator->boneTransforms().size();
-    program->setUniformValueArray("uBoneTransforms", animator->boneTransforms().constData(), animator->boneTransforms().size());
+    qDebug() << gameObject()->name() << " : yes, we have animator";
+    if (animator->boneTransforms().isEmpty()) {
+      qDebug() << "boneTransform Nums : 0";
+      program->setUniformValue("hasAnimation", false);
+    } else {
+      if (animator->isAnimationStopped()) {
+        qDebug() << "animation stopped.";
+        program->setUniformValue("hasAnimation", false);
+      } else {
+        qDebug() << "boneTransform Nums :" << animator->boneTransforms().size();
+        program->setUniformValue("hasAnimation", true);
+        program->setUniformValueArray("uBoneTransforms", animator->boneTransforms().constData(),
+                                      animator->boneTransforms().size());
+      }
+    }
   }
 
   for (auto i = 0; i < m_meshes_to_rendered.size(); ++i) {

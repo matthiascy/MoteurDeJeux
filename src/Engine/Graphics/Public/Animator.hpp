@@ -23,6 +23,8 @@ private:
   bool m_is_initialized;
   Array<Mat4> m_bone_transforms;
   AnimatedMeshRenderer* m_animated_mesh_renderer;
+  bool m_is_registered_in_system;
+  bool m_is_stopped;
 
 public:
   [[nodiscard]]
@@ -46,6 +48,14 @@ public:
   [[nodiscard]]
   bool isInitialized() const;
 
+  [[nodiscard]]
+  bool isRegisteredInAnimationSystem() const;
+  void registerInAnimationSystem();
+
+  void stopAnimation();
+  void startAnimation();
+  bool isAnimationStopped();
+
 private:
   void _update_skeleton_recursively(Real animTime, const Animation* animation, const Skeleton* skeleton, Bone* bone, const Mat4& parentTransform);
 
@@ -66,7 +76,8 @@ Int32 Animator::_locate_animation_key_frame(const T& keyFrames, float animTime)
       return i;
   }
 
-  return -1;
+  // TODO:
+  return 0;
 }
 
 

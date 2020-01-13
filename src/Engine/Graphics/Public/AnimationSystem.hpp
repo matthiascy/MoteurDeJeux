@@ -23,6 +23,8 @@ public:
   void update(Real dt) override;
 
   void postUpdate(Real dt) override;
+
+  void registerAnimator(Animator* animator);
 };
 
 

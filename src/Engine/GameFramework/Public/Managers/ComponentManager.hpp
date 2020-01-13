@@ -46,8 +46,7 @@ public:
 };
 
 template <typename T, typename... Args>
-T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Args&&... params)
-{
+T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Args&&... params) {
   // TODO::specify names(name generator)
   T* component = nullptr;
   if constexpr (std::is_base_of_v<Collider, T>) {
@@ -80,10 +79,13 @@ T* ComponentManager::addComponent(const String& name, GameObject* gameObject, Ar
       table->insert(type, new ComponentContainer);
       (*table)[type]->push_back(component);
     }
+
   } else {
+
     m_game_object_components.insert(gameObject, new ComponentTable);
     m_game_object_components[gameObject]->insert(type, new ComponentContainer);
     (*m_game_object_components[gameObject])[type]->push_back(component);
+
   }
 
   return component;

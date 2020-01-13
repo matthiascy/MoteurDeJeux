@@ -56,6 +56,7 @@ bool Engine::init()
   m_physics_sys->init();
   m_behavior_sys->init();
   m_input_sys->init();
+  m_animation_sys->init();
   return true;
 }
 

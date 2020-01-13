@@ -17,18 +17,21 @@ Animator::Animator(const String& name, GameObject* gameObject)
     m_animations{},
     m_skeleton{nullptr},
     m_is_initialized{false},
-    m_animated_mesh_renderer{nullptr}
+    m_animated_mesh_renderer{nullptr},
+    m_is_stopped{true}
 {
   auto* animatedMeshRenderer = m_game_object->getComponent<AnimatedMeshRenderer>();
   if (animatedMeshRenderer) {
     m_animated_mesh_renderer = animatedMeshRenderer;
     animatedMeshRenderer->setAnimator(this);
   }
+  m_is_registered_in_system = false;
 }
 
 void Animator::init(AssetManager* assetManager)
 {
   if (!m_is_initialized) {
+    qDebug() << "initialization";
     auto* animatedMeshRenderer = m_game_object->getComponent<AnimatedMeshRenderer>();
 
     if (animatedMeshRenderer) {
@@ -41,6 +44,9 @@ void Animator::init(AssetManager* assetManager)
     }
 
     m_bone_transforms.resize(m_skeleton->bones().size());
+    for (auto& i : m_bone_transforms) {
+      i.setToIdentity();
+    }
 
     m_is_initialized = true;
   }
@@ -48,13 +54,17 @@ void Animator::init(AssetManager* assetManager)
 
 void Animator::update(Real dt)
 {
-  if (m_current_anim != -1) {
-    Animation* currentAnim = m_animations[m_current_anim];
-    m_animation_time = fmodf(m_animation_time + dt * currentAnim->ticksPerSecond, currentAnim->duration);
-    _update_skeleton_recursively(m_animation_time, currentAnim, m_skeleton, m_skeleton->boneAt(0), Math::Mat4Identity);
+  if (!m_is_stopped) {
+    if (m_current_anim != -1) {
+      Animation* currentAnim = m_animations[m_current_anim];
+      m_animation_time = fmodf(m_animation_time + dt * currentAnim->ticksPerSecond, currentAnim->duration);
+      _update_skeleton_recursively(m_animation_time, currentAnim, m_skeleton, m_skeleton->boneAt(0),
+                                   Math::Mat4Identity);
 
-    for (auto i = 0; i < m_bone_transforms.size(); ++i) {
-      m_bone_transforms[i] = m_skeleton->boneAt(i)->animatedTransform;
+      for (auto i = 0; i < m_bone_transforms.size(); ++i) {
+        m_bone_transforms[i] = m_skeleton->boneAt(i)->animatedTransform;
+        //m_bone_transforms[i].setToIdentity();
+      }
     }
   }
 }
@@ -160,4 +170,29 @@ bool Animator::isInitialized() const
 
 UInt64 Animator::typeID() const {
   return Component::family::type<Animator>;
+}
+
+void Animator::registerInAnimationSystem()
+{
+  m_is_registered_in_system = true;
+}
+
+bool Animator::isRegisteredInAnimationSystem() const
+{
+  return m_is_registered_in_system;
+}
+
+void Animator::stopAnimation()
+{
+  m_is_stopped = true;
+}
+
+void Animator::startAnimation()
+{
+  m_is_stopped = false;
+}
+
+bool Animator::isAnimationStopped()
+{
+  return m_is_stopped;
 }

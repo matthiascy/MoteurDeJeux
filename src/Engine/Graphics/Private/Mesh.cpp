@@ -15,7 +15,7 @@ Mesh::Mesh(UInt32 vcount, const Array<VertexLayoutPNTTB>& data, const Array<UInt
   for (auto i = 0; i < m_vertices.size(); ++i) {
     m_vertices_with_bone_info[i].pnttb = m_vertices[i];
     for (auto j = 0; j < 8; ++j) {
-      m_vertices_with_bone_info[i].boneIds[j] = -1;
+      m_vertices_with_bone_info[i].boneIds[j] = 0;
       m_vertices_with_bone_info[i].boneWeights[j] = 0.0f;
     }
   }
@@ -129,7 +129,7 @@ void Mesh::addBone(UInt32 vertexId, UInt32 boneId, Real boneWeight)
 {
   VertexLayoutPNTTB_B_W& vertex = m_vertices_with_bone_info[vertexId];
   for (auto i = 0; i < 8; ++i) {
-    if (vertex.boneWeights[i] != 0.0f) {
+    if (vertex.boneWeights[i] == 0.0f) {
       vertex.boneIds[i] = boneId;
       vertex.boneWeights[i] = boneWeight;
     }
