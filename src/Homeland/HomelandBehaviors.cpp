@@ -6,7 +6,6 @@ void HomelandBehaviors::freeView(GameObject* self, Engine* engine, Real dt)
 {
   if (engine->inputSystem()->isMouseButtonPressed(Qt::MouseButton::MiddleButton)) {
     if (engine->inputSystem()->isKeyPressed(Qt::Key_Shift)) {
-
       // Pan
       self->transform()->translate(self->transform()->up() * dt * engine->inputSystem()->mouseDelta().y(), ESpace::World);
       self->transform()->translate(self->transform()->right() * dt * -engine->inputSystem()->mouseDelta().x(), ESpace::World);
@@ -26,8 +25,10 @@ void HomelandBehaviors::freeView(GameObject* self, Engine* engine, Real dt)
 void HomelandBehaviors::trackball(GameObject* self, Engine* engine, Real dt)
 {
   if (engine->inputSystem()->isMouseButtonPressed(Qt::MouseButton::LeftButton)) {
-    self->transform()->rotate(Math::Up, engine->inputSystem()->mouseDelta().x() * 0.1f, ESpace::Local);
-    self->transform()->rotate(Math::Right, engine->inputSystem()->mouseDelta().y() * 0.1f, ESpace::Local);
+    qDebug() << "delta x : " << engine->inputSystem()->mouseDelta().x();
+    qDebug() << "delta y : " << engine->inputSystem()->mouseDelta().y();
+    self->transform()->rotate(Math::Up, engine->inputSystem()->mouseDelta().x() * dt * 10, ESpace::Local);
+    self->transform()->rotate(Math::Right, engine->inputSystem()->mouseDelta().y() * dt * 10, ESpace::Local);
   }
 }
 

@@ -352,7 +352,7 @@ Array<TextureHandle> AssetManager::_load_material_textures(const aiMaterial* ass
 
     if (!isSkip) {
       auto* image = new Image;
-      qDebug() << "Try to load image : " << filepath;
+      //qDebug() << "Try to load image : " << filepath;
       reader.setFileName(filepath);
       if (reader.read(image)) {
         textures.push_back(_add_texture(new Texture(filepath, image, type)));
@@ -583,7 +583,7 @@ Skeleton* AssetManager::getSkeleton(SkeletonHandle handle)
 
 AnimatedModel* AnimatedModelLoader::load(const String& path)
 {
-
+  return nullptr;
 }
 
 // TODO: implementation

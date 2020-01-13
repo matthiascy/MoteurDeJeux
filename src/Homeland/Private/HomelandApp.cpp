@@ -48,8 +48,10 @@ void HomelandApp::_load_game_asset()
   //m_assets.insert("Bunny", m_engine->assetManager()->loadModel("./assets/models/bunny.obj"));
   //m_assets.insert("Sibenik", m_engine->assetManager()->loadModel("./assets/models/sibenik/sibenik.obj"));
   m_assets.insert("Sponza", {m_engine->assetManager()->loadModel("./assets/models/sponza/sponza-m.obj").idx, EAssetType::Model});
-  m_assets.insert("MerdiqueFBXAModel", {m_engine->assetManager()->loadAnimatedModel("./assets/models/merdique.fbx").idx, EAssetType::AnimatedModel});
-  m_assets.insert("MerdiqueFBXModel", {m_engine->assetManager()->loadModel("./assets/models/merdique.fbx").idx, EAssetType::Model});
+  //m_assets.insert("MerdiqueFBXAModel", {m_engine->assetManager()->loadAnimatedModel("./assets/models/merdique.fbx").idx, EAssetType::AnimatedModel});
+  //m_assets.insert("MerdiqueFBXModel", {m_engine->assetManager()->loadModel("./assets/models/merdique.fbx").idx, EAssetType::Model});
+  m_assets.insert("HandGun", {m_engine->assetManager()->loadModel("./assets/models/Handgun/Handgun.obj").idx, EAssetType::Model});
+  m_assets.insert("Crate", {m_engine->assetManager()->loadModel("./assets/models/Crate/Crate.obj").idx, EAssetType::Model});
   //m_assets.insert("MerdiqueDAE", {m_engine->assetManager()->loadModel("./assets/models/merdique.dae").idx, EAssetType::AnimatedModel});
   //m_assets.insert("Terrain001", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground.obj"));
   //m_assets.insert("Terrain002", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground2.obj"));
@@ -161,11 +163,9 @@ bool HomelandApp::_init_main_scene()
    */
 
 
-  /*
-  auto* sponza = m_main_scene->createGameObject("Sponza", "default");
-  auto* sponzaMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-sponza", sponza, ModelHandle{m_assets["Sponza"].idx});
-  sponza->transform()->setPosition({0, 0, 0}, ESpace::World);
-   */
+  //auto* sponza = m_main_scene->createGameObject("Sponza", "default");
+  //auto* sponzaMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-sponza", sponza, ModelHandle{m_assets["Sponza"].idx});
+  //sponza->transform()->setPosition({0, 0, 0}, ESpace::World);
 
   /*
   auto* sibenik = m_main_scene->createGameObject("sibenik", "default");
@@ -178,11 +178,20 @@ bool HomelandApp::_init_main_scene()
   //knight->transform()->setPosition({20, 0, -20}, ESpace::World);
   //knight->transform()->setLocalScale({10, 10, 10});
 
-  /*
   auto* helico = m_main_scene->createGameObject("Helico", "default");
   auto* helicoRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-helico", helico, ModelHandle{m_assets["Helico"].idx});
   helico->transform()->setPosition({0, 0, 0}, ESpace::World);
-   */
+
+  auto* handgun = m_main_scene->createGameObject("HandGun", "default");
+  auto* handGunRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-gun", handgun, ModelHandle{m_assets["HandGun"].idx});
+  handgun->transform()->setPosition({0, 0, 0}, ESpace::World);
+  handgun->transform()->setLocalScale({50, 50, 50});
+
+  auto* crate = m_main_scene->createGameObject("Crate", "default");
+  auto* crateRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-gun", crate, ModelHandle{m_assets["Crate"].idx});
+  crate->transform()->setPosition({0, 0, 0}, ESpace::World);
+  crate->transform()->rotate(Math::AxisY, 180, ESpace::Local);
+  crate->transform()->setLocalScale({50, 50, 50});
 
   /*
   auto* sprite = m_main_scene->createGameObject("Sprite", "default");
@@ -191,6 +200,7 @@ bool HomelandApp::_init_main_scene()
   spriteRenderer->setAnimator(spriteAnimator);
   sprite->transform()->setPosition({0, 0, 0}, ESpace::World);
    */
+  /*
   auto* sprite = m_main_scene->createGameObject("Merdique", "default");
   auto* spriteRenderer = m_engine->componentManager()->addComponent<AnimatedMeshRenderer>("merdique", sprite, AnimatedModelHandle{m_assets["MerdiqueFBXAModel"].idx});
   //auto* spriteRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("merdique", sprite, ModelHandle{m_assets["MerdiqueFBXModel"].idx});
@@ -200,6 +210,8 @@ bool HomelandApp::_init_main_scene()
   spriteAnimator->startAnimation();
   sprite->transform()->setPosition({0, -5, 0}, ESpace::World);
   sprite->transform()->setLocalScale({20, 20, 20});
+   */
+  return true;
 }
 
 void HomelandApp::_init_camera()
