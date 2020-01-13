@@ -4,9 +4,9 @@
 *.lo
 *.o
 *.obj
-!assets/models/*.obj
+!assets/models/**.obj
 !src/Homeland/Assets/models/*.obj
-!src/Homeland/Assets/**/**.obj
+
 
 # Precompiled Headers
 *.gch
