@@ -32,26 +32,14 @@ void HomelandApp::init()
 
 void HomelandApp::_load_game_asset()
 {
-  auto sphereHandle = m_engine->assetManager()->loadModel("./assets/models/sphere.obj");
-  //m_assets.insert("Sphere", sphereHandle);
-  //m_assets.insert("Klingon", m_engine->assetManager()->loadModel("./assets/models/klingon.off"));
-  //m_assets.insert("Tree000", m_engine->assetManager()->loadModel("./assets/models/tree.fbx"));
-  //m_assets.insert("TreeType001", m_engine->assetManager()->loadModel("./assets/models/TreeType001.dae"));
-  m_assets.insert("Cube", {m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/cube.obj").idx, EAssetType::Model});
-  //m_assets.insert("Plane", m_engine->assetManager()->loadModel("./assets/models/plane.obj"));
-  //m_assets.insert("Terrain000", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/island.obj"));
-  //m_assets.insert("Knight", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/KnightCharacter-m.obj"));
-  //m_assets.insert("DabrovicSponza", m_engine->assetManager()->loadModel("./assets/models/dabrovic-sponza/sponza.obj"));
-  //m_assets.insert("CryptekSponza", m_engine->assetManager()->loadModel("./assets/models/crytek-sponza/sponza.obj"));
-  m_assets.insert("Helico", {m_engine->assetManager()->loadModel("./assets/models/helicopter.obj").idx, EAssetType::Model});
-  //m_assets.insert("Helico1", {m_engine->assetManager()->loadModel("./assets/models/helicopter.obj").idx, EAssetType::Model});
-  //m_assets.insert("Bunny", m_engine->assetManager()->loadModel("./assets/models/bunny.obj"));
-  //m_assets.insert("Sibenik", m_engine->assetManager()->loadModel("./assets/models/sibenik/sibenik.obj"));
-  m_assets.insert("Sponza", {m_engine->assetManager()->loadModel("./assets/models/sponza/sponza-m.obj").idx, EAssetType::Model});
+  m_engine->assetManager()->loadModel("./assets/models/sphere.obj", "Sphere");
+  m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/cube.obj", "Cube");
+  m_engine->assetManager()->loadModel("./assets/models/sponza/sponza-m.obj", "Sponza");
+  m_engine->assetManager()->loadModel("./assets/models/Handgun/HandGun.obj", "HandGun");
+  m_engine->assetManager()->loadModel("./assets/models/Crate/Crate.obj", "Crate");
+  m_engine->assetManager()->loadModel("./assets/models/Handgun/HandGun.obj", "Revolver");
   //m_assets.insert("MerdiqueFBXAModel", {m_engine->assetManager()->loadAnimatedModel("./assets/models/merdique.fbx").idx, EAssetType::AnimatedModel});
   //m_assets.insert("MerdiqueFBXModel", {m_engine->assetManager()->loadModel("./assets/models/merdique.fbx").idx, EAssetType::Model});
-  m_assets.insert("HandGun", {m_engine->assetManager()->loadModel("./assets/models/Handgun/Handgun.obj").idx, EAssetType::Model});
-  m_assets.insert("Crate", {m_engine->assetManager()->loadModel("./assets/models/Crate/Crate.obj").idx, EAssetType::Model});
   //m_assets.insert("MerdiqueDAE", {m_engine->assetManager()->loadModel("./assets/models/merdique.dae").idx, EAssetType::AnimatedModel});
   //m_assets.insert("Terrain001", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground.obj"));
   //m_assets.insert("Terrain002", m_engine->assetManager()->loadModel("./src/Homeland/Assets/models/ground2.obj"));
@@ -162,11 +150,6 @@ bool HomelandApp::_init_main_scene()
   });
    */
 
-
-  //auto* sponza = m_main_scene->createGameObject("Sponza", "default");
-  //auto* sponzaMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-sponza", sponza, ModelHandle{m_assets["Sponza"].idx});
-  //sponza->transform()->setPosition({0, 0, 0}, ESpace::World);
-
   /*
   auto* sibenik = m_main_scene->createGameObject("sibenik", "default");
   auto* sibenikMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-sponza", sibenik, m_assets["Sibenik"]);
@@ -178,69 +161,54 @@ bool HomelandApp::_init_main_scene()
   //knight->transform()->setPosition({20, 0, -20}, ESpace::World);
   //knight->transform()->setLocalScale({10, 10, 10});
 
-  auto* helico = m_main_scene->createGameObject("Helico", "default");
-  auto* helicoRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-helico", helico, ModelHandle{m_assets["Helico"].idx});
-  helico->transform()->setPosition({0, 0, 0}, ESpace::World);
+  //auto* helico = m_main_scene->createGameObject("Helico", "default");
+  //auto* helicoRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-helico", helico, ModelHandle{m_assets["Helico"].idx});
+  //helico->transform()->setPosition({0, 0, 0}, ESpace::World);
 
-  auto* handgun = m_main_scene->createGameObject("HandGun", "default");
-  auto* handGunRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-gun", handgun, ModelHandle{m_assets["HandGun"].idx});
-  handgun->transform()->setPosition({0, 0, 0}, ESpace::World);
-  handgun->transform()->setLocalScale({50, 50, 50});
+  auto* crateMgr = m_main_scene->createGameObject("CrateMgr", "default");
+  auto* crateBehavior = m_engine->componentManager()->addComponent<Behavior>("behavior", crateMgr);
+  m_engine->componentManager()->addComponent<MeshRenderer>("mesh-gun", crateMgr, m_engine->assetManager()->getModel("Cube"));
+  crateMgr->transform()->setLocalScale({10, 10, 10});
+  crateBehavior->addUpdateFunction(HomelandBehaviors::crateMgrBehavior);
 
-  auto* crate = m_main_scene->createGameObject("Crate", "default");
-  auto* crateRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-gun", crate, ModelHandle{m_assets["Crate"].idx});
-  crate->transform()->setPosition({0, 0, 0}, ESpace::World);
-  crate->transform()->rotate(Math::AxisY, 180, ESpace::Local);
-  crate->transform()->setLocalScale({50, 50, 50});
 
-  /*
-  auto* sprite = m_main_scene->createGameObject("Sprite", "default");
-  auto* spriteRenderer = m_engine->componentManager()->addComponent<AnimatedMeshRenderer>("sprite", sprite, AnimatedModelHandle{m_assets["Sprite"].idx});
-  auto* spriteAnimator = m_engine->componentManager()->addComponent<Animator>("animator", sprite);
-  spriteRenderer->setAnimator(spriteAnimator);
-  sprite->transform()->setPosition({0, 0, 0}, ESpace::World);
-   */
-  /*
-  auto* sprite = m_main_scene->createGameObject("Merdique", "default");
-  auto* spriteRenderer = m_engine->componentManager()->addComponent<AnimatedMeshRenderer>("merdique", sprite, AnimatedModelHandle{m_assets["MerdiqueFBXAModel"].idx});
-  //auto* spriteRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("merdique", sprite, ModelHandle{m_assets["MerdiqueFBXModel"].idx});
-  auto* spriteAnimator = m_engine->componentManager()->addComponent<Animator>("animator", sprite);
-  spriteRenderer->setAnimator(spriteAnimator);
-  //spriteAnimator->stopAnimation();
-  spriteAnimator->startAnimation();
-  sprite->transform()->setPosition({0, -5, 0}, ESpace::World);
-  sprite->transform()->setLocalScale({20, 20, 20});
-   */
   return true;
 }
 
 void HomelandApp::_init_camera()
 {
-  auto* trackball = m_main_scene->createGameObject("trackball", "default");
-  trackball->setStatic(false);
-  m_engine->componentManager()->addComponent<Behavior>("trackball", trackball)->addUpdateFunction(HomelandBehaviors::trackball);
-
   auto* camera = m_main_scene->createGameObject("MainCamera", "Camera");
   auto* cameraTransform = camera->transform();
-  cameraTransform->rotate(Math::AxisY, 180, ESpace::World);
-  cameraTransform->setParent(trackball->transform());
-  cameraTransform->setPosition({0, 0, 20}, ESpace::World);
-  cameraTransform->lookAt(Math::Zero, cameraTransform->up());
+  cameraTransform->setPosition({-400, 48, 0}, ESpace::World);
   m_engine->componentManager()->addComponent<PerspectiveCamera>("", camera, 45, 1.77, 1, 10000);
-  auto* behavior = m_engine->componentManager()->addComponent<Behavior>("behavior", camera);
-  behavior->addUpdateFunction(HomelandBehaviors::freeView);
-  behavior->addUpdateFunction(HomelandBehaviors::canonicalBehavior);
-  //auto* collider = m_engine->componentManager()->addComponent<SphereCollider>("sphere-collider", camera, 1);
-  //auto* rigidBody = m_engine->componentManager()->addComponent<RigidBody>("rigid-body", camera, 10000000);
-  //rigidBody->setIsUsingGravity(false);
-  //camera->setIsSimulated(true);
+  auto* cameraBehavior = m_engine->componentManager()->addComponent<Behavior>("behavior", camera);
+  cameraBehavior->addUpdateFunction(HomelandBehaviors::fpsView);
+  cameraBehavior->addUpdateFunction(HomelandBehaviors::bodyBehavior);
+
+  auto* handgun = m_main_scene->createGameObject("HandGun", "default");
+  auto* handGunRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("mesh-gun", handgun, m_engine->assetManager()->getModel("Revolver"));
+  handgun->transform()->setParent(camera->transform());
+  handgun->transform()->translate(cameraTransform->forward() * -1.2f, ESpace::Local);
+  handgun->transform()->setLocalScale({1, 1, 1});
+  //handgun->transform()->translate(cameraTransform->forward() * -2.2f, ESpace::Local);
+  //handgun->transform()->setLocalScale({5, 5, 5});
+  handgun->transform()->rotate(Math::AxisY, 180, ESpace::Local);
+  handgun->transform()->rotate(Math::AxisX, -15, ESpace::Local);
+  auto handGunBehavior = m_engine->componentManager()->addComponent<Behavior>("behavior", handgun);
+  handGunBehavior->addUpdateFunction(HomelandBehaviors::handGun);
+
+  cameraTransform->rotate(Math::AxisY, -90, ESpace::World);
 }
 
 void HomelandApp::_init_terrain()
 {
-  auto* terrain = m_main_scene->createGameObject("Terrain", "default");
+  auto* sponza = m_main_scene->createGameObject("Sponza", "default");
+  auto* sponzaMeshRenderer = m_engine->componentManager()->addComponent<MeshRenderer>("Sponza", sponza, m_engine->assetManager()->getModel("Sponza"));
+  sponza->transform()->setPosition({0, 0, 0}, ESpace::World);
+
+  auto* terrain = m_main_scene->createGameObject("Terrain", "Ground");
   terrain->transform()->setPosition({0, -5, 0}, ESpace::World);
-  m_engine->componentManager()->addComponent<BoxCollider>("boxCollider", terrain, Vec3{600, 5, 250});
+  m_engine->componentManager()->addComponent<BoxCollider>("boxCollider", terrain, Vec3{1000, 5, 250});
   m_engine->componentManager()->addComponent<RigidBody>("rigidBody", terrain, 0);
   terrain->setIsSimulated(true);
 }

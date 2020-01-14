@@ -10,7 +10,6 @@ class GameObject;
 class HomelandApp : public GameApp {
 private:
   Scene* m_main_scene { };
-  HashMap<String, AssetHandle> m_assets { };
 
 public:
   HomelandApp(int argc, char** argv);

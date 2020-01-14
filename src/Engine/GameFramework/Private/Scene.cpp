@@ -83,3 +83,17 @@ GameObject* Scene::find(const String& name)
   }
   return nullptr;
 }
+
+void Scene::update()
+{
+  for (auto i = m_game_objects.begin(); i != m_game_objects.end(); ++i) {
+    Array<GameObject*>::iterator it = i.value()->begin();
+    while(it != i.value()->end()) {
+      if((*it)->isToBeDestroyed()) {
+        delete *it;
+        it = i.value()->erase(it);
+      }
+      else ++it;
+    }
+  }
+}

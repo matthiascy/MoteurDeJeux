@@ -107,3 +107,13 @@ void GameObject::setIsSimulated(bool isSimulated)
 {
   m_is_simulated = isSimulated;
 }
+
+void GameObject::setToBeDestroyed(bool destroyed)
+{
+  m_to_be_destroyed = destroyed;
+}
+
+bool GameObject::isToBeDestroyed() const
+{
+  return m_to_be_destroyed;
+}

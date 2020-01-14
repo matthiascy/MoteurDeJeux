@@ -10,11 +10,17 @@
 class Model {
 private:
   Array<MeshHandle> m_meshes;
+  String m_name;
 
 public:
   Model() = default;
 
   void addMesh(MeshHandle mesh);
+
+  [[nodiscard]]
+  String name() const;
+
+  void setName(const String& name);
 
   [[nodiscard]]
   Array<MeshHandle> meshes() const;

@@ -15,3 +15,13 @@ Int32 Model::meshesNum() const
 {
   return m_meshes.size();
 }
+
+String Model::name() const
+{
+  return m_name;
+}
+
+void Model::setName(const String& name)
+{
+  m_name = name;
+}

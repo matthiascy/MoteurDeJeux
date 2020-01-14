@@ -44,11 +44,13 @@ AssetManager::~AssetManager()
   qDebug() << "Shutting down...[Finished]";
 }
 
-ModelHandle AssetManager::loadModel(const String& path)
+ModelHandle AssetManager::loadModel(const String& path, const String& name)
 {
   auto model_idx = m_models->size();
   // No animation loaded
-  m_models->push_back(_load_model(path));
+  auto* model = _load_model(path);
+  model->setName(name);
+  m_models->push_back(model);
   return {model_idx};
 }
 
@@ -578,6 +580,14 @@ Skeleton* AssetManager::getSkeleton(SkeletonHandle handle)
     return m_skeletons->at(handle.idx);
   } else {
     return nullptr;
+  }
+}
+
+ModelHandle AssetManager::getModel(const String& name) {
+  for (int i = 0; i < m_models->size(); ++i) {
+    if (m_models->at(i)->name() == name) {
+      return { i };
+    }
   }
 }
 

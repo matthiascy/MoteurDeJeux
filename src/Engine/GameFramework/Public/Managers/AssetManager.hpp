@@ -38,8 +38,9 @@ public:
   AssetManager(const AssetManager& other) = delete;
   ~AssetManager() override;
 
-  ModelHandle loadModel(const String& path);
+  ModelHandle loadModel(const String& path, const String& name);
   Model* getModel(ModelHandle handle);
+  ModelHandle getModel(const String& name);
 
   TextureHandle loadTexture(const String& path);
   Texture* getTexture(TextureHandle handle);

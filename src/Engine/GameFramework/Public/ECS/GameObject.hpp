@@ -27,6 +27,7 @@ private:
   bool m_has_collider;
   Scene* m_scene;
   Array<Component*> m_components;
+  bool m_to_be_destroyed;
   // TODO::using handle to retrieve components
 
 public:
@@ -60,6 +61,11 @@ public:
   bool isSimulated() const;
 
   void setIsSimulated(bool isSimulated);
+
+  void setToBeDestroyed(bool destroyed);
+
+  [[nodiscard]]
+  bool isToBeDestroyed() const;
 
   [[nodiscard]] Scene* scene() const;
 
