@@ -88,6 +88,7 @@ set(EngineCoreSrc
 set(EngineGameFrameworkSrc
     ${EngineSrcDir}/GameFramework/Private/Scene.cpp
     ${EngineSrcDir}/GameFramework/Private/ECS/System.cpp
+    ${EngineSrcDir}/GameFramework/Private/Systems/AudioSystem.cpp
     ${EngineSrcDir}/GameFramework/Private/Engine.cpp
     ${EngineSrcDir}/GameFramework/Private/GameApp.cpp
     ${EngineSrcDir}/GameFramework/Private/ECS/Component.cpp
@@ -98,6 +99,7 @@ set(EngineGameFrameworkSrc
     ${EngineSrcDir}/GameFramework/Public/ECS/System.hpp
     ${EngineSrcDir}/GameFramework/Public/GameApp.hpp
     ${EngineSrcDir}/GameFramework/Public/Forward.hpp
+    ${EngineSrcDir}/GameFramework/Public/Systems/AudioSystem.hpp
     ${EngineSrcDir}/GameFramework/Public/ECS/Component.hpp
     ${EngineSrcDir}/GameFramework/Public/ECS/GameObject.hpp
 
@@ -133,12 +135,16 @@ set(EngineGameFrameworkSrc
     ${EngineSrcDir}/GameFramework/Private/EngineWindow.cpp
     ${EngineSrcDir}/GameFramework/Public/EngineWindow.hpp)
 
+set(FModSrc
+    ${EngineSrcDir}/Thirdparty/fmod/fmod.hpp
+    ${EngineSrcDir}/Thirdparty/fmod/fmod_studio.hpp)
+
 set(EngineSrc
     ${EngineCoreSrc}
     ${EngineGraphicsSrc}
     ${EnginePhysicsSrc}
     ${EngineGameFrameworkSrc}
-
+    ${FModSrc}
     ${EditorSrcDir}/EditorCamera.hpp
     ${EditorSrcDir}/EditorCamera.cpp
     ${EditorSrcDir}/AssetPreviewer.cpp

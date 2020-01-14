@@ -86,13 +86,15 @@ GameApp::GameApp(const String& name, const String& description, QSize&& minSize,
 
   m_window->hide();
 
-  m_splash = makeUnique<SplashScreen>(QPixmap{":/App/loading-engine"}.scaled(m_window->geometry().size()), Qt::WindowStaysOnTopHint);
-  m_splash->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, m_splash->size(), QApplication::screens()[0]->availableGeometry()));
   m_splash = makeUnique<SplashScreen>(QPixmap{":/App/loading-engine"}, Qt::WindowStaysOnTopHint);
-  m_splash->showFullScreen();
+  //m_splash = makeUnique<SplashScreen>(QPixmap{":/App/loading-engine"}.scaled(m_window->geometry().size()), Qt::WindowStaysOnTopHint);
+  m_splash->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, m_splash->size(), QApplication::screens()[0]->availableGeometry()));
+  //m_splash = makeUnique<SplashScreen>(QPixmap{":/App/loading-engine"}, Qt::WindowStaysOnTopHint);
+  m_splash->show();
+  //m_splash->showFullScreen();
 
   QTimer::singleShot(3000, m_splash.get(), [this](){
-    m_splash->setPixmap(QPixmap{":/App/loading-game"}.scaled(m_window->geometry().size()));
+    //m_splash->setPixmap(QPixmap{":/App/loading-game"}.scaled(m_window->geometry().size()));
     m_splash->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, m_splash->size(), QApplication::screens()[0]->availableGeometry()));
     QTimer::singleShot(3000, m_splash.get(), &QSplashScreen::close);
   });
